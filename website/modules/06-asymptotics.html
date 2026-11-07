@@ -1,0 +1,191 @@
+<section class="module" id="module-6" data-day="6">
+  <div class="module-inner">
+    <h2>Day 6: Asymptotics</h2>
+    <p>Is n²/2 − n/2 steps better or worse than n log₂ n − n + 1? For a million items, the small terms don't matter. <span class="term" data-definition="Notation for comparing how functions grow as n gets large, ignoring constant factors and lower-order terms.">Asymptotic notation</span> lets you drop that detail precisely, knowing exactly what you dropped.</p>
+
+    <h3>Leaning blocks off a table</h3>
+    <p>Stack n blocks, each sliding out as far as it can. The gaps are ½, ¼, ⅙, …, 1/(2n), so the overhang is ½Hₙ, where Hₙ is the <span class="term" data-definition="Hₙ = 1 + 1/2 + 1/3 + … + 1/n. It has no closed form but grows like ln n.">harmonic number</span>.</p>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body"><strong>Integral method</strong><p>1/x is decreasing, so ln n + 1/n ≤ Hₙ ≤ ln n + 1.</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body"><strong>Divide by ln n</strong><p>1 + 1/(n ln n) ≤ Hₙ/ln n ≤ 1 + 1/ln n.</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body"><strong>Squeeze</strong><p>Both sides tend to 1, so Hₙ/ln n → 1: Hₙ is <span class="term" data-definition="f ~ g means f(n)/g(n) tends to 1 as n grows: equal up to lower-order terms.">asymptotically equivalent</span> to ln n.</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">4</span>
+        <div class="step-body"><strong>Reality check</strong><p>Overhang of 10 block-lengths needs Hₙ = 20: hundreds of millions of blocks.</p></div>
+      </div>
+    </div>
+
+    <div class="callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <div class="callout-content">
+        <strong>Products become sums:</strong> ln(n!) = ln 1 + … + ln n, so the integral method bounds n! within a factor of n. <span class="term" data-definition="n! ~ √(2πn)·(n/e)ⁿ. The ratio is within 1% of 1 already at n = 10.">Stirling's formula</span> is much sharper: n! ~ √(2πn)(n/e)ⁿ.
+      </div>
+    </div>
+
+    <h3>Big O: zoom out on the map</h3>
+    <figure class="diagram-container">
+      <img src="diagrams/06-asymptotics.svg" alt="Plot of a constant, n, n log n, n squared over 2 and 2 to the n, with a ladder of growth classes from O(1) up to O(2ⁿ) and the formal definition of big O." loading="lazy">
+      <figcaption>Zoom out far enough and only the growth shape is left. Each class sits inside the one above it.</figcaption>
+    </figure>
+    <p>From orbit, side streets vanish and only the coastline remains. <span class="term" data-definition="f ∈ O(g) means there exist C &gt; 0 and n₀ so that f(n) ≤ C·g(n) for every n ≥ n₀.">Big O</span> does the same: f ∈ O(g) if some constant C and starting point n₀ make f(n) ≤ C·g(n) for all n ≥ n₀.</p>
+
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">ratios.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python"><span class="code-keyword">import</span> math
+
+<span class="code-keyword">def</span> <span class="code-function">swaps</span>(n):
+    <span class="code-keyword">return</span> n * (n - <span class="code-number">1</span>) // <span class="code-number">2</span>
+
+<span class="code-keyword">def</span> <span class="code-function">merges</span>(n):
+    <span class="code-keyword">return</span> n * math.<span class="code-function">log2</span>(n) - n + <span class="code-number">1</span>
+
+<span class="code-keyword">for</span> n <span class="code-keyword">in</span> (<span class="code-number">10</span>, <span class="code-number">100</span>, <span class="code-number">10_000</span>):
+    <span class="code-function">print</span>(n, <span class="code-function">swaps</span>(n) / n**<span class="code-number">2</span>, <span class="code-function">merges</span>(n) / <span class="code-function">swaps</span>(n))
+<span class="code-comment"># ratios: 0.45 / 0.54, then 0.495 / 0.11, then 0.49995 / 0.0025</span></code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">We need log base 2 for merge sort's bound.</div>
+        <div class="translation-line">Swap sort's worst case: every one of the n(n−1)/2 pairs is inverted.</div>
+        <div class="translation-line">Merge sort's step bound, quoted in lecture.</div>
+        <div class="translation-line">Try bigger and bigger inputs, since asymptotics only cares about the trend.</div>
+        <div class="translation-line">Compare with ratios, not differences: the limit of f/g decides the question.</div>
+        <div class="translation-line">S/n² heads to ½, so S ∈ Θ(n²). M/S heads to 0, so merge sort ∈ o(swap sort).</div>
+      </div>
+    </div>
+
+    <h3>The limit test, in conversation</h3>
+    <div class="chat-window" id="chat-day6-limit">
+      <div class="chat-messages">
+        <div class="chat-message" data-msg="1" data-sender="1" style="display:none;">Is n² in O(1,000,000 · n)? The constant is huge.</div>
+        <div class="chat-message" data-msg="2" data-sender="4" style="display:none;">Take the limit: n² / (10⁶ n) = n / 10⁶, which goes to infinity. So no.</div>
+        <div class="chat-message" data-msg="3" data-sender="1" style="display:none;">And 3ⁿ versus 2ⁿ? Isn't the base just a constant?</div>
+        <div class="chat-message" data-msg="4" data-sender="4" style="display:none;">3ⁿ / 2ⁿ = 1.5ⁿ, which also goes to infinity. That is a constant multiplied n times, not once.</div>
+        <div class="chat-message" data-msg="5" data-sender="2" style="display:none;">Rule: limit is infinite means not big O. Limit finite means big O. No limit means the test is silent.</div>
+        <div class="chat-typing typing-indicator" style="display:none;"><span></span><span></span><span></span></div>
+      </div>
+      <div class="chat-controls">
+        <button class="chat-next-btn">Next →</button>
+        <button class="chat-all-btn">Show All</button>
+        <button class="chat-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <h3>The whole family</h3>
+    <div class="pattern-cards">
+      <div class="pattern-card"><strong>f ~ g</strong><p>f/g → 1. Equal except lower-order terms.</p></div>
+      <div class="pattern-card"><strong>O and Ω</strong><p>f ≤ g, or f ≥ g, up to a constant factor.</p></div>
+      <div class="pattern-card"><strong><span class="term" data-definition="f ∈ Θ(g) means f ∈ O(g) and g ∈ O(f): the same growth up to constant factors.">Θ</span></strong><p>Both O and Ω. n²/2 − n/2 ∈ Θ(n²).</p></div>
+      <div class="pattern-card"><strong><span class="term" data-definition="f ∈ o(g) means f(n)/g(n) tends to 0: f is negligible compared with g.">o</span> and ω</strong><p>f/g → 0, or f/g → ∞. Much smaller, or much bigger.</p></div>
+    </div>
+
+    <div class="callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-content">
+        <strong>Never induct on big O:</strong> a "proof" that 2ⁿ ∈ O(1) goes 2ⁿ⁺¹ = 2ⁿ + 2ⁿ ∈ O(1) + O(1) = O(1). It only shows each single number 2ⁿ is a constant. Big O is a claim about the whole function at once.
+      </div>
+    </div>
+
+    <h3>Flashcards</h3>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>~ vs. Θ</h4>
+          <p>Is n²/2 ~ n²? Is it Θ(n²)?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Not ~, but Θ</h4>
+          <p>The ratio tends to ½, not 1, so not ~. Θ forgives constant factors, so yes, Θ(n²).</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Harmonic numbers</h4>
+          <p>How fast does Hₙ grow?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Hₙ ~ ln n</h4>
+          <p>ln n + 1/n ≤ Hₙ ≤ ln n + 1. Unbounded, but very slow.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Prove n² + 3n + 7 ∈ O(n²)</h4>
+          <p>Which C and n₀?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>C = 11, n₀ = 1</h4>
+          <p>For n ≥ 1: 3n ≤ 3n² and 7 ≤ 7n², so the total is at most 11n².</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> Algorithm A takes 100·n·log₂ n steps and B takes n²/2. For huge inputs, which is better and why?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="Good instinct for small n, but the constant only delays the crossover (around n = 2224). n log n ∈ o(n²)."
+          data-explanation-wrong="Good instinct for small n, but the constant only delays the crossover (around n = 2224). n log n ∈ o(n²).">B, because its constant ½ is far smaller than 100</button>
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Yes. (100 n log n)/(n²/2) → 0, so A is in o(B) no matter what constant it carries."
+          data-explanation-wrong="Yes. (100 n log n)/(n²/2) → 0, so A is in o(B) no matter what constant it carries.">A, because n log n grows strictly slower than n²</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="They are in different Θ classes, so asymptotics does decide it."
+          data-explanation-wrong="They are in different Θ classes, so asymptotics does decide it.">Neither; big O cannot compare them</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> lim f(n)/g(n) does not exist. What can you conclude about f ∈ O(g)?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="3 + sin n ∈ O(1) even though its ratio to 1 has no limit."
+          data-explanation-wrong="3 + sin n ∈ O(1) even though its ratio to 1 has no limit.">f is not in O(g)</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="If g is 1 on odd n and n² on even n, then n is not in O(g), and the limit of n/g does not exist."
+          data-explanation-wrong="If g is 1 on odd n and n² on even n, then n is not in O(g), and the limit of n/g does not exist.">f is in O(g)</button>
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Right. The limit test is one-sided: without a limit you must go back to the C and n₀ definition."
+          data-explanation-wrong="Right. The limit test is one-sided: without a limit you must go back to the C and n₀ definition.">Nothing yet: go back to the definition</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> You want to say swap sort is at least as slow as merge sort. Which is correct?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="That reads like 'at least 60 inches or less': it says nothing, since O is a set of smaller functions."
+          data-explanation-wrong="That reads like 'at least 60 inches or less': it says nothing, since O is a set of smaller functions.">S(n) ≥ O(M(n))</button>
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Yes. Ω is the reverse of O: S ∈ Ω(M) means M ∈ O(S)."
+          data-explanation-wrong="Yes. Ω is the reverse of O: S ∈ Ω(M) means M ∈ O(S).">S(n) ∈ Ω(M(n))</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="That says S is at most M up to a constant, which is false here."
+          data-explanation-wrong="That says S is at most M up to a constant, which is false here.">S(n) ∈ O(M(n))</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-01/day-06-asymptotics.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=6dQQAn4L24s" target="_blank" rel="noopener">Watch Lecture 6: Asymptotics →</a></p>
+  </div>
+</section>

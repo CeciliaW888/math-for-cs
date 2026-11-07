@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "You roll a fair six-sided die. Which statement about E[D] = 3.5 is correct?",
+   "options": ["It is the most likely single roll", "It is a roll you will see about half the time", "It is the long-run average, even though no roll ever equals 3.5", "It only makes sense if you roll many dice at once"],
+   "answer": 2,
+   "explanation": "Expectation is a probability-weighted average. It need not be a possible value: no face shows 3.5, but the average of many rolls approaches it."},
+  {"question": "A network request succeeds independently with probability 0.2 on each try. What is the expected number of tries up to and including the first success?",
+   "options": ["0.2", "4", "0.8", "5"],
+   "answer": 3,
+   "explanation": "This is mean time to failure: E[F] = 1/p = 1/0.2 = 5. Using Pr[F > i] = 0.8^i and summing the geometric series gives the same result."},
+  {"question": "You draw 5 cards from a shuffled 52-card deck. What is the expected number of aces?",
+   "options": ["5/13", "1/13", "4/5", "It requires computing Pr[0], Pr[1], ..., Pr[4 aces] first"],
+   "answer": 0,
+   "explanation": "Use one indicator per ace. Each specific ace is in your hand with probability 5/52, so E = 4 × 5/52 = 5/13. No binomial coefficients needed."},
+  {"question": "Why can linearity of expectation be used to find the expected number of kids who get their own phone back, even though the events 'kid 1 matches' and 'kid 2 matches' are dependent?",
+   "options": ["Because the dependence is weak when n is large", "Because linearity holds for any random variables on the same sample space, independent or not", "Because the events are actually disjoint", "Because we can multiply the probabilities instead"],
+   "answer": 1,
+   "explanation": "Linearity needs no independence or disjointness. That is what makes it so powerful: sum the n indicators, each with expectation 1/n, to get exactly 1."}
+]}

@@ -1,0 +1,179 @@
+<section class="module" id="module-15" data-day="15">
+  <div class="module-inner">
+    <h2>Day 15 · Relations and Counting</h2>
+    <p>Database tables, follower lists, and the ≤ sign all record which pairs of things are related. Today we give them one shared language. That language then hands us the main tool of the counting unit: matching one set up with another.</p>
+
+    <h3>A relation is a set of arrows</h3>
+    <p>A <span class="term" data-definition="A domain A, a codomain B, and a set of pairs R ⊆ A × B. Draw it as arrows from A to B.">relation</span> needs a domain, a codomain, and a set of pairs. You can classify it just by counting arrows.</p>
+
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <strong>Function: ≤ 1 arrow out of each input</strong>
+          <p>Classes → professors is a <span class="term" data-definition="A relation where every element of the domain has at most one arrow out.">function</span>. Students → classes is not, because a student can take several classes.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <strong>Total: ≥ 1 arrow out of each input</strong>
+          <p>1/x² from ℝ to ℝ isn't <span class="term" data-definition="A relation where every element of the domain has at least one arrow out.">total</span>, because 0 has no output. On ℝ∖{0}, the same pairs form a total function.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <strong>Injective / surjective: ≤ 1 / ≥ 1 arrow in</strong>
+          <p><span class="term" data-definition="Every element of the codomain has at most one arrow in, so nothing is hit twice.">Injective</span> means no output is hit twice. <span class="term" data-definition="Every element of the codomain has at least one arrow in, so everything is hit.">Surjective</span> means every output is hit at least once.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">4</span>
+        <div class="step-body">
+          <strong>All four: bijection</strong>
+          <p>In a <span class="term" data-definition="A total, injective, surjective function: exactly one arrow out of every input and exactly one arrow into every output.">bijection</span>, each input has exactly one arrow out and each output exactly one arrow in. So |A| = |B|.</p>
+        </div>
+      </div>
+    </div>
+
+    <figure class="diagram-container">
+      <img src="diagrams/15-relations-counting.svg" alt="Four arrow diagrams showing a total injection, a surjective function, a bijection, and a non-function, plus the bijection between the bit string 010011 and the subset {2, 5, 6}." loading="lazy">
+      <figcaption>Counting arrows forces size comparisons. A bijection proves two sets are the same size.</figcaption>
+    </figure>
+
+    <h3>Sameness vs order</h3>
+    <p>A relation on a single set is just a digraph. If it is reflexive, symmetric, and transitive, it is an <span class="term" data-definition="A relation that is reflexive, symmetric and transitive. It splits the set into disjoint blocks of mutually related elements.">equivalence relation</span>, which splits the set into blocks, like the ten remainder classes mod 10. If symmetry is replaced by <span class="term" data-definition="If a R b and b R a then a = b. This is not the same as being not symmetric.">antisymmetry</span>, you get a <span class="term" data-definition="A relation that is reflexive, antisymmetric and transitive, behaving like ≤, ⊆ or divides.">weak partial order</span>.</p>
+
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">properties.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python">
+<span class="code-keyword">def</span> <span class="code-function">properties</span>(A, R):
+    <span class="code-keyword">return</span> {
+        <span class="code-string">"reflexive"</span>: <span class="code-function">all</span>((a, a) <span class="code-keyword">in</span> R <span class="code-keyword">for</span> a <span class="code-keyword">in</span> A),
+        <span class="code-string">"symmetric"</span>: <span class="code-function">all</span>((b, a) <span class="code-keyword">in</span> R <span class="code-keyword">for</span> a, b <span class="code-keyword">in</span> R),
+        <span class="code-string">"antisymmetric"</span>: <span class="code-function">all</span>(a == b <span class="code-keyword">for</span> a, b <span class="code-keyword">in</span> R <span class="code-keyword">if</span> (b, a) <span class="code-keyword">in</span> R),
+        <span class="code-string">"transitive"</span>: <span class="code-function">all</span>((a, d) <span class="code-keyword">in</span> R <span class="code-keyword">for</span> a, b <span class="code-keyword">in</span> R <span class="code-keyword">for</span> c, d <span class="code-keyword">in</span> R <span class="code-keyword">if</span> b == c),
+    }
+        </code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">A relation is just a set of pairs, so each property becomes a check over those pairs.</div>
+        <div class="translation-line">Reflexive: every element must be related to itself.</div>
+        <div class="translation-line">Symmetric: every arrow needs a matching arrow going back.</div>
+        <div class="translation-line">Antisymmetric: arrows run both ways only from an element to itself.</div>
+        <div class="translation-line">Transitive: every two-step chain must already have a direct shortcut.</div>
+      </div>
+    </div>
+
+    <div class="callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-content">
+        <strong>Common mistake:</strong> "antisymmetric" doesn't mean "not symmetric". Equality is both symmetric and antisymmetric. The relation {(1,2), (2,1), (1,3)} is neither.
+      </div>
+    </div>
+
+    <h3>Counting with correspondences</h3>
+    <p>A coat-check attendant never counts coats. One ticket per coat means the tickets handed out tell you the count. That idea is the <span class="term" data-definition="If there is a bijection from A to B, then A and B have the same size.">bijection rule</span>. Add the <span class="term" data-definition="The number of ways to choose one item from each of several sets is the product of their sizes.">product rule</span> ("and" multiplies) and the <span class="term" data-definition="The size of a union of disjoint sets is the sum of their sizes.">sum rule</span> ("or" adds), and you can count a great deal.</p>
+
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>Generalized product rule:</strong> which cards are left changes with every draw, but how many are left (52, then 51, then 50, …) never depends on earlier choices. So a deck has 52! orderings.
+      </div>
+    </div>
+
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Subsets of {1,…,n}</h4>
+          <p>How many, and why?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>2ⁿ</h4>
+          <p>They are in bijection with n-bit strings, and each bit has 2 choices.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Equivalence relation</h4>
+          <p>Which three properties, and what do they give you?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Reflexive, symmetric, transitive</h4>
+          <p>Together they partition the set into blocks of "the same" elements.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Total injection A → B</h4>
+          <p>What does it prove?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>|A| ≤ |B|</h4>
+          <p>Each a sends at least one arrow and each b receives at most one.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> "a divides b" on the positive integers is which kind of relation?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="Close, but 2 divides 4 while 4 doesn't divide 2, so it isn't symmetric."
+          data-explanation-wrong="Close, but 2 divides 4 while 4 doesn't divide 2, so it isn't symmetric.">An equivalence relation</button>
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Yes. It is reflexive, antisymmetric, and transitive, so it is a weak partial order."
+          data-explanation-wrong="Yes. It is reflexive, antisymmetric, and transitive, so it is a weak partial order.">A weak partial order</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="2 and 3 are incomparable, since neither divides the other, so it isn't a total order."
+          data-explanation-wrong="2 and 3 are incomparable, since neither divides the other, so it isn't a total order.">A total order</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> Passwords have length 6 to 8 and use 62 possible characters. Why do we add across lengths?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Right. Each password has exactly one length, so the cases are disjoint and the sum rule applies."
+          data-explanation-wrong="Right. Each password has exactly one length, so the cases are disjoint and the sum rule applies.">The three length-cases are disjoint, so the sum rule applies</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="Multiplying would count triples of passwords. Use &quot;or&quot; to add and &quot;and&quot; to multiply."
+          data-explanation-wrong="Multiplying would count triples of passwords. Use &quot;or&quot; to add and &quot;and&quot; to multiply.">We should multiply them instead</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="The bijection rule isn't needed here. The issue is splitting into disjoint cases."
+          data-explanation-wrong="The bijection rule isn't needed here. The issue is splitting into disjoint cases.">Because of the bijection rule</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> f(x) = 1/x² is given the domain ℝ. What is it?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="0 has no output, so not every input has an arrow out."
+          data-explanation-wrong="0 has no output, so not every input has an arrow out.">A total function</button>
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Correct. Each input has at most one output, but 0 has none, so f is a function that isn't total."
+          data-explanation-wrong="Correct. Each input has at most one output, but 0 has none, so f is a function that isn't total.">A function that is not total</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="No input has two outputs, so it really is a function."
+          data-explanation-wrong="No input has two outputs, so it really is a function.">Not a function at all</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-03/day-15-relations-counting.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=gwOxD51n3nc" target="_blank" rel="noopener">Watch Lecture 15: Relations and Counting (MIT OCW)</a></p>
+  </div>
+</section>

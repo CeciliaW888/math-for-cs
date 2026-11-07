@@ -1,0 +1,200 @@
+<section class="module" id="module-7" data-day="7">
+  <div class="module-inner">
+    <h2>Day 7 · Recurrences</h2>
+    <p class="module-subtitle">Every recursive function hides an equation about its own running time. Today you learn to write that equation and solve it.</p>
+
+    <p>A <span class="term" data-definition="A sequence where each term is defined using earlier terms, for example T(n) = 2T(n-1) + 1.">recurrence</span> is a sequence defined by induction. It tells you how to get the next term, but what we want is a <span class="term" data-definition="A formula that gives the n-th term directly, without computing all the earlier ones.">closed form</span> you can evaluate in one shot.</p>
+
+    <figure class="diagram-container">
+      <img src="diagrams/07-recurrences.svg" alt="Merge sort recursion tree: one node of size n, two of size n/2, four of size n/4, down to n leaves of size 1, with about n work per level across log2 n levels" loading="lazy">
+      <figcaption>Each level of the merge sort tree does about n work, and there are only log₂ n levels, so the total is about n log₂ n.</figcaption>
+    </figure>
+
+    <h3>Towers of Hanoi in three moves</h3>
+    <p>The biggest disk must move at some point, and at that moment every smaller disk has to be parked on the spare peg. That single observation is the whole algorithm.</p>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <strong>Park the small stack</strong>
+          <p>Move disks 1 to n−1 from A to B. This is the same puzzle, one disk smaller: T(n−1) moves.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <strong>Move the giant</strong>
+          <p>Move disk n from A to C: exactly 1 move.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <strong>Restack on top</strong>
+          <p>Move disks 1 to n−1 from B to C: another T(n−1) moves. Total T(n) = 2T(n−1) + 1.</p>
+        </div>
+      </div>
+    </div>
+
+    <p>The terms 1, 3, 7, 15, 31 suggest T(n) = 2ⁿ − 1. This is <span class="term" data-definition="Spot a pattern in the first few terms, guess a formula, then prove the guess by induction.">guess and check</span>: the induction step is 2(2ⁿ⁻¹ − 1) + 1 = 2ⁿ − 1.</p>
+
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">hanoi.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python"><span class="code-keyword">def</span> <span class="code-function">hanoi</span>(n, src, via, dst, moves):
+    <span class="code-keyword">if</span> n == <span class="code-number">0</span>:
+        <span class="code-keyword">return</span>
+    <span class="code-function">hanoi</span>(n - <span class="code-number">1</span>, src, dst, via, moves)
+    moves.<span class="code-function">append</span>((n, src, dst))
+    <span class="code-function">hanoi</span>(n - <span class="code-number">1</span>, via, src, dst, moves)</code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">To solve the puzzle with n disks, given where they start, the spare peg, and the goal…</div>
+        <div class="translation-line">An empty stack needs no moves: this is the base case of the induction.</div>
+        <div class="translation-line">(Stop here.)</div>
+        <div class="translation-line">Trust the smaller puzzle to park n−1 disks on the spare peg. This trust is the inductive hypothesis.</div>
+        <div class="translation-line">Record the single move of the biggest disk.</div>
+        <div class="translation-line">Trust the smaller puzzle again to restack the n−1 disks onto the goal.</div>
+      </div>
+    </div>
+
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>Key Insight:</strong> Recursion is induction in disguise. A recursive call is not circular; it calls a smaller version you have already built and proven correct.
+      </div>
+    </div>
+
+    <h3>Merge sort and plug and chug</h3>
+    <p>Merge sort halves the list, sorts each half, then merges. Its worst-case comparisons obey M(n) = 2M(n/2) + (n − 1). Watch one pass of <span class="term" data-definition="Substitute a recurrence into itself repeatedly, keeping each level separate, until a pattern appears.">plug and chug</span>:</p>
+
+    <div class="flow-animation" data-steps='[
+      {"highlight": "flow-actor-1", "label": "Start: M(n) = (n-1) + 2M(n/2)", "packet": "1", "from": "flow-actor-1", "to": "flow-actor-2"},
+      {"highlight": "flow-actor-2", "label": "Expand once: (n-1) + (n-2) + 4M(n/4)", "packet": "2", "from": "flow-actor-2", "to": "flow-actor-3"},
+      {"highlight": "flow-actor-3", "label": "After t steps: sum of (n - 2^i) plus 2^t M(n/2^t)", "packet": "t", "from": "flow-actor-3", "to": "flow-actor-4"},
+      {"highlight": "flow-actor-4", "label": "Set n = 2^k, t = k: M(n) = n log2 n - n + 1", "packet": "✓", "from": "flow-actor-4", "to": "flow-actor-4"}
+    ]'>
+      <div class="flow-actors">
+        <div class="flow-actor" id="flow-actor-1">📝 Recurrence</div>
+        <div class="flow-actor" id="flow-actor-2">🔁 Expand</div>
+        <div class="flow-actor" id="flow-actor-3">🔍 Pattern</div>
+        <div class="flow-actor" id="flow-actor-4">🎯 Closed form</div>
+      </div>
+      <div class="flow-packet"></div>
+      <div class="flow-step-label"></div>
+      <div class="flow-controls">
+        <button class="flow-next-btn">Next Step</button>
+        <button class="flow-play-btn">Play All</button>
+        <button class="flow-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <h3>The master theorem: a tug of war</h3>
+    <p>For <span class="term" data-definition="Algorithms that split the input into smaller pieces, solve each recursively, then combine the answers.">divide-and-conquer</span> recurrences T(n) = a·T(n/b) + f(n), the <span class="term" data-definition="A rule that gives a Theta bound for T(n) = aT(n/b) + f(n) by comparing f(n) with n to the power log_b a.">master theorem</span> compares the work at the root, f(n), with the number of leaves, n^(log_b a).</p>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <strong>Leaves win</strong>
+          <p>f(n) is smaller than n^(log_b a): T(n) = Θ(n^(log_b a)).</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <strong>Every level ties</strong>
+          <p>f(n) = Θ(n^(log_b a)): multiply by the log n levels. Merge sort lives here: Θ(n log n).</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <strong>Root wins</strong>
+          <p>f(n) is bigger than n^(log_b a): T(n) = Θ(f(n)).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-content">
+        <strong>Not a magic wand:</strong> some recurrences fall in the gaps between the three cases. Check the conditions before you pattern-match.
+      </div>
+    </div>
+
+    <h3>Flip to review</h3>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Hanoi closed form</h4>
+          <p>T(n) = 2T(n−1) + 1, T(1) = 1. What is T(n)?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>2ⁿ − 1</h4>
+          <p>Guessed from 1, 3, 7, 15 and proven by induction. 64 disks take about 580 billion years.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Plug and chug tip</h4>
+          <p>Why not simplify while expanding?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Keep levels separate</h4>
+          <p>Writing (n−1) + (n−2) instead of 2n−3 keeps each level visible, so the pattern is easier to spot.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Why is Fibonacci exponential?</h4>
+          <p>Its recursive calls only subtract 1 or 2.</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>A deep, bushy tree</h4>
+          <p>Subtracting a constant gives about n levels, and the tree branches at every level, so it grows like 1.618ⁿ.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> A function makes two recursive calls on size n−1 and does constant extra work. Roughly how does its cost grow?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Linear growth would need only one call on n−1. Two calls double the work at every level." data-explanation-wrong="Linear growth would need only one call on n−1. Two calls double the work at every level.">Θ(n)</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="n log n comes from halving the input, as in merge sort. Here the input shrinks by only 1." data-explanation-wrong="n log n comes from halving the input, as in merge sort. Here the input shrinks by only 1.">Θ(n log n)</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. This is the Hanoi recurrence T(n) = 2T(n−1) + c, which grows like 2ⁿ." data-explanation-wrong="Right. This is the Hanoi recurrence T(n) = 2T(n−1) + c, which grows like 2ⁿ.">Θ(2ⁿ)</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> Which master theorem case applies to T(n) = 2T(n/2) + n?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Case 1 needs f(n) to be smaller than n^(log₂2) = n. Here f(n) = n is the same size." data-explanation-wrong="Case 1 needs f(n) to be smaller than n^(log₂2) = n. Here f(n) = n is the same size.">Case 1: leaves win</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes. f(n) = n matches n^(log₂2) = n, so every level ties and T(n) = Θ(n log n)." data-explanation-wrong="Yes. f(n) = n matches n^(log₂2) = n, so every level ties and T(n) = Θ(n log n).">Case 2: every level ties</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Case 3 needs f(n) to be bigger than n. It is the same size, not bigger." data-explanation-wrong="Case 3 needs f(n) to be bigger than n. It is the same size, not bigger.">Case 3: root wins</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> You guessed a closed form from the first ten terms of a recurrence. What should you do next?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-correct="More matching terms is good evidence, but no finite number of checks proves the formula for every n." data-explanation-wrong="More matching terms is good evidence, but no finite number of checks proves the formula for every n.">Check twenty more terms and call it proven</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Exactly. Guess and check means the check is an induction proof, which usually goes smoothly once you have the formula." data-explanation-wrong="Exactly. Guess and check means the check is an induction proof, which usually goes smoothly once you have the formula.">Prove it by induction using the recurrence</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="The master theorem gives only a Theta bound, and it applies only to divide-and-conquer recurrences." data-explanation-wrong="The master theorem gives only a Theta bound, and it applies only to divide-and-conquer recurrences.">Apply the master theorem to confirm it exactly</button>
+      </div>
+    </div>
+
+    <p class="module-links"><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-01/day-07-recurrences.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=PvuwfciiH2U" target="_blank" rel="noopener">Watch Lecture 7: Recurrences →</a></p>
+  </div>
+</section>

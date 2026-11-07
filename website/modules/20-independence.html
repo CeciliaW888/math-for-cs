@@ -1,0 +1,133 @@
+<section class="module" id="module-20" data-day="20">
+  <div class="module-inner">
+    <h2>Day 20: Independence</h2>
+    <p>Hash functions, noisy channels and randomized algorithms all quietly assume that some events are <em>independent</em>. Today we pin that word down, and then meet the birthday paradox, which decides how long a hash has to be.</p>
+
+    <h3>The bookmaker test</h3>
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>Picture a bookmaker taking bets on A.</strong> News arrives that B happened. If the odds on A don't move, B was irrelevant to A, and the two are <span class="term" data-definition="A is independent of B when Pr[A | B] = Pr[A], or Pr[B] = 0. Equivalently, Pr[A ∩ B] = Pr[A] · Pr[B].">independent</span>. In symbols, Pr[A | B] = Pr[A], or Pr[B] = 0.
+      </div>
+    </div>
+    <div class="step-cards">
+      <div class="step-card"><span class="step-num">✓</span><div class="step-body"><strong>Monty Hall: independent</strong><p>You pick door 1, and door 2 is opened and shown empty. Pr[door 1 has the prize | that reveal] = 1/3 = Pr[door 1 has the prize]. The reveal tells you nothing about your own door.</p></div></div>
+      <div class="step-card"><span class="step-num">✗</span><div class="step-body"><strong>Disjoint: dependent</strong><p>If B happened, then A certainly did not: Pr[A | B] = 0 ≠ Pr[A], unless one of the events has probability 0.</p></div></div>
+      <div class="step-card"><span class="step-num">✗</span><div class="step-body"><strong>Nested: dependent</strong><p>If B ⊆ A, then Pr[A | B] = 1, which differs from Pr[A] unless A is certain.</p></div></div>
+    </div>
+
+    <h3>Proof: the product rule is equivalent</h3>
+    <p><strong>Theorem:</strong> A is independent of B if and only if Pr[A ∩ B] = Pr[A] · Pr[B].</p>
+    <div class="step-cards">
+      <div class="step-card"><span class="step-num">1</span><div class="step-body"><strong>Case Pr[B] = 0</strong><p>A and B are independent by definition. By monotonicity, 0 ≤ Pr[A ∩ B] ≤ Pr[B] = 0, so both sides of the product rule equal 0.</p></div></div>
+      <div class="step-card"><span class="step-num">2</span><div class="step-body"><strong>Case Pr[B] ≠ 0</strong><p>Independence says Pr[A ∩ B] / Pr[B] = Pr[A]. Pr[B] is not 0, so we can multiply both sides by it.</p></div></div>
+      <div class="step-card"><span class="step-num">3</span><div class="step-body"><strong>Conclude</strong><p>Pr[A ∩ B] = Pr[A]·Pr[B], and every step reverses. The product form is symmetric, so independence is a symmetric relation.</p></div></div>
+    </div>
+
+    <h3>Pairwise is not mutual</h3>
+    <p><span class="term" data-definition="Every pair of events in the collection is independent.">Pairwise independence</span> checks only pairs. <span class="term" data-definition="Every sub-collection of the events satisfies the product rule: the probability that they all happen equals the product of their probabilities.">Mutual independence</span> demands the product rule for <em>every</em> sub-collection. The forensic claim that "9 markers at 10% each gives 1 in a billion" needs the mutual version.</p>
+    <figure class="diagram-container">
+      <img src="diagrams/20-independence.svg" alt="The eight outcomes of three coin flips, each labelled with which of the events A, B, C hold. Only HHH and TTT satisfy all three. Each pair of events has probability one quarter, but the triple also has probability one quarter instead of one eighth." loading="lazy">
+      <figcaption>Each pair of events overlaps on {HHH, TTT} with probability 1/4 = 1/2 · 1/2, but the triple also has probability 1/4, not 1/8.</figcaption>
+    </figure>
+
+    <h3>The birthday paradox</h3>
+    <p>The <span class="term" data-definition="With n random items in d slots, a collision becomes more likely than not once n is about 1.18 times the square root of d.">birthday paradox</span>: with 365 days, only 23 people give better-than-even odds of a shared birthday. Using 1 − x ≤ e<sup>−x</sup>, Pr[no match] ≤ e<sup>−n(n−1)/(2d)</sup>, so n ≈ √(2 ln 2 · d) ≈ 1.18√d.</p>
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">birthdays.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python"><span class="code-keyword">def</span> <span class="code-function">p_no_match</span>(n, d=<span class="code-number">365</span>):
+    p = <span class="code-number">1.0</span>
+    <span class="code-keyword">for</span> i <span class="code-keyword">in</span> <span class="code-function">range</span>(n):
+        p *= (d - i) / d
+    <span class="code-keyword">return</span> p
+
+exact = <span class="code-number">1</span> - p_no_match(<span class="code-number">23</span>)          <span class="code-comment"># 0.5072972</span>
+estimate = <span class="code-number">1</span> - math.<span class="code-function">exp</span>(-<span class="code-number">23</span> * <span class="code-number">22</span> / (<span class="code-number">2</span> * <span class="code-number">365</span>))  <span class="code-comment"># 0.5000018</span></code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">Compute the chance that n people all have different birthdays, assuming d equally likely days.</div>
+        <div class="translation-line">Start at certainty, then add people one at a time.</div>
+        <div class="translation-line">Person i must avoid the i days already taken. Birthdays are independent, so the factors multiply.</div>
+        <div class="translation-line">This is the generalized product rule from the counting unit, divided by d<sup>n</sup>.</div>
+        <div class="translation-line">Return the no-match probability.</div>
+        <div class="translation-line">With 23 people, a match is already slightly more likely than not.</div>
+        <div class="translation-line">The e<sup>−x</sup> shortcut lands very close, and always a little below the exact value.</div>
+      </div>
+    </div>
+    <div class="callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <div class="callout-content">
+        <strong>Why CS cares:</strong> collisions show up after about √d random items. A hash or signature space therefore has to be roughly the <em>square</em> of the number of files or messages you expect to handle. For 32-bit hashes, a collision becomes likely after only about 77,000 files.
+      </div>
+    </div>
+
+    <h3>Ten heads in a row: what next?</h3>
+    <div class="chat-window" id="chat-day20-gambler">
+      <div class="chat-messages">
+        <div class="chat-message" data-msg="1" data-sender="1" style="display:none;">Ten heads in a row! Tails is definitely due now.</div>
+        <div class="chat-message" data-msg="2" data-sender="2" style="display:none;">A fair coin has no memory. The flips are independent, so the next one is heads with probability 1/2.</div>
+        <div class="chat-message" data-msg="3" data-sender="4" style="display:none;">Hmm, maybe this coin is two-headed. Ten heads is a 1-in-1024 event for a fair coin.</div>
+        <div class="chat-message" data-msg="4" data-sender="3" style="display:none;">Law of total probability: Pr[H | H¹⁰] = 1·Pr[cheat | H¹⁰] + ½·Pr[fair | H¹⁰]. If cheating is possible, the answer is above 1/2.</div>
+        <div class="chat-message" data-msg="5" data-sender="2" style="display:none;">So the gambler is wrong both ways. Tails is never more likely than 1/2.</div>
+        <div class="chat-typing typing-indicator" style="display:none;"><span></span><span></span><span></span></div>
+      </div>
+      <div class="chat-controls">
+        <button class="chat-next-btn">Next →</button>
+        <button class="chat-all-btn">Show All</button>
+        <button class="chat-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <h3>Flip to review</h3>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front"><h4>Product rule test</h4><p>What single equation decides whether A and B are independent?</p><p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p></div>
+        <div class="flashcard-back"><h4>Pr[A ∩ B] = Pr[A]·Pr[B]</h4><p>It is symmetric and works even when Pr[B] = 0.</p><p style="font-size:0.8em">← Tap to flip →</p></div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front"><h4>Unfair coins</h4><p>When is "the two coins match" independent of "coin 1 is heads"?</p><p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p></div>
+        <div class="flashcard-back"><h4>q = ½ or p = 1</h4><p>The equation factors as (2q − 1)(p − 1) = 0. Fairness of coin 2 is what makes it work.</p><p style="font-size:0.8em">← Tap to flip →</p></div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front"><h4>Birthday rule of thumb</h4><p>How many random picks from d slots give even odds of a collision?</p><p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p></div>
+        <div class="flashcard-back"><h4>About 1.18√d</h4><p>That is 23 for d = 365, far fewer than the 366 the pigeonhole principle needs.</p><p style="font-size:0.8em">← Tap to flip →</p></div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> A and B are disjoint, and each has probability 0.3. Are they independent?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Good instinct that they don't overlap, but not overlapping is the opposite of independence: knowing B rules A out.">Yes, because they have nothing in common</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. Pr[A ∩ B] = 0, but Pr[A]·Pr[B] = 0.09. Learning that B happened tells you A didn't.">No, because Pr[A ∩ B] = 0 ≠ 0.09</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Independence is decided by the product rule, which these events fail. You don't need to know more.">It cannot be decided without more information</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> Three events are pairwise independent, each with probability 1/2. Can you conclude that Pr[all three] = 1/8?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="The three-coin example breaks this: each pair is fine, but Pr[A ∩ B ∩ C] = 1/4.">Yes, because pairwise independence lets you multiply</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="It isn't always 1/4 either. Pairwise independence simply doesn't determine the triple probability.">No, it is always 1/4</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Exactly. Multiplying all three needs mutual independence. The coins-match events A, B, C give 1/4 instead.">No. You need mutual independence for that</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> A system assigns random 16-bit IDs (65,536 values). Roughly how many IDs can it hand out before a duplicate becomes more likely than not?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="That is the pigeonhole guarantee, which is the worst case. Collisions become likely much sooner.">About 65,537</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Half the space is still far too many. Collisions grow with the square of n.">About 32,768</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes. 1.18 × √65,536 = 1.18 × 256 ≈ 300. That is the birthday paradox at work.">About 300</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-03/day-20-independence.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=qYia9FXN7Po" target="_blank" rel="noopener">Watch Lecture 20: Independence (MIT OpenCourseWare)</a></p>
+  </div>
+</section>

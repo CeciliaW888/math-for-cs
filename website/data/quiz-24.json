@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "Job run times R are never negative and average 4 minutes. Nothing else is known. What is the strongest valid statement about Pr[R ≥ 20 minutes]?",
+   "options": ["At most 1/5, by Markov", "At most 1/25, by Chebyshev", "Exponentially small, by Chernoff", "Nothing can be said without the full distribution"],
+   "answer": 0,
+   "explanation": "Markov needs only non-negativity and the mean: 4/20 = 1/5. Chebyshev needs the variance and Chernoff needs independent bounded pieces, neither of which we have."},
+  {"question": "Scores R lie in [40, 100] with mean 70. Which bound on Pr[R ≥ 90] is valid and the strongest?",
+   "options": ["70/90 ≈ 0.78, applying Markov to R directly", "30/50 = 0.6, applying Markov to R − 40", "20/90 ≈ 0.22, using 90 − 70", "1, since Markov does not apply"],
+   "answer": 1,
+   "explanation": "R − 40 is non-negative with mean 30, and R ≥ 90 means R − 40 ≥ 50, so the bound is 30/50 = 0.6. Using the tighter lower limit gives a stronger result than 70/90."},
+  {"question": "A random variable has mean 100 and standard deviation 10. What does Chebyshev say about the chance it lands outside the range 70 to 130?",
+   "options": ["It is at most 1/3", "It is about 0.3%, as for a normal curve", "It is at most 1/9", "It is at most 1/30"],
+   "answer": 2,
+   "explanation": "Landing outside 70 to 130 means being at least 30 = 3σ from the mean. Chebyshev gives Var/30² = 100/900 = 1/9. The 0.3% figure needs the much stronger assumption of a normal distribution."},
+  {"question": "Which situation is the best fit for the Chernoff bound?",
+   "options": ["The maximum of a few dependent measurements", "Any non-negative variable whose mean is known", "A single die roll", "The total number of failures among a million independent requests, each failing or not"],
+   "answer": 3,
+   "explanation": "Chernoff needs a sum of mutually independent pieces, each between 0 and 1. Independent failure indicators fit exactly, and the tail shrinks exponentially in the expected count."}
+]}

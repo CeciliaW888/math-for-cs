@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "Which pair is congruent modulo 5?",
+   "options": ["17 and 33", "17 and −3", "17 and 21", "17 and 5"],
+   "answer": 1,
+   "explanation": "17 − (−3) = 20, a multiple of 5, so 17 ≡ −3 (mod 5). Both leave remainder 2. The other differences, −16, −4 and 12, are not multiples of 5."},
+  {"question": "Why is it wrong to conclude x ≡ 1 (mod 6) from 3x ≡ 3 (mod 6)?",
+   "options": ["Because 3 is not prime", "Because congruences cannot be multiplied", "Because gcd(3, 6) = 3, so 3 has no inverse mod 6; for example x = 3 also works", "Because 6 is too small a modulus"],
+   "answer": 2,
+   "explanation": "Cancelling means multiplying by an inverse, and 3 has one mod 6 only if gcd(3, 6) = 1. It is 3, and indeed 3·3 = 9 ≡ 3 although 3 ≢ 1."},
+  {"question": "If a ≡ b (mod n), which statement is NOT guaranteed?",
+   "options": ["a + c ≡ b + c (mod n)", "a·c ≡ b·c (mod n)", "aᶜ ≡ bᶜ (mod n) for positive c", "cᵃ ≡ cᵇ (mod n)"],
+   "answer": 3,
+   "explanation": "Bases can be replaced but exponents cannot. For example 1 ≡ 6 (mod 5), but (−1)¹ = −1 and (−1)⁶ = 1 are not congruent mod 5."},
+  {"question": "Using Fermat's little theorem, what is 2¹⁰⁰ mod 11?",
+   "options": ["1", "2", "10", "100"],
+   "answer": 0,
+   "explanation": "11 is prime, so 2¹⁰ ≡ 1 (mod 11). Since 100 = 10·10, 2¹⁰⁰ = (2¹⁰)¹⁰ ≡ 1¹⁰ = 1."}
+]}

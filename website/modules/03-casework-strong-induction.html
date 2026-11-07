@@ -1,0 +1,163 @@
+<section class="module" id="module-3" data-day="3">
+  <div class="module-inner">
+    <h2>Day 3: Casework and Strong Induction</h2>
+    <p>Merge sort and quicksort split a problem into pieces of <em>unpredictable</em> size. To prove algorithms like these correct, you need two tools: splitting into cases, and an induction that can lean on <em>any</em> smaller case.</p>
+
+    <figure class="diagram-container">
+      <img src="diagrams/03-casework-strong-induction.svg" alt="Left: person P with solid friend lines to Q, R and S, branching into case 1A where two of them are friends and case 1B where all three are strangers. Right: a stack of n blocks splitting into stacks a and b, both smaller than n" loading="lazy">
+      <figcaption>Left: the case split in the six-people proof. Right: strong induction lets you assume the result for <em>both</em> smaller stacks, whatever their sizes.</figcaption>
+    </figure>
+
+    <h3>Proof by cases</h3>
+    <p>"C OR NOT C" is a <span class="term" data-definition="A statement that is always true, whatever the truth values of its parts. Example: C OR NOT C.">tautology</span>. So if P holds when C is true <em>and</em> when C is false, then P always holds. With more cases, you must also show they are <span class="term" data-definition="The cases together cover every possible situation, so no scenario slips through.">exhaustive</span>.</p>
+
+    <h3>Six people: 3 mutual friends or 3 mutual strangers</h3>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">0</span>
+        <div class="step-body">
+          <strong>Pick anyone, P</strong>
+          <p>P has 5 relationships. Each one is either friend or stranger, never both.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <strong>Case 1: P has at least 3 friends (Q, R, S)</strong>
+          <p>1A: If any two of Q, R, S are friends, those two plus P make a friend triangle. 1B: Otherwise, Q, R, S are mutual strangers.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <strong>Case 2: P has at most 2 friends</strong>
+          <p>Then P has at least 3 strangers. This is Case 1 with the words "friend" and "stranger" swapped.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">✓</span>
+        <div class="step-body">
+          <strong>Exhaustive</strong>
+          <p>The number of friends is either at least 3 or at most 2, so no situation is missed. This number, 6, is the <span class="term" data-definition="R(3,3) = 6: the fewest people that guarantees 3 mutual friends or 3 mutual strangers.">Ramsey number R(3,3)</span>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-content">
+        <strong>Missing cases sink proofs:</strong> Kempe's 1879 "proof" of the Four Color Theorem had a gap that went unnoticed for 11 years. Today the theorem's proof is fully machine-checked.
+      </div>
+    </div>
+
+    <h3>Strong induction: cooking from a stocked fridge</h3>
+    <p>Ordinary induction lets you use only yesterday's leftovers, P(n − 1). <span class="term" data-definition="To prove P(n), you may assume P(k) for every k smaller than n, not just k = n - 1. It is exactly as valid as ordinary induction.">Strong induction</span> lets you use any dish made so far: P(0), …, P(n − 1).</p>
+
+    <div class="chat-window" id="chat-day3-unstack">
+      <div class="chat-messages">
+        <div class="chat-message" data-msg="1" data-sender="1" style="display:none;">I have a stack of 5 blocks. Splitting a stack into a and b scores a × b points. How do I maximise my score?</div>
+        <div class="chat-message" data-msg="2" data-sender="2" style="display:none;">Split 2 + 3: 6 points. Then 1 + 2 + 1 more. Total 10.</div>
+        <div class="chat-message" data-msg="3" data-sender="1" style="display:none;">Peel one block at a time: 4 + 3 + 2 + 1 = 10. Same total?!</div>
+        <div class="chat-message" data-msg="4" data-sender="4" style="display:none;">Guess: every strategy scores n(n − 1)/2. The first split makes stacks a and b, both smaller than n, of any size.</div>
+        <div class="chat-message" data-msg="5" data-sender="3" style="display:none;">Strong induction says those stacks score a(a − 1)/2 and b(b − 1)/2. Add ab, and the algebra gives n(n − 1)/2. Proved.</div>
+        <div class="chat-typing typing-indicator" style="display:none;">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="chat-controls">
+        <button class="chat-next-btn">Next →</button>
+        <button class="chat-all-btn">Show All</button>
+        <button class="chat-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>Key Insight:</strong> Reach for strong induction whenever size n breaks into smaller pieces whose sizes you can't predict. Each piece only needs to be <em>smaller</em> than n.
+      </div>
+    </div>
+
+    <h3>A strong-induction proof, run as code</h3>
+    <p>A <span class="term" data-definition="An ordering of all teams in a round-robin tournament where each team beat the next one in line.">beat ordering</span> always exists in a round-robin tournament. The proof splits the teams around a pivot, much like quicksort.</p>
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">beat_order.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python"><span class="code-keyword">def</span> <span class="code-function">beat_order</span>(teams, beats):
+    <span class="code-keyword">if</span> <span class="code-function">len</span>(teams) &lt;= <span class="code-number">1</span>:
+        <span class="code-keyword">return</span> <span class="code-function">list</span>(teams)
+    t, rest = teams[<span class="code-number">0</span>], teams[<span class="code-number">1</span>:]
+    winners = [s <span class="code-keyword">for</span> s <span class="code-keyword">in</span> rest <span class="code-keyword">if</span> (s, t) <span class="code-keyword">in</span> beats]
+    losers = [s <span class="code-keyword">for</span> s <span class="code-keyword">in</span> rest <span class="code-keyword">if</span> (t, s) <span class="code-keyword">in</span> beats]
+    <span class="code-keyword">return</span> <span class="code-function">beat_order</span>(winners, beats) + [t] + <span class="code-function">beat_order</span>(losers, beats)</code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">Goal: line up the teams so each one beat the next</div>
+        <div class="translation-line">Base cases: zero or one team is already a valid line-up</div>
+        <div class="translation-line">(nothing to check)</div>
+        <div class="translation-line">Choose a pivot team T. Every other team either beat T or lost to T</div>
+        <div class="translation-line">W = the teams that beat T, fewer than n of them</div>
+        <div class="translation-line">L = the teams T beat, also fewer than n</div>
+        <div class="translation-line">Strong induction orders W and L. The last team in W beat T, and T beat the first team in L</div>
+      </div>
+    </div>
+
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Why is strong induction valid?</h4>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>It follows from ordinary induction</h4>
+          <p>Use ordinary induction on Q(n) = "P(k) holds for all k &lt; n." Each step adds P(n) to the pile.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Two jobs in every proof by cases</h4>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Each case, plus coverage</h4>
+          <p>Prove the claim in every case, <em>and</em> show the cases are exhaustive.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> To prove (A → B) OR (B → C) is always true, which variable is best to split on?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Splitting on A only settles the first half. You would need more cases to handle B → C.">A</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes. B appears in both halves. If B is true, A → B holds. If B is false, B → C holds.">B</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Splitting on C only touches the second half, so the cases do not close neatly.">C</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> Why can't ordinary induction prove the unstacking formula directly?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="The base case n = 1 is easy: 0 points, matching 1 × 0 / 2.">The base case is false</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="The algebra works fine. The problem is which earlier cases you are allowed to assume.">The algebra does not simplify</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. The first split can make stacks of any sizes a and b below n, so you need P(a) and P(b), not just P(n - 1).">The first split can create stacks of any smaller size</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> In the six-people proof, why does Case 2 (at most 2 friends) need no new argument?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Exactly. At most 2 friends out of 5 means at least 3 strangers, and the Case 1 argument works with the two words swapped.">P then has at least 3 strangers, so it mirrors Case 1</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Case 2 can definitely happen. Imagine a very shy P.">Case 2 is impossible</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="A computer check works, but the symmetry argument proves it without any brute force.">A computer must check it</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-01/day-03-casework-strong-induction.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=GOgA8JGUiwI" target="_blank" rel="noopener">Watch Lecture 3: Casework and Strong Induction (MIT OpenCourseWare)</a></p>
+  </div>
+</section>

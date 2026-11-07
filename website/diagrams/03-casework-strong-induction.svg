@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <rect x="0" y="0" width="800" height="450" fill="#ffffff"/>
+  <text x="400" y="40" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#2d2d2d">Split into Cases, Lean on Smaller Cases</text>
+
+  <g font-family="Georgia, serif" fill="#2d2d2d">
+    <!-- Left panel: friends and strangers -->
+    <text x="210" y="78" text-anchor="middle" font-size="17" fill="#7a8fa6">Case 1: P has at least 3 friends</text>
+
+    <!-- edges from P -->
+    <line x1="80" y1="175" x2="250" y2="105" stroke="#c4825a" stroke-width="2"/>
+    <line x1="80" y1="175" x2="270" y2="165" stroke="#c4825a" stroke-width="2"/>
+    <line x1="80" y1="175" x2="250" y2="225" stroke="#c4825a" stroke-width="2"/>
+    <line x1="80" y1="175" x2="150" y2="265" stroke="#7a8fa6" stroke-width="1.5" stroke-dasharray="6 5"/>
+    <line x1="80" y1="175" x2="60" y2="270" stroke="#7a8fa6" stroke-width="1.5" stroke-dasharray="6 5"/>
+
+    <circle cx="80" cy="175" r="20" fill="#fbe9dd" stroke="#c4825a" stroke-width="2"/>
+    <text x="80" y="181" text-anchor="middle" font-size="17">P</text>
+    <circle cx="250" cy="105" r="18" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="250" y="111" text-anchor="middle" font-size="16">Q</text>
+    <circle cx="270" cy="165" r="18" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="270" y="171" text-anchor="middle" font-size="16">R</text>
+    <circle cx="250" cy="225" r="18" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="250" y="231" text-anchor="middle" font-size="16">S</text>
+    <circle cx="150" cy="265" r="14" fill="#ffffff" stroke="#7a8fa6" stroke-width="1.5"/>
+    <circle cx="60" cy="270" r="14" fill="#ffffff" stroke="#7a8fa6" stroke-width="1.5"/>
+
+    <!-- legend -->
+    <line x1="300" y1="100" x2="330" y2="100" stroke="#c4825a" stroke-width="2"/>
+    <text x="337" y="105" font-size="14">friends</text>
+    <line x1="300" y1="124" x2="330" y2="124" stroke="#7a8fa6" stroke-width="1.5" stroke-dasharray="6 5"/>
+    <text x="337" y="129" font-size="14">strangers</text>
+
+    <!-- sub-cases -->
+    <rect x="30" y="305" width="170" height="110" rx="10" fill="#fbe9dd" fill-opacity="0.5" stroke="#c4825a" stroke-width="1.5"/>
+    <text x="115" y="330" text-anchor="middle" font-size="16">1A: some pair of</text>
+    <text x="115" y="350" text-anchor="middle" font-size="16">Q, R, S are friends</text>
+    <text x="115" y="378" text-anchor="middle" font-size="15" fill="#c4825a">→ friend triangle</text>
+    <text x="115" y="398" text-anchor="middle" font-size="15" fill="#c4825a">with P</text>
+
+    <rect x="220" y="305" width="190" height="110" rx="10" fill="#f5f0eb" stroke="#7a8fa6" stroke-width="1.5"/>
+    <text x="315" y="330" text-anchor="middle" font-size="16">1B: no pair of</text>
+    <text x="315" y="350" text-anchor="middle" font-size="16">Q, R, S are friends</text>
+    <text x="315" y="378" text-anchor="middle" font-size="15" fill="#7a8fa6">→ Q, R, S are</text>
+    <text x="315" y="398" text-anchor="middle" font-size="15" fill="#7a8fa6">mutual strangers</text>
+
+    <text x="220" y="438" text-anchor="middle" font-size="14" fill="#7a8fa6">Case 2 (at most 2 friends) is the mirror image.</text>
+  </g>
+
+  <line x1="450" y1="70" x2="450" y2="420" stroke="#e0d6cc" stroke-width="1.5"/>
+
+  <g font-family="Georgia, serif" fill="#2d2d2d">
+    <!-- Right panel: unstacking -->
+    <text x="625" y="78" text-anchor="middle" font-size="17" fill="#7a8fa6">Strong induction: split n = a + b</text>
+
+    <!-- stack of n (5 blocks) -->
+    <rect x="600" y="95"  width="50" height="24" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <rect x="600" y="119" width="50" height="24" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <rect x="600" y="143" width="50" height="24" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <rect x="600" y="167" width="50" height="24" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <rect x="600" y="191" width="50" height="24" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="670" y="160" font-size="18">n</text>
+
+    <line x1="610" y1="225" x2="545" y2="265" stroke="#2d2d2d" stroke-width="1.5"/>
+    <line x1="640" y1="225" x2="705" y2="265" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="625" y="258" text-anchor="middle" font-size="15" fill="#c4825a">+ a·b points</text>
+
+    <!-- stack a (2) -->
+    <rect x="515" y="300" width="50" height="24" fill="#fbe9dd" stroke="#c4825a" stroke-width="1.5"/>
+    <rect x="515" y="324" width="50" height="24" fill="#fbe9dd" stroke="#c4825a" stroke-width="1.5"/>
+    <text x="540" y="372" text-anchor="middle" font-size="18">a &lt; n</text>
+
+    <!-- stack b (3) -->
+    <rect x="685" y="276" width="50" height="24" fill="#fbe9dd" stroke="#c4825a" stroke-width="1.5"/>
+    <rect x="685" y="300" width="50" height="24" fill="#fbe9dd" stroke="#c4825a" stroke-width="1.5"/>
+    <rect x="685" y="324" width="50" height="24" fill="#fbe9dd" stroke="#c4825a" stroke-width="1.5"/>
+    <text x="710" y="372" text-anchor="middle" font-size="18">b &lt; n</text>
+
+    <text x="625" y="405" text-anchor="middle" font-size="15">Assume P(a) and P(b), for any sizes.</text>
+    <text x="625" y="430" text-anchor="middle" font-size="14" fill="#6b8f71">ab + a(a−1)/2 + b(b−1)/2 = n(n−1)/2</text>
+  </g>
+</svg>

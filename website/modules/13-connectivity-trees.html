@@ -1,0 +1,186 @@
+<section class="module" id="module-13" data-day="13">
+  <div class="module-inner">
+    <h2>Day 13 · Connectivity and Trees</h2>
+    <p>Can you get from here to there? Can you trace every street exactly once? Today's tools answer both questions by counting, so you never have to search through routes.</p>
+
+    <figure class="diagram-container">
+      <img src="diagrams/13-connectivity-trees.svg" alt="Left: the house graph with degrees 2, 4, 4, 3, 3; the two odd corners are where an Euler walk starts and ends. Right: a tree losing a leaf and staying a tree." loading="lazy">
+      <figcaption>Odd-degree vertices decide where an Euler walk begins and ends. Removing a leaf keeps a tree a tree.</figcaption>
+    </figure>
+
+    <h3>Walks, paths, cycles</h3>
+    <p>A <span class="term" data-definition="A sequence of vertices where each consecutive pair is an edge. Repeats allowed. Length = number of edges.">walk</span> may wander and repeat itself. A <span class="term" data-definition="A walk that never repeats a vertex or an edge.">path</span> never repeats anything. A <span class="term" data-definition="A closed walk of positive length with no repeated vertices or edges except that it ends where it starts. In simple graphs, length is at least 3.">cycle</span> is a closed loop with no repeats, apart from ending where it began.</p>
+
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <strong>Take a shortest walk from u to v</strong>
+          <p>At least one walk exists, and lengths can't go below 0, so a shortest one exists.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <strong>Suppose it repeats a vertex</strong>
+          <p>Say vi = vj with i &lt; j. The stretch between those two visits is a detour.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <strong>Cut the detour out</strong>
+          <p>Jumping from vi straight to vj+1 gives a shorter walk between the same endpoints. That contradicts "shortest".</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">4</span>
+        <div class="step-body">
+          <strong>So the shortest walk is a path</strong>
+          <p>For questions about <span class="term" data-definition="Two vertices are connected if some walk joins them. The relation is reflexive, symmetric and transitive.">connectivity</span>, "walk" and "path" are interchangeable.</p>
+        </div>
+      </div>
+    </div>
+
+    <p>Connectivity splits any graph into <span class="term" data-definition="A maximal group of vertices that can all reach each other, together with the edges among them. Every vertex is in exactly one.">connected components</span>. The 8-puzzle has two of them, one for even and one for odd permutations.</p>
+
+    <h3>Euler: every edge exactly once</h3>
+    <p>Picture a snowplow that must clear every street exactly once and come back to the depot. That route is an <span class="term" data-definition="A closed walk that uses every edge of the graph exactly once.">Euler tour</span>. If it doesn't need to return, the route is an <span class="term" data-definition="A walk that uses every edge exactly once; it need not end where it started.">Euler walk</span>.</p>
+
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>The theorem:</strong> a graph has an Euler tour exactly when it is connected and every <span class="term" data-definition="The number of edges touching a vertex.">degree</span> is even. Each pass through a vertex uses one edge in and one edge out, so the edges get used up in pairs.
+      </div>
+    </div>
+
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">euler_status.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python">
+<span class="code-keyword">from</span> collections <span class="code-keyword">import</span> Counter
+<span class="code-keyword">def</span> <span class="code-function">euler_status</span>(edges):
+    deg = <span class="code-function">Counter</span>(v <span class="code-keyword">for</span> e <span class="code-keyword">in</span> edges <span class="code-keyword">for</span> v <span class="code-keyword">in</span> e)
+    odd = <span class="code-function">sorted</span>(v <span class="code-keyword">for</span> v <span class="code-keyword">in</span> deg <span class="code-keyword">if</span> deg[v] % <span class="code-number">2</span> == <span class="code-number">1</span>)
+    <span class="code-comment"># assumes the graph is connected; the theorem needs that too</span>
+    <span class="code-keyword">if not</span> odd:
+        <span class="code-keyword">return</span> <span class="code-string">"Euler tour"</span>
+    <span class="code-keyword">if</span> <span class="code-function">len</span>(odd) == <span class="code-number">2</span>:
+        <span class="code-keyword">return</span> <span class="code-string">f"Euler walk {odd[0]} to {odd[1]}"</span>
+    <span class="code-keyword">return</span> <span class="code-string">f"neither ({len(odd)} odd vertices)"</span>
+        </code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">We only need a counting tool. No route search is required.</div>
+        <div class="translation-line">Each edge adds 1 to the degree of both of its endpoints.</div>
+        <div class="translation-line">The odd-degree vertices are the only thing that matters.</div>
+        <div class="translation-line">Connectivity is the theorem's other condition, so check it separately.</div>
+        <div class="translation-line">No odd vertices means you can loop back to the start.</div>
+        <div class="translation-line">Exactly two odd vertices are the forced start and finish.</div>
+        <div class="translation-line">Four or more odd vertices means no single stroke can cover every edge.</div>
+      </div>
+    </div>
+
+    <div class="callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <div class="callout-content">
+        <strong>Reduction trick:</strong> to prove the Euler <em>walk</em> case, add a new vertex x joined to the two odd vertices. Every degree is now even, so an Euler tour exists. Delete x again and the tour becomes the walk. You've turned a new problem into one you've already solved.
+      </div>
+    </div>
+
+    <h3>Trees and leaf pruning</h3>
+    <p>A <span class="term" data-definition="A connected graph with no cycles.">tree</span> is connected and has no cycles. Every tree with at least two vertices has at least two <span class="term" data-definition="A vertex of degree 1.">leaves</span>, namely the two ends of a longest path. Snip off a leaf and what remains is still a tree, so <span class="term" data-definition="Proving P(n) for all n by proving a base case and showing P(n-1) implies P(n).">induction</span> on trees almost always starts by pruning a leaf.</p>
+
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Euler walk (open)</h4>
+          <p>When does a connected graph have one?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Exactly two odd vertices</h4>
+          <p>The walk must start at one of them and end at the other.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Tree edge count</h4>
+          <p>A tree has n vertices. How many edges?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>n − 1</h4>
+          <p>Proof: prune a leaf, apply induction, then add the edge back.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Is u → v → u a cycle?</h4>
+          <p>In a simple undirected graph.</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>No</h4>
+          <p>It reuses the edge {u, v}. Cycles in simple graphs have length at least 3.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> A connected graph has degrees 2, 2, 3, 3, 4, 4. What can you trace?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="Close, but a tour needs every degree to be even, and two vertices here have degree 3."
+          data-explanation-wrong="Close, but a tour needs every degree to be even, and two vertices here have degree 3.">An Euler tour</button>
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Right. Exactly two odd vertices means an open Euler walk exists, running from one degree-3 vertex to the other."
+          data-explanation-wrong="Right. Exactly two odd vertices means an open Euler walk exists, running from one degree-3 vertex to the other.">An Euler walk between the two degree-3 vertices</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="Having two odd vertices is allowed. Only more than two rules out a walk."
+          data-explanation-wrong="Having two odd vertices is allowed. Only more than two rules out a walk.">Neither</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> In the tree induction, why remove a leaf instead of an arbitrary vertex?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="Leaves aren't faster to find. The real issue is what's left after the deletion."
+          data-explanation-wrong="Leaves aren't faster to find. The real issue is what's left after the deletion.">Leaves are quicker to locate</button>
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Exactly. Removing a leaf leaves a tree, so the induction hypothesis applies. Removing a middle vertex can leave a forest."
+          data-explanation-wrong="Exactly. Removing a leaf leaves a tree, so the induction hypothesis applies. Removing a middle vertex can leave a forest.">What remains is guaranteed to still be a tree</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="Any vertex removal can lose edges. The point is that a leaf takes exactly one edge with it and leaves the rest connected."
+          data-explanation-wrong="Any vertex removal can lose edges. The point is that a leaf takes exactly one edge with it and leaves the rest connected.">Removing a leaf deletes no edges</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> Why does a <em>shortest</em> walk from u to v never repeat a vertex?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Yes. A repeat creates a removable loop, and cutting it out gives a shorter walk, which is a contradiction."
+          data-explanation-wrong="Yes. A repeat creates a removable loop, and cutting it out gives a shorter walk, which is a contradiction.">A repeat would create a loop you could cut out to get a shorter walk</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="Walks are allowed to repeat by definition. Minimality is what rules repeats out."
+          data-explanation-wrong="Walks are allowed to repeat by definition. Minimality is what rules repeats out.">Walks are not allowed to repeat vertices</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="This works in any graph, not just trees, because it relies only on minimality."
+          data-explanation-wrong="This works in any graph, not just trees, because it relies only on minimality.">Because the graph is a tree</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-02/day-13-connectivity-trees.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=BVpOkj7W_xE" target="_blank" rel="noopener">Watch Lecture 13: Connectivity and Trees (MIT OCW)</a></p>
+  </div>
+</section>

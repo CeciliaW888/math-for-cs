@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "There are 13 hearts and 12 face cards in a deck. Why is the number of cards that are hearts or face cards 22, not 25?",
+   "options": ["Because face cards are not counted as hearts", "Because the jack, queen and king of hearts were counted twice, so we subtract the 3-card overlap", "Because the ace of hearts is excluded", "Because we must subtract the 4 kings"],
+   "answer": 1,
+   "explanation": "Two-set inclusion-exclusion: |A ∪ B| = |A| + |B| − |A ∩ B| = 13 + 12 − 3 = 22."},
+  {"question": "In three-set inclusion-exclusion, after adding |A|+|B|+|C| and subtracting the three pairwise intersections, how many times has an element in all three sets been counted?",
+   "options": ["Once, so we are done", "Twice, so subtract the triple intersection", "Zero times, so the triple intersection must be added back", "Three times, so subtract it twice"],
+   "answer": 2,
+   "explanation": "It is added 3 times (once per set) and subtracted 3 times (once per pair), leaving 0. Adding |A∩B∩C| restores it to exactly 1."},
+  {"question": "Boston has about 650,000 residents and no one has more than 200,000 hairs. What does the generalized pigeonhole principle let you conclude?",
+   "options": ["Someone in Boston has exactly the same number of hairs as you", "Every hair count from 1 to 200,000 is shared by at least 3 people", "Exactly 4 people share each hair count", "At least 4 Bostonians have exactly the same number of hairs"],
+   "answer": 3,
+   "explanation": "650,000 > 3 × 200,000, so some hair count (box) holds at least 3 + 1 = 4 people. The principle says nothing about specific people or about every box."},
+  {"question": "To prove C(n, k) = C(n−1, k−1) + C(n−1, k) by double counting, which split of the binary strings of length n with k ones works?",
+   "options": ["Split by whether the last bit is 1 or 0", "Split by whether the first two bits are equal", "Split by whether k is even or odd", "Split by whether the string is a palindrome"],
+   "answer": 0,
+   "explanation": "Ending in 1 leaves k−1 ones in n−1 spots, C(n−1, k−1). Ending in 0 leaves k ones in n−1 spots, C(n−1, k). The cases are disjoint and exhaustive."}
+]}

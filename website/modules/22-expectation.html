@@ -1,0 +1,177 @@
+<section class="module" id="module-22" data-day="22">
+  <div class="module-inner">
+    <h2>Day 22: Expectation</h2>
+    <p>How many tries until a randomized algorithm succeeds? How many hearts land in a random hand? A <span class="term" data-definition="A function that turns each outcome of an experiment into a number.">random variable</span> holds a whole table of answers. The <span class="term" data-definition="The probability-weighted average of a random variable: the sum over outcomes of Pr[outcome] times the value.">expectation</span> boils it down to one number: the long-run average.</p>
+
+    <div class="pattern-cards">
+      <div class="pattern-card">
+        <strong>Definition</strong>
+        <p>E[X] = Σ Pr[ω] · X(ω). A fair die gives (1+…+6)/6 = 3.5, a value the die never shows.</p>
+      </div>
+      <div class="pattern-card">
+        <strong>Indicator shortcut</strong>
+        <p>For an <span class="term" data-definition="A random variable that is 1 when an event happens and 0 when it does not.">indicator variable</span> I of event A, the zeros vanish: E[I] = Pr[A].</p>
+      </div>
+      <div class="pattern-card">
+        <strong>Tail sums</strong>
+        <p>For natural-number X: E[X] = Σ Pr[X &gt; i]. Perfect for waiting times.</p>
+      </div>
+    </div>
+
+    <h3>Mean time to failure</h3>
+    <p>Flip a coin with Pr[heads] = p until the first head. The waiting time F follows the <span class="term" data-definition="The distribution of how many independent trials you wait for the first success.">geometric distribution</span>.</p>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <strong>Spot the tail event</strong>
+          <p>F &gt; i means the first i flips were all tails.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <strong>Use independence</strong>
+          <p>Pr[F &gt; i] = (1 − p)^i by the product rule.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <strong>Sum the geometric series</strong>
+          <p>Σ (1 − p)^i = 1 / (1 − (1 − p)) = <strong>1/p</strong>. A fair coin needs 2 flips on average.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Linearity: the superpower</h3>
+    <p><span class="term" data-definition="The rule E[X + Y] = E[X] + E[Y] and E[cX] = cE[X]. It holds with no independence assumption.">Linearity of expectation</span> says E[X + Y] = E[X] + E[Y], always. Split a hard count into simple 0/1 pieces, then add.</p>
+
+    <figure class="diagram-container">
+      <img src="diagrams/22-expectation.svg" alt="A box labelled X, the number of kids who get their own phone, splits into n indicator boxes each with expectation 1 over n; they add back up to an expectation of 1." loading="lazy">
+      <figcaption>Decompose into indicators, take each expectation, add. The phone problem gives exactly 1 for any n.</figcaption>
+    </figure>
+
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>Key Insight:</strong> The product rule needs independence and the sum rule needs disjoint events. Linearity needs neither. Two dice glued together still average 7.
+      </div>
+    </div>
+
+    <div class="chat-window" id="chat-day22">
+      <div class="chat-messages">
+        <div class="chat-message" data-msg="1" data-sender="1" style="display:none;">The school returned 30 phones at random. How many kids get their own phone back?</div>
+        <div class="chat-message" data-msg="2" data-sender="2" style="display:none;">Counting all 30! shuffles sounds awful. Let me give each kid an indicator instead.</div>
+        <div class="chat-message" data-msg="3" data-sender="4" style="display:none;">Kid k matches in (n−1)! of the n! shuffles, so the chance is 1/n.</div>
+        <div class="chat-message" data-msg="4" data-sender="3" style="display:none;">Thirty indicators, each 1/30. Linearity says the expected count is exactly 1.</div>
+        <div class="chat-message" data-msg="5" data-sender="5" style="display:none;">Fun twist: spin the phones on a Lazy Susan and the average is still 1, but now it is all or nothing.</div>
+        <div class="chat-typing typing-indicator" style="display:none;"><span></span><span></span><span></span></div>
+      </div>
+      <div class="chat-controls">
+        <button class="chat-next-btn">Next →</button>
+        <button class="chat-all-btn">Show All</button>
+        <button class="chat-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <h3>Code ↔ English</h3>
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">hearts.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python"><span class="code-keyword">from</span> fractions <span class="code-keyword">import</span> Fraction
+<span class="code-keyword">from</span> itertools <span class="code-keyword">import</span> combinations
+deck = [(r, s) <span class="code-keyword">for</span> r <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">13</span>) <span class="code-keyword">for</span> s <span class="code-keyword">in</span> <span class="code-string">"SHDC"</span>]
+hands = <span class="code-function">list</span>(<span class="code-function">combinations</span>(deck, <span class="code-number">3</span>))
+total = <span class="code-function">sum</span>(<span class="code-function">sum</span>(c[<span class="code-number">1</span>] == <span class="code-string">"H"</span> <span class="code-keyword">for</span> c <span class="code-keyword">in</span> h) <span class="code-keyword">for</span> h <span class="code-keyword">in</span> hands)
+<span class="code-function">print</span>(<span class="code-function">Fraction</span>(total, <span class="code-function">len</span>(hands)))  <span class="code-comment"># 3/4</span>
+<span class="code-function">print</span>(<span class="code-number">13</span> * <span class="code-function">Fraction</span>(<span class="code-number">3</span>, <span class="code-number">52</span>))         <span class="code-comment"># 3/4</span></code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">Use exact fractions so the two answers can be compared with no rounding.</div>
+        <div class="translation-line">We need every possible 3-card hand to apply the definition directly.</div>
+        <div class="translation-line">Build a 52-card deck as (rank, suit) pairs.</div>
+        <div class="translation-line">All 22,100 hands are equally likely, which is what makes a plain average correct.</div>
+        <div class="translation-line">Count hearts in every hand and add them up: the slow, brute-force road.</div>
+        <div class="translation-line">Divide by the number of hands to get the expectation: 3/4.</div>
+        <div class="translation-line">The fast road: 13 heart indicators, each with probability 3/52. Same 3/4.</div>
+      </div>
+    </div>
+
+    <div class="callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-content">
+        <strong>Common mistake:</strong> Do not write "X = Σ Pr[event]". X is a random variable and a probability is a number. Write X = Σ Iₖ first, then take expectations.
+      </div>
+    </div>
+
+    <h3>Flashcards</h3>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>E[indicator] = ?</h4>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Pr[event]</h4>
+          <p>The 0 outcomes contribute nothing, so only the probability of a 1 remains.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Mean time to failure</h4>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>1/p</h4>
+          <p>Expected number of independent trials, each succeeding with probability p, until the first success.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>What does linearity require?</h4>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Only a shared sample space</h4>
+          <p>No independence, no disjointness. E[X + Y] = E[X] + E[Y] always.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> A randomized test reports a result with probability 1/4 per run and says "unknown" otherwise. Runs are independent. How many runs do you expect until you get a result?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Mean time to failure is 1/p = 4." data-explanation-wrong="That is p itself, not the waiting time. The waiting time is 1/p = 4.">1/4</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. Mean time to failure is 1/p, and 1/(1/4) = 4." data-explanation-wrong="Mean time to failure is 1/p = 4.">4</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Mean time to failure is 1/p = 4." data-explanation-wrong="Close, but 3 counts only the failures before the success. Including the success itself, you expect 4 runs.">3</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> Ten coins are glued so they always land the same way, each showing heads with probability 0.3. What is the expected number of heads?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Linearity gives 10 × 0.3 = 3." data-explanation-wrong="Linearity does not need independence, so it still applies. Each coin contributes 0.3, giving 3.">It cannot be computed without independence</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Linearity gives 10 × 0.3 = 3." data-explanation-wrong="0.3 is the chance of one coin being heads. You want the expected count across 10 coins: 3.">0.3</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes. Linearity gives 10 × 0.3 = 3 even though the coins are completely dependent. The outcomes are only 0 or 10, but the average is 3." data-explanation-wrong="Linearity gives 10 × 0.3 = 3.">3</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> Shuffled phones and Lazy Susan phones both average 1 match. What does that show?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Exactly. Same mean, very different spreads. That gap is what variance measures tomorrow." data-explanation-wrong="Same mean, very different spreads: expectation does not capture the whole distribution.">Expectation alone does not describe a distribution</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Same mean, very different spreads." data-explanation-wrong="They are not the same: the Lazy Susan gives 0 or n matches, while the shuffle often gives 1 or 2.">The two procedures behave identically</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Same mean, very different spreads." data-explanation-wrong="Linearity applied correctly in both cases. Each person has a 1/n chance of a match either way.">Linearity gave a wrong answer for one of them</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-04/day-22-expectation.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=h6fbQD8NKKo" target="_blank" rel="noopener">Watch Lecture 22 on YouTube →</a></p>
+  </div>
+</section>

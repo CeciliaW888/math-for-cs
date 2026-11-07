@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "You want to show two vertices are connected, and a proof would be easier with a path than a walk. Is it safe to assume the connection is a path?",
+   "options": ["No, a walk may exist when no path does", "Yes, a shortest walk between them never repeats a vertex, so it is a path", "Only if the graph is a tree", "Only if the walk has length at most 3"],
+   "answer": 1,
+   "explanation": "If a shortest walk repeated a vertex, you could cut out the loop and get a shorter walk. So a shortest walk is always a path, in any graph."},
+  {"question": "A connected graph has vertex degrees 2, 3, 3, 4, 4, 2. What is the best you can do?",
+   "options": ["An Euler tour that returns to the start", "Nothing: no Euler walk exists", "An Euler walk that starts at one degree-3 vertex and ends at the other", "An Euler walk that can start anywhere"],
+   "answer": 2,
+   "explanation": "There are exactly two odd-degree vertices, so an open Euler walk exists. It is forced to begin at one odd vertex and finish at the other."},
+  {"question": "How does the lecture prove the open Euler walk theorem without redoing the long tour proof?",
+   "options": ["By strong induction on the number of edges", "By checking every possible walk", "By deleting one of the odd vertices", "By adding a new vertex joined to both odd vertices, taking an Euler tour, then removing the new vertex"],
+   "answer": 3,
+   "explanation": "This is a reduction. The extra vertex makes every degree even, the tour theorem applies, and deleting the extra vertex turns the tour into the desired walk."},
+  {"question": "A connected graph has 10 vertices and 10 edges. What can you conclude?",
+   "options": ["It contains at least one cycle", "It is a tree", "It has at least two leaves", "It has an Euler tour"],
+   "answer": 0,
+   "explanation": "A tree on 10 vertices has exactly 9 edges. Being connected with 10 edges means the graph is not a tree, so it must have a cycle. Nothing forces leaves or even degrees."}
+]}

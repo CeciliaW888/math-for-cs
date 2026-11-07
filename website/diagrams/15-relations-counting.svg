@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-labelledby="t15 d15">
+  <title id="t15">Counting arrows: relation types and the sizes they force</title>
+  <desc id="d15">Four arrow diagrams from a set A on the left to a set B on the right: a total injection, which forces size of A at most size of B; a surjective function, which forces size of A at least size of B; a bijection, which forces equal sizes; and a relation that is not a function. Below, the bijection between bit string 010011 and subset 2, 5, 6.</desc>
+  <defs><marker id="a15" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#2d2d2d" stroke-width="1.5"/></marker>
+  <marker id="c15" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#c4825a" stroke-width="1.8"/></marker></defs>
+  <rect width="800" height="450" fill="#ffffff"/>
+  <text x="400" y="36" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#2d2d2d">Count the arrows, compare the sets</text>
+  <rect x="20" y="60" width="176" height="250" rx="12" fill="#f5f0eb" stroke="#e6ddd3" stroke-width="1.5"/>
+  <text x="108" y="86" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="16" fill="#2d2d2d">Total injection</text>
+  <text x="65" y="112" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="14" fill="#7a8fa6">A</text>
+  <text x="151" y="112" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="14" fill="#7a8fa6">B</text>
+  <line x1="74" y1="150" x2="140" y2="130" stroke="#2d2d2d" stroke-width="1.8" marker-end="url(#a15)"/>
+  <line x1="74" y1="190" x2="140" y2="210" stroke="#2d2d2d" stroke-width="1.8" marker-end="url(#a15)"/>
+  <line x1="74" y1="230" x2="140" y2="250" stroke="#2d2d2d" stroke-width="1.8" marker-end="url(#a15)"/>
+  <circle cx="65" cy="150" r="8" fill="#ffffff" stroke="#6b8f71" stroke-width="2"/>
+  <circle cx="65" cy="190" r="8" fill="#ffffff" stroke="#6b8f71" stroke-width="2"/>
+  <circle cx="65" cy="230" r="8" fill="#ffffff" stroke="#6b8f71" stroke-width="2"/>
+  <circle cx="151" cy="130" r="8" fill="#ffffff" stroke="#7a8fa6" stroke-width="2"/>
+  <circle cx="151" cy="170" r="8" fill="#ffffff" stroke="#7a8fa6" stroke-width="2"/>
+  <circle cx="151" cy="210" r="8" fill="#ffffff" stroke="#7a8fa6" stroke-width="2"/>
+  <circle cx="151" cy="250" r="8" fill="#ffffff" stroke="#7a8fa6" stroke-width="2"/>
+  <text x="108" y="292" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="16" fill="#2d2d2d">|A| ≤ |B|</text>
+  <rect x="212" y="60" width="176" height="250" rx="12" fill="#f5f0eb" stroke="#e6ddd3" stroke-width="1.5"/>
+  <text x="300" y="86" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="16" fill="#2d2d2d">Surjective function</text>
+  <text x="257" y="112" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="14" fill="#7a8fa6">A</text>
+  <text x="343" y="112" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="14" fill="#7a8fa6">B</text>
+  <line x1="266" y1="130" x2="332" y2="150" stroke="#2d2d2d" stroke-width="1.8" marker-end="url(#a15)"/>
+  <line x1="266" y1="170" x2="332" y2="150" stroke="#2d2d2d" stroke-width="1.8" marker-end="url(#a15)"/>
+  <line x1="266" y1="210" x2="332" y2="190" stroke="#2d2d2d" stroke-width="1.8" marker-end="url(#a15)"/>
+  <line x1="266" y1="250" x2="332" y2="230" stroke="#2d2d2d" stroke-width="1.8" marker-end="url(#a15)"/>
+  <circle cx="257" cy="130" r="8" fill="#ffffff" stroke="#6b8f71" stroke-width="2"/>
+  <circle cx="257" cy="170" r="8" fill="#ffffff" stroke="#6b8f71" stroke-width="2"/>
+  <circle cx="257" cy="210" r="8" fill="#ffffff" stroke="#6b8f71" stroke-width="2"/>
+  <circle cx="257" cy="250" r="8" fill="#ffffff" stroke="#6b8f71" stroke-width="2"/>
+  <circle cx="343" cy="150" r="8" fill="#ffffff" stroke="#7a8fa6" stroke-width="2"/>
+  <circle cx="343" cy="190" r="8" fill="#ffffff" stroke="#7a8fa6" stroke-width="2"/>
+  <circle cx="343" cy="230" r="8" fill="#ffffff" stroke="#7a8fa6" stroke-width="2"/>
+  <text x="300" y="292" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="16" fill="#2d2d2d">|A| ≥ |B|</text>
+  <rect x="404" y="60" width="176" height="250" rx="12" fill="#fbe9dd" stroke="#c4825a" stroke-width="1.5"/>
+  <text x="492" y="86" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="16" fill="#2d2d2d">Bijection</text>
+  <text x="449" y="112" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="14" fill="#7a8fa6">A</text>
+  <text x="535" y="112" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="14" fill="#7a8fa6">B</text>
+  <line x1="458" y1="150" x2="524" y2="190" stroke="#c4825a" stroke-width="1.8" marker-end="url(#c15)"/>
+  <line x1="458" y1="190" x2="524" y2="150" stroke="#c4825a" stroke-width="1.8" marker-end="url(#c15)"/>
+  <line x1="458" y1="230" x2="524" y2="230" stroke="#c4825a" stroke-width="1.8" marker-end="url(#c15)"/>
+  <circle cx="449" cy="150" r="8" fill="#ffffff" stroke="#6b8f71" stroke-width="2"/>
+  <circle cx="449" cy="190" r="8" fill="#ffffff" stroke="#6b8f71" stroke-width="2"/>
+  <circle cx="449" cy="230" r="8" fill="#ffffff" stroke="#6b8f71" stroke-width="2"/>
+  <circle cx="535" cy="150" r="8" fill="#ffffff" stroke="#7a8fa6" stroke-width="2"/>
+  <circle cx="535" cy="190" r="8" fill="#ffffff" stroke="#7a8fa6" stroke-width="2"/>
+  <circle cx="535" cy="230" r="8" fill="#ffffff" stroke="#7a8fa6" stroke-width="2"/>
+  <text x="492" y="292" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="16" fill="#c4825a">|A| = |B|</text>
+  <rect x="596" y="60" width="176" height="250" rx="12" fill="#f5f0eb" stroke="#e6ddd3" stroke-width="1.5"/>
+  <text x="684" y="86" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="16" fill="#2d2d2d">Not a function</text>
+  <text x="641" y="112" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="14" fill="#7a8fa6">A</text>
+  <text x="727" y="112" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="14" fill="#7a8fa6">B</text>
+  <line x1="650" y1="150" x2="716" y2="150" stroke="#c4825a" stroke-width="1.8" marker-end="url(#c15)"/>
+  <line x1="650" y1="150" x2="716" y2="190" stroke="#c4825a" stroke-width="1.8" marker-end="url(#c15)"/>
+  <line x1="650" y1="190" x2="716" y2="190" stroke="#2d2d2d" stroke-width="1.8" marker-end="url(#a15)"/>
+  <line x1="650" y1="230" x2="716" y2="230" stroke="#2d2d2d" stroke-width="1.8" marker-end="url(#a15)"/>
+  <circle cx="641" cy="150" r="8" fill="#ffffff" stroke="#6b8f71" stroke-width="2"/>
+  <circle cx="641" cy="190" r="8" fill="#ffffff" stroke="#6b8f71" stroke-width="2"/>
+  <circle cx="641" cy="230" r="8" fill="#ffffff" stroke="#6b8f71" stroke-width="2"/>
+  <circle cx="727" cy="150" r="8" fill="#ffffff" stroke="#7a8fa6" stroke-width="2"/>
+  <circle cx="727" cy="190" r="8" fill="#ffffff" stroke="#7a8fa6" stroke-width="2"/>
+  <circle cx="727" cy="230" r="8" fill="#ffffff" stroke="#7a8fa6" stroke-width="2"/>
+  <text x="684" y="292" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="16" fill="#2d2d2d">a has 2 arrows out</text>
+  <text x="400" y="346" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="15" fill="#2d2d2d">Bijection rule in action: each subset of {1,…,6} matches exactly one bit string</text>
+  <rect x="190" y="364" width="28" height="34" rx="6" fill="#ffffff" stroke="#2d2d2d" stroke-width="1.5"/>
+  <text x="204" y="387" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="16" fill="#2d2d2d">0</text>
+  <text x="204" y="418" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="14" fill="#7a8fa6">1</text>
+  <rect x="224" y="364" width="28" height="34" rx="6" fill="#fbe9dd" stroke="#c4825a" stroke-width="1.5"/>
+  <text x="238" y="387" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="16" fill="#2d2d2d">1</text>
+  <text x="238" y="418" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="14" fill="#7a8fa6">2</text>
+  <rect x="258" y="364" width="28" height="34" rx="6" fill="#ffffff" stroke="#2d2d2d" stroke-width="1.5"/>
+  <text x="272" y="387" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="16" fill="#2d2d2d">0</text>
+  <text x="272" y="418" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="14" fill="#7a8fa6">3</text>
+  <rect x="292" y="364" width="28" height="34" rx="6" fill="#ffffff" stroke="#2d2d2d" stroke-width="1.5"/>
+  <text x="306" y="387" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="16" fill="#2d2d2d">0</text>
+  <text x="306" y="418" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="14" fill="#7a8fa6">4</text>
+  <rect x="326" y="364" width="28" height="34" rx="6" fill="#fbe9dd" stroke="#c4825a" stroke-width="1.5"/>
+  <text x="340" y="387" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="16" fill="#2d2d2d">1</text>
+  <text x="340" y="418" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="14" fill="#7a8fa6">5</text>
+  <rect x="360" y="364" width="28" height="34" rx="6" fill="#fbe9dd" stroke="#c4825a" stroke-width="1.5"/>
+  <text x="374" y="387" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="16" fill="#2d2d2d">1</text>
+  <text x="374" y="418" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="14" fill="#7a8fa6">6</text>
+  <text x="420" y="388" font-family="Georgia, serif" font-size="22" fill="#c4825a">⟷</text>
+  <text x="462" y="388" font-family="Geist, system-ui, sans-serif" font-size="18" fill="#2d2d2d">{2, 5, 6}</text>
+  <text x="400" y="442" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="14" fill="#6b8f71">2 choices per element × 6 elements = 2⁶ = 64 subsets</text>
+</svg>

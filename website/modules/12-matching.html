@@ -1,0 +1,190 @@
+<section class="module" id="module-12" data-day="12">
+  <div class="module-inner">
+    <h2>Day 12: Matching</h2>
+    <p>Every March, thousands of new doctors in the US find out on the same day where they'll train. The assignment comes from a 1962 algorithm that you can prove correct today.</p>
+
+    <h3>Three kinds of "big"</h3>
+    <p>A <span class="term" data-definition="A set of edges in which no two edges share an endpoint, so every vertex is paired with at most one other.">matching</span> pairs vertices off, with nobody in two pairs.</p>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body"><strong>Maximal (local)</strong><p>You can't add even one more edge. In the path a–b–c–d, the middle edge {b, c} alone is maximal.</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body"><strong>Maximum (global)</strong><p>No matching anywhere has more edges. {a, b} and {c, d} together beat {b, c}.</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body"><strong>Perfect</strong><p>Every vertex gets a partner. In a <span class="term" data-definition="A graph whose vertices split into two sides, with every edge going between the sides.">bipartite</span> graph, that requires both sides to be the same size.</p></div>
+      </div>
+    </div>
+
+    <div class="callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <div class="callout-content">
+        <strong>Good news:</strong> Unlike coloring, matching problems are computationally easy. There are efficient algorithms for maximum matchings and for minimum-weight perfect matchings.
+      </div>
+    </div>
+
+    <h3>Rogue pairs and stability</h3>
+    <p>Applicants and evaluators each rank everyone on the other side. Two people who are not matched together form a <span class="term" data-definition="A pair who are not matched to each other but who each prefer the other to their assigned partner, so they would abandon the plan.">rogue pair</span> if each prefers the other to their assigned partner. A <span class="term" data-definition="A perfect matching with no rogue pairs.">stable matching</span> has none.</p>
+
+    <figure class="diagram-container">
+      <img src="diagrams/12-matching.svg" alt="Two matchings of A, B with C, D: A–D and B–C has the rogue pair A and C, while A–C and B–D is stable. Below, the four steps of the Gale-Shapley loop." loading="lazy">
+      <figcaption>The same preferences, two matchings: one has a rogue pair and the other is stable.</figcaption>
+    </figure>
+
+    <h3>Watch Gale-Shapley run</h3>
+    <p>Preferences: Ana ranks Mercy, City, Bay. Ben ranks Mercy, Bay, City. Cy ranks City, Mercy, Bay. Mercy ranks Cy, Ben, Ana. City ranks Ana, Cy, Ben. Bay ranks Ana, Ben, Cy.</p>
+    <div class="chat-window" id="chat-day12">
+      <div class="chat-messages">
+        <div class="chat-message" data-msg="1" data-sender="1" style="display:none;">Day 1: Ana and Ben both apply to Mercy, and Cy applies to City 🏥</div>
+        <div class="chat-message" data-msg="2" data-sender="2" style="display:none;">Mercy: I prefer Ben, so I'll hold Ben. Sorry Ana, that's a permanent no ❌</div>
+        <div class="chat-message" data-msg="3" data-sender="1" style="display:none;">Day 2: Ana moves down her list to City.</div>
+        <div class="chat-message" data-msg="4" data-sender="2" style="display:none;">City: Ana beats Cy for me. I'll hold Ana. Cy, you're out ❌</div>
+        <div class="chat-message" data-msg="5" data-sender="1" style="display:none;">Day 3: Cy moves on to Mercy.</div>
+        <div class="chat-message" data-msg="6" data-sender="2" style="display:none;">Mercy: Cy is my top choice! Trading up. Ben, you're out ❌</div>
+        <div class="chat-message" data-msg="7" data-sender="1" style="display:none;">Day 4: Ben applies to Bay, his second choice.</div>
+        <div class="chat-message" data-msg="8" data-sender="4" style="display:none;">Nobody was rejected today, so the algorithm stops 🛑</div>
+        <div class="chat-message" data-msg="9" data-sender="3" style="display:none;">Final matching: Mercy–Cy, City–Ana, Bay–Ben. It's stable ✅</div>
+        <div class="chat-typing typing-indicator" style="display:none;"><span></span><span></span><span></span></div>
+      </div>
+      <div class="chat-controls">
+        <button class="chat-next-btn">Next →</button>
+        <button class="chat-all-btn">Show All</button>
+        <button class="chat-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">gale_shapley.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python"><span class="code-keyword">for</span> a <span class="code-keyword">in</span> app_prefs:
+    <span class="code-keyword">if</span> a <span class="code-keyword">not in</span> held.values():
+        offers.<span class="code-function">setdefault</span>(app_prefs[a][nxt[a]], []).<span class="code-function">append</span>(a)
+<span class="code-keyword">if</span> <span class="code-keyword">not</span> offers:
+    <span class="code-keyword">return</span> held
+<span class="code-keyword">for</span> e, suitors <span class="code-keyword">in</span> offers.<span class="code-function">items</span>():
+    pool = suitors + ([held[e]] <span class="code-keyword">if</span> e <span class="code-keyword">in</span> held <span class="code-keyword">else</span> [])
+    held[e] = <span class="code-function">min</span>(pool, key=eval_prefs[e].index)
+    <span class="code-keyword">for</span> a <span class="code-keyword">in</span> pool:
+        <span class="code-keyword">if</span> a != held[e]: nxt[a] += <span class="code-number">1</span></code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">Each morning, look at every applicant.</div>
+        <div class="translation-line">Applicants already being held stay put. Only the others go out.</div>
+        <div class="translation-line">Each one applies to the best evaluator who hasn't rejected them yet.</div>
+        <div class="translation-line">No new offers means nobody was rejected yesterday, so we're done.</div>
+        <div class="translation-line">Return the final pairs.</div>
+        <div class="translation-line">Each afternoon, every evaluator looks at the people in front of them.</div>
+        <div class="translation-line">That includes the person they were already holding.</div>
+        <div class="translation-line">Keep the favourite. An evaluator never trades down.</div>
+        <div class="translation-line">Everyone else is rejected for good.</div>
+        <div class="translation-line">Each rejected applicant moves one step down their list.</div>
+      </div>
+    </div>
+
+    <h3>Why the result is always stable</h3>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body"><strong>It stops</strong><p>Every day except the last adds a rejection, and at most n² rejections are possible.</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body"><strong>Everyone is paired</strong><p>If A were rejected by all n evaluators, all n would end holding someone better than A. But only n − 1 other applicants exist.</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body"><strong>E rejected A</strong><p>E ends with someone better than A, so E won't defect.</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">4</span>
+        <div class="step-body"><strong>A never reached E</strong><p>A stopped higher up their own list, so A won't defect. No rogue pairs can exist.</p></div>
+      </div>
+    </div>
+
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>Key Insight:</strong> The proposing side wins. Every applicant gets their best <span class="term" data-definition="Someone you are paired with in at least one stable matching.">feasible partner</span>, and every evaluator gets their worst, all at once. Swap the roles and you usually get a different stable matching.
+      </div>
+    </div>
+
+    <h3>Flip to review</h3>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Maximal vs maximum</h4>
+          <p>What's the difference?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Local vs global</h4>
+          <p>Maximal: no single edge can be added. Maximum: no bigger matching exists anywhere. Every maximum matching is maximal, but not the other way round.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Rogue pair</h4>
+          <p>When are E and A rogue?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Mutual preference</h4>
+          <p>They aren't matched together, but each prefers the other to their assigned partner.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Key invariant</h4>
+          <p>What does an evaluator know after rejecting A?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Always someone better</h4>
+          <p>From then on, they hold a candidate they prefer to A, because evaluators never trade down.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> You built a matching by adding edges until none fit. Is it the largest possible?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Good instinct, but stuck is not the same as biggest. In the path a–b–c–d, picking {b, c} first leaves you stuck at size 1, while size 2 is possible.">Yes, because no edge can be added</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. You have a maximal matching. Maximum is a global claim and needs a separate argument.">Not necessarily. It's maximal, which may not be maximum</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="A perfect matching covers every vertex, and adding edges until stuck does not guarantee that.">Yes, and it's also perfect</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> Hospitals run Gale-Shapley as the proposers instead of the doctors. What changes?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Gale-Shapley always produces a stable matching, whichever side proposes.">The result may be unstable</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Often there are several stable matchings, and each direction lands on a different extreme.">Nothing: the result is always identical</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes. The proposing side gets its best feasible partners and the other side its worst, so hospitals would gain and doctors would lose.">Hospitals get their best feasible partners and doctors their worst</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> In the final matching, applicant A never approached evaluator E. Why can't (E, A) be rogue?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Exactly. Applicants go down their lists in order, so A ended with someone ranked above E.">A stopped higher up their list, so A prefers their partner to E</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="We know nothing about how E ranks A here. The argument comes from A's side instead.">E must rank A last</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Rogue pairs are defined by preferences, not by whether two people met during the algorithm.">People who never met can't be rogue by definition</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-02/day-12-matching.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=CEd313PPKXQ" target="_blank" rel="noopener">Watch Lecture 12: Matching (MIT OpenCourseWare)</a></p>
+  </div>
+</section>

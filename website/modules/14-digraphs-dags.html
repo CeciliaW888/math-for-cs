@@ -1,0 +1,173 @@
+<section class="module" id="module-14" data-day="14">
+  <div class="module-inner">
+    <h2>Day 14 · Digraphs and DAGs</h2>
+    <p>Build systems, course prerequisites, and spreadsheet formulas all form one-way dependency graphs. Today's maths answers two questions about them: in what order can you do the tasks, and how fast can a team finish them?</p>
+
+    <h3>Arrows change everything</h3>
+    <p>In a <span class="term" data-definition="A directed graph: edges are ordered pairs (u, v), drawn as arrows. Loops and opposite pairs of arrows are allowed.">digraph</span>, every vertex has an <span class="term" data-definition="The number of arrows pointing into a vertex.">in-degree</span> and an <span class="term" data-definition="The number of arrows leaving a vertex.">out-degree</span>, and Σ in-degree = Σ out-degree = |E|. Reachability is no longer symmetric, so we group vertices into <span class="term" data-definition="A maximal set of vertices that can all reach each other along the arrows.">strongly connected components</span>. Shrinking each one to a dot gives the <span class="term" data-definition="The graph with one vertex per strongly connected component and an arrow between components whenever the original graph has one. It is always acyclic.">condensation graph</span>, which never contains a cycle.</p>
+
+    <div class="callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <div class="callout-content">
+        <strong>Euler, directed:</strong> a digraph has an Euler tour exactly when it is strongly connected and every vertex has in-degree = out-degree. The undirected even-degree rule becomes "whatever comes in must go out".
+      </div>
+    </div>
+
+    <h3>Getting dressed is a DAG</h3>
+    <p>A <span class="term" data-definition="Directed acyclic graph: a digraph with no directed cycles. It is the natural model for precedence constraints.">DAG</span> models precedence constraints. A <span class="term" data-definition="An ordering of all vertices in which each vertex appears before every vertex it can reach.">topological order</span> lists every task before anything that depends on it. The recipe is simple: repeatedly do a <span class="term" data-definition="A vertex with in-degree 0, so nothing has to happen before it.">source</span> and cross it off.</p>
+
+    <div class="flow-animation" data-steps='[
+      {"highlight": "flow-actor-1", "label": "Time 0: all four sources (both socks, pants, shirt) go at once", "packet": "🧦", "from": "flow-actor-1", "to": "flow-actor-2"},
+      {"highlight": "flow-actor-2", "label": "Time 1: shoes, belt and jacket now have no unfinished prerequisites", "packet": "👞", "from": "flow-actor-2", "to": "flow-actor-3"},
+      {"highlight": "flow-actor-3", "label": "Time 2: scarf and hat, both waiting only on the jacket", "packet": "🧣", "from": "flow-actor-3", "to": "flow-actor-4"},
+      {"highlight": "flow-actor-4", "label": "Time 3: the coat, last link of the longest chain shirt to jacket to scarf to coat", "packet": "🧥", "from": "flow-actor-3", "to": "flow-actor-4"}
+    ]'>
+      <div class="flow-actors">
+        <div class="flow-actor" id="flow-actor-1">Round 0 · sources</div>
+        <div class="flow-actor" id="flow-actor-2">Round 1</div>
+        <div class="flow-actor" id="flow-actor-3">Round 2</div>
+        <div class="flow-actor" id="flow-actor-4">Round 3 · coat</div>
+      </div>
+      <div class="flow-packet"></div>
+      <div class="flow-step-label"></div>
+      <div class="flow-controls">
+        <button class="flow-next-btn">Next Step</button>
+        <button class="flow-play-btn">Play All</button>
+        <button class="flow-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <figure class="diagram-container">
+      <img src="diagrams/14-digraphs-dags.svg" alt="Eleven clothing tasks laid out in four columns by depth, with the longest path shirt, jacket, scarf, coat highlighted." loading="lazy">
+      <figcaption>Scheduling each task at its depth gives the fastest possible parallel plan. Four rounds match the four vertices on the longest path.</figcaption>
+    </figure>
+
+    <h3>The parallel speed limit</h3>
+    <p>Picture a holiday dinner with plenty of cooks. Many dishes can cook side by side, but the gravy still has to wait for the roast. A schedule's <span class="term" data-definition="The number of distinct time steps a parallel schedule uses.">span</span> can never be smaller than the number of vertices on a longest path, and scheduling each vertex at its <span class="term" data-definition="The length of the longest path that ends at a vertex. Sources have depth 0.">depth</span> achieves exactly that number.</p>
+
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">schedule.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python">
+preds = {t: [u <span class="code-keyword">for</span> u, v <span class="code-keyword">in</span> edges <span class="code-keyword">if</span> v == t] <span class="code-keyword">for</span> t <span class="code-keyword">in</span> tasks}
+depth = {}
+<span class="code-keyword">def</span> <span class="code-function">get_depth</span>(v):
+    <span class="code-comment"># longest path ending at v; sources get 0</span>
+    <span class="code-keyword">if</span> v <span class="code-keyword">not in</span> depth:
+        depth[v] = <span class="code-function">max</span>((<span class="code-function">get_depth</span>(u) + <span class="code-number">1</span> <span class="code-keyword">for</span> u <span class="code-keyword">in</span> preds[v]), default=<span class="code-number">0</span>)
+    <span class="code-keyword">return</span> depth[v]
+rounds = {}
+<span class="code-keyword">for</span> t <span class="code-keyword">in</span> tasks:
+    rounds.<span class="code-function">setdefault</span>(<span class="code-function">get_depth</span>(t), []).<span class="code-function">append</span>(t)
+        </code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">For each task, list the tasks that must come directly before it.</div>
+        <div class="translation-line">Remember depths once computed so no work is repeated.</div>
+        <div class="translation-line">A task can start only after its deepest prerequisite finishes.</div>
+        <div class="translation-line">With no prerequisites, start at time 0. Otherwise go one step after the latest prerequisite.</div>
+        <div class="translation-line">Group tasks by their depth. Each group is one parallel round.</div>
+        <div class="translation-line">On the dressing graph this prints four rounds, the length of the longest path.</div>
+      </div>
+    </div>
+
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>Chains vs antichains:</strong> the tasks in a single round form an <span class="term" data-definition="A set of vertices where no vertex can reach another, so they can all run at the same time.">antichain</span>. The fewest antichains needed to cover a DAG equals the size of its largest <span class="term" data-definition="A set of vertices that are all comparable: for each pair, one reaches the other.">chain</span>. So the longest chain of dependencies, not the total amount of work, decides the finish time.
+      </div>
+    </div>
+
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Every DAG has…</h4>
+          <p>What two special vertices, and why?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>A source and a sink</h4>
+          <p>They are the ends of a longest path. An extra arrow at either end would create a cycle or a longer path.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Minimum span</h4>
+          <p>With unlimited workers, how many rounds?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Vertices on a longest path</h4>
+          <p>Count vertices, not edges. Scheduling each task at its depth achieves it.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Condensation graph</h4>
+          <p>Why is it always a DAG?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Cycles would merge SCCs</h4>
+          <p>A cycle through several components would make them mutually reachable, which means they would really be one component.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> Your build tool reports a dependency cycle. What can you conclude?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="Parallelism can't help. Every task on the cycle waits on another task on the cycle."
+          data-explanation-wrong="Parallelism can't help. Every task on the cycle waits on another task on the cycle.">More parallel workers would fix it</button>
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Right. Topological orders exist exactly for DAGs. A cycle means no task on it can ever go first."
+          data-explanation-wrong="Right. Topological orders exist exactly for DAGs. A cycle means no task on it can ever go first.">No valid build order exists until the cycle is broken</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="Order doesn't help with a cycle. Every possible ordering breaks at least one constraint."
+          data-explanation-wrong="Order doesn't help with a cycle. Every possible ordering breaks at least one constraint.">Any order works if you start with a source</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> A DAG has 20 tasks, and its longest path has 5 edges. With unlimited workers, what is the minimum span?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="Close, but the span counts the vertices on the path, which is one more than its edges."
+          data-explanation-wrong="Close, but the span counts the vertices on the path, which is one more than its edges.">5</button>
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Yes. A path with 5 edges has 6 vertices, and those must run one per round."
+          data-explanation-wrong="Yes. A path with 5 edges has 6 vertices, and those must run one per round.">6</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="20 is the single-worker time. Unlimited workers can overlap independent tasks."
+          data-explanation-wrong="20 is the single-worker time. Unlimited workers can overlap independent tasks.">20</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> In a digraph, u reaches v. What must be true?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="That holds in undirected graphs, but arrows may only go one way."
+          data-explanation-wrong="That holds in undirected graphs, but arrows may only go one way.">v reaches u</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="They are strongly connected only if v also reaches u."
+          data-explanation-wrong="They are strongly connected only if v also reaches u.">u and v are in the same SCC</button>
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Correct. As before, cutting out any loop turns a walk into a path."
+          data-explanation-wrong="Correct. As before, cutting out any loop turns a walk into a path.">There is a path from u to v</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-02/day-14-digraphs-dags.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=E33i67e_X9Q" target="_blank" rel="noopener">Watch Lecture 14: Digraphs and DAGs (MIT OCW)</a></p>
+  </div>
+</section>

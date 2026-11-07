@@ -1,0 +1,175 @@
+<section class="module" id="module-9" data-day="9">
+  <div class="module-inner">
+    <h2>Day 9 · Modular Arithmetic</h2>
+    <p class="module-subtitle">Clocks, calendars, last digits, and hash tables all forget whole multiples and keep only the remainder. Today that habit becomes an arithmetic system.</p>
+
+    <p>We write a <span class="term" data-definition="a is congruent to b modulo n when n divides a − b. Equivalently, a and b leave the same remainder when divided by n.">≡ b (mod n)</span> when n divides a − b. So 17 ≡ 12 ≡ 2 (mod 5). Each integer belongs to exactly one <span class="term" data-definition="The set of all integers that share a remainder mod n. Mod 5 there are five classes, one for each remainder 0 to 4.">congruence class</span>, named by its <span class="term" data-definition="rem(a, n): the remainder of a divided by n, always between 0 and n − 1 in this course.">remainder</span>.</p>
+
+    <figure class="diagram-container">
+      <img src="diagrams/09-modular-arithmetic.svg" alt="Five circles labelled 0 to 4 on a loop, each with sample members of its congruence class mod 5, beside a panel listing inverse pairs mod 5: 1 times 1, 2 times 3, and 4 times 4" loading="lazy">
+      <figcaption>Mod 5, every integer lands on one of five spots. Whole laps of 5 vanish, which is why you can reduce at any step.</figcaption>
+    </figure>
+
+    <div class="callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-content">
+        <strong>Notation trap:</strong> “a = b mod n” could mean the relation a ≡ b (mod n) or the function a = rem(b, n). And in code, Python gives <code>-7 % 5 == 3</code> while C and JavaScript give −2.
+      </div>
+    </div>
+
+    <h3>Reduce early, reduce often</h3>
+    <p>If a ≡ b, you may swap a for b inside any sum, difference, product, or base of a power. Watch the lecture's big example collapse:</p>
+
+    <div class="flow-animation" data-steps='[
+      {"highlight": "flow-actor-1", "label": "Goal: 11335^11111 times (6 + 7799^5000), remainder mod 100", "packet": "🔢", "from": "flow-actor-1", "to": "flow-actor-2"},
+      {"highlight": "flow-actor-2", "label": "Swap bases: 11335 is 35 and 7799 is -1 (mod 100)", "packet": "✂️", "from": "flow-actor-2", "to": "flow-actor-3"},
+      {"highlight": "flow-actor-3", "label": "(-1)^5000 = 1, so the bracket is 7. Odd powers of 35 above 1 are 75", "packet": "🔁", "from": "flow-actor-3", "to": "flow-actor-4"},
+      {"highlight": "flow-actor-4", "label": "75 times 7 = 525, which leaves remainder 25", "packet": "✅", "from": "flow-actor-4", "to": "flow-actor-4"}
+    ]'>
+      <div class="flow-actors">
+        <div class="flow-actor" id="flow-actor-1">🧮 Giant number</div>
+        <div class="flow-actor" id="flow-actor-2">✂️ Reduce bases</div>
+        <div class="flow-actor" id="flow-actor-3">🔁 Spot cycles</div>
+        <div class="flow-actor" id="flow-actor-4">🎯 Answer: 25</div>
+      </div>
+      <div class="flow-packet"></div>
+      <div class="flow-step-label"></div>
+      <div class="flow-controls">
+        <button class="flow-next-btn">Next Step</button>
+        <button class="flow-play-btn">Play All</button>
+        <button class="flow-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>Bases yes, exponents no:</strong> 1 ≡ 6 (mod 5), but (−1)¹ = −1 while (−1)⁶ = 1. You cannot reduce an exponent mod n.
+      </div>
+    </div>
+
+    <h3>Division means multiplying by an inverse</h3>
+    <p>Mod 6, 3x ≡ 3 has the solution x = 3, so you cannot just cancel the 3s. Cancelling needs a <span class="term" data-definition="A number a⁻¹ with a · a⁻¹ ≡ 1 (mod n). It exists exactly when gcd(a, n) = 1.">multiplicative inverse</span>, which exists exactly when a and n are <span class="term" data-definition="Two integers are coprime (relatively prime) when their greatest common divisor is 1.">coprime</span>.</p>
+
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">inverse.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python"><span class="code-keyword">from</span> math <span class="code-keyword">import</span> gcd
+
+<span class="code-keyword">if</span> <span class="code-function">gcd</span>(<span class="code-number">7</span>, <span class="code-number">30</span>) == <span class="code-number">1</span>:
+    inv = <span class="code-function">pow</span>(<span class="code-number">7</span>, -<span class="code-number">1</span>, <span class="code-number">30</span>)
+    x = <span class="code-number">14</span> * inv % <span class="code-number">30</span>
+    <span class="code-function">print</span>(inv, x)  <span class="code-comment"># 13 2</span></code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">We need gcd from the standard library.</div>
+        <div class="translation-line">&nbsp;</div>
+        <div class="translation-line">Dividing by 7 mod 30 is only legal if 7 and 30 share no factor.</div>
+        <div class="translation-line">Find 7⁻¹: Python runs the Pulverizer and returns 13, since 7 · 13 = 91 ≡ 1.</div>
+        <div class="translation-line">Solve 7x ≡ 14 by multiplying both sides by the inverse.</div>
+        <div class="translation-line">Inverse 13, solution x ≡ 2.</div>
+      </div>
+    </div>
+
+    <h3>Fermat's little theorem in three steps</h3>
+    <p><span class="term" data-definition="If p is prime and p does not divide a, then a^(p−1) ≡ 1 (mod p). It lets you reduce exponents mod p − 1.">Fermat's little theorem</span>: for prime p not dividing a, a^(p−1) ≡ 1 (mod p).</p>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <strong>List the multiples</strong>
+          <p>Take a, 2a, …, (p−1)a. None is 0 mod p, and no two match: ia ≡ ja lets you cancel a, giving i = j.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <strong>They are a shuffle</strong>
+          <p>So mod p they are exactly 1, 2, …, p−1 in some order. Multiply all of them: a^(p−1) · (p−1)! ≡ (p−1)!.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <strong>Cancel the factorial</strong>
+          <p>(p−1)! is coprime to p, so it has an inverse. Cancel it: a^(p−1) ≡ 1. Example: 7⁹⁵ ≡ 7¹¹ ≡ 2 (mod 13).</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Flip to review</h3>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>a ≡ b (mod n) means…</h4>
+          <p>Give two equivalent tests.</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Two tests</h4>
+          <p>n divides a − b. Equivalently, rem(a, n) = rem(b, n).</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>When does a⁻¹ mod n exist?</h4>
+          <p>One condition.</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>gcd(a, n) = 1</h4>
+          <p>Then 1 = s·a + t·n by Bézout, and s is the inverse.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>3¹⁰⁰ mod 7?</h4>
+          <p>Use Fermat with p = 7.</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>4</h4>
+          <p>3⁶ ≡ 1 and 100 = 16·6 + 4, so 3¹⁰⁰ ≡ 3⁴ = 81 ≡ 4.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> It is Monday. What day will it be in 100 days?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-correct="That assumes 100 ≡ 1 (mod 7). Actually 100 = 14·7 + 2." data-explanation-wrong="That assumes 100 ≡ 1 (mod 7). Actually 100 = 14·7 + 2.">Tuesday</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes. 100 ≡ 2 (mod 7), so 14 whole weeks vanish and two days remain." data-explanation-wrong="Yes. 100 ≡ 2 (mod 7), so 14 whole weeks vanish and two days remain.">Wednesday</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="That uses 100 ≡ 0 (mod 10), but weeks repeat every 7 days, not 10." data-explanation-wrong="That uses 100 ≡ 0 (mod 10), but weeks repeat every 7 days, not 10.">Monday</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> Which congruence lets you safely cancel the coefficient?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-correct="gcd(4, 10) = 2, so 4 has no inverse mod 10. Indeed x = 3 and x = 8 both satisfy 4x ≡ 2." data-explanation-wrong="gcd(4, 10) = 2, so 4 has no inverse mod 10. Indeed x = 3 and x = 8 both satisfy 4x ≡ 2.">4x ≡ 2 (mod 10)</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="gcd(3, 6) = 3, so cancelling fails: x = 3 is a solution but is not ≡ 1." data-explanation-wrong="gcd(3, 6) = 3, so cancelling fails: x = 3 is a solution but is not ≡ 1.">3x ≡ 3 (mod 6)</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. gcd(7, 30) = 1, so 7 has the inverse 13 and you may cancel to get x ≡ 2." data-explanation-wrong="Right. gcd(7, 30) = 1, so 7 has the inverse 13 and you may cancel to get x ≡ 2.">7x ≡ 14 (mod 30)</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> To compute 7⁹⁵ mod 13, what can you do to the exponent?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Exponents cannot be reduced mod n itself; that is the trap from the lecture." data-explanation-wrong="Exponents cannot be reduced mod n itself; that is the trap from the lecture.">Reduce it mod 13, giving 7⁴</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes. 13 is prime, so Fermat gives 7¹² ≡ 1, and 95 ≡ 11 (mod 12). Then 7¹¹ ≡ 2." data-explanation-wrong="Yes. 13 is prime, so Fermat gives 7¹² ≡ 1, and 95 ≡ 11 (mod 12). Then 7¹¹ ≡ 2.">Reduce it mod 12, giving 7¹¹</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Bases may be reduced mod 13, but 7 is already small. The exponent needs Fermat instead." data-explanation-wrong="Bases may be reduced mod 13, but 7 is already small. The exponent needs Fermat instead.">Nothing; you must multiply 95 times</button>
+      </div>
+    </div>
+
+    <p class="module-links"><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-02/day-09-modular-arithmetic.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=Nn8nBPyzzQ0" target="_blank" rel="noopener">Watch Lecture 9: Modular Arithmetic →</a></p>
+  </div>
+</section>

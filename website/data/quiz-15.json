@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "You found a total injection from set A to set B, where both sets are finite. What can you conclude?",
+   "options": ["|A| = |B|", "|A| ≥ |B|", "Nothing about the sizes", "|A| ≤ |B|"],
+   "answer": 3,
+   "explanation": "Each element of A sends at least one arrow, and each element of B receives at most one. So |A| ≤ number of arrows ≤ |B|. Equality would need a bijection."},
+  {"question": "Which relation on the integers is an equivalence relation?",
+   "options": ["a ≡ b (mod 10)", "a ≤ b", "a divides b", "a < b"],
+   "answer": 0,
+   "explanation": "Congruence mod 10 is reflexive, symmetric, and transitive, and it splits the integers into 10 remainder classes. The other three fail symmetry."},
+  {"question": "How do we show that {1, …, n} has 2ⁿ subsets?",
+   "options": ["List the subsets of every size and add them up", "Build a bijection with n-bit strings, then count the strings with the product rule", "Use the sum rule on the n elements", "Note that each subset has at most n elements"],
+   "answer": 1,
+   "explanation": "Bit i records whether element i is in the subset. That matching is a bijection, and the product rule gives 2 × 2 × … × 2 = 2ⁿ strings."},
+  {"question": "Why does counting deck orderings need the generalized product rule rather than the plain product rule?",
+   "options": ["Because the deck has 52 cards", "Because order does not matter", "Because the set of cards available for the second position depends on the first pick, even though the count, 51, does not", "Because the sum rule must be used first"],
+   "answer": 2,
+   "explanation": "The plain product rule needs fixed option sets. Here the options change with each pick but their number does not, giving 52 · 51 · … · 1 = 52!."}
+]}

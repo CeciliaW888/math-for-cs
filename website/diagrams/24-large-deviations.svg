@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-labelledby="t24">
+  <title id="t24">Tail bounds get stronger as you know more: Markov, Chebyshev, Chernoff for 100 coin flips</title>
+  <rect x="0" y="0" width="800" height="450" fill="#ffffff"/>
+  <text x="400" y="38" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#2d2d2d">More information, stronger tail bounds</text>
+  <text x="400" y="62" text-anchor="middle" font-family="Helvetica, sans-serif" font-size="15" fill="#6b6b6b">R = heads in 100 fair flips. How likely is R ≥ 75?</text>
+
+  <!-- distribution curve -->
+  <line x1="80" y1="250" x2="720" y2="250" stroke="#2d2d2d" stroke-width="1.5"/>
+  <polyline fill="#f5f0eb" stroke="#7a8fa6" stroke-width="2" points="80,250 176.0,249.2 186.7,248.6 197.3,247.4 208.0,245.6 218.7,242.7 229.3,238.4 240.0,232.4 250.7,224.3 261.3,213.9 272.0,201.2 282.7,186.7 293.3,171.2 304.0,155.6 314.7,141.4 325.3,130.0 336.0,122.6 346.7,120.0 357.3,122.6 368.0,130.0 378.7,141.4 389.3,155.6 400.0,171.2 410.7,186.7 421.3,201.2 432.0,213.9 442.7,224.3 453.3,232.4 464.0,238.4 474.7,242.7 485.3,245.6 496.0,247.4 506.7,248.6 517.3,249.2 720,250"/>
+
+  <!-- mean and threshold -->
+  <line x1="346.7" y1="100" x2="346.7" y2="250" stroke="#7a8fa6" stroke-width="1.5" stroke-dasharray="5 5"/>
+  <text x="346.7" y="92" text-anchor="middle" font-family="Helvetica, sans-serif" font-size="14" fill="#7a8fa6">E[R] = 50</text>
+  <line x1="613.3" y1="110" x2="613.3" y2="250" stroke="#c4825a" stroke-width="2"/>
+  <rect x="613.3" y="236" width="106.7" height="14" fill="#fbe9dd" stroke="#c4825a" stroke-width="1.5"/>
+  <text x="620" y="128" font-family="Helvetica, sans-serif" font-size="14" fill="#c4825a">tail: R ≥ 75</text>
+  <text x="620" y="148" font-family="Helvetica, sans-serif" font-size="14" fill="#c4825a">(too thin to see)</text>
+  <g font-family="Helvetica, sans-serif" font-size="14" fill="#6b6b6b" text-anchor="middle">
+    <text x="80" y="270">25</text>
+    <text x="346.7" y="270">50</text>
+    <text x="613.3" y="270">75</text>
+    <text x="720" y="270">85</text>
+  </g>
+
+  <!-- ladder of bounds -->
+  <g font-family="Helvetica, sans-serif" fill="#2d2d2d">
+    <rect x="30" y="300" width="175" height="110" rx="10" fill="#ffffff" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="117.5" y="328" text-anchor="middle" font-size="15" fill="#6b6b6b">know the mean</text>
+    <text x="117.5" y="354" text-anchor="middle" font-family="Georgia, serif" font-size="18">Markov</text>
+    <text x="117.5" y="388" text-anchor="middle" font-size="20" fill="#c4825a">≤ 0.67</text>
+
+    <rect x="220" y="300" width="175" height="110" rx="10" fill="#ffffff" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="307.5" y="328" text-anchor="middle" font-size="15" fill="#6b6b6b">+ the variance</text>
+    <text x="307.5" y="354" text-anchor="middle" font-family="Georgia, serif" font-size="18">Chebyshev</text>
+    <text x="307.5" y="388" text-anchor="middle" font-size="20" fill="#c4825a">≤ 0.04</text>
+
+    <rect x="410" y="300" width="175" height="110" rx="10" fill="#ffffff" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="497.5" y="328" text-anchor="middle" font-size="15" fill="#6b6b6b">+ independence</text>
+    <text x="497.5" y="354" text-anchor="middle" font-family="Georgia, serif" font-size="18">Chernoff</text>
+    <text x="497.5" y="388" text-anchor="middle" font-size="20" fill="#c4825a">≤ 0.0045</text>
+
+    <rect x="600" y="300" width="170" height="110" rx="10" fill="#e8efe9" stroke="#6b8f71" stroke-width="1.5"/>
+    <text x="685" y="328" text-anchor="middle" font-size="15" fill="#6b6b6b">the truth</text>
+    <text x="685" y="354" text-anchor="middle" font-family="Georgia, serif" font-size="18">exact</text>
+    <text x="685" y="388" text-anchor="middle" font-size="20" fill="#6b8f71">≈ 0.0000003</text>
+  </g>
+  <g stroke="#c4825a" stroke-width="1.5" fill="none">
+    <path d="M205 355 L218 355"/>
+    <path d="M395 355 L408 355"/>
+    <path d="M585 355 L598 355"/>
+  </g>
+  <text x="400" y="438" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="15" fill="#6b6b6b">constant, then 1/n, then exponentially small in n</text>
+</svg>

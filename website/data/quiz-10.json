@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "Eve intercepts a message encrypted with a Caesar shift using an unknown key k. What is her most efficient attack?",
+   "options": ["Factor the ciphertext length", "Count letter frequencies across thousands of messages", "Try all 26 possible shifts and keep the one that reads as English", "Wait for a known-plaintext weather report"],
+   "answer": 2,
+   "explanation": "A Caesar shift has only 26 keys, so brute force is instant. The other attacks work but are overkill here."},
+  {"question": "In RSA, why must e be chosen with gcd(e, (p−1)(q−1)) = 1?",
+   "options": ["So that encryption is fast", "So that n is prime", "So that the ciphertext is smaller than the message", "So that e has an inverse d modulo (p−1)(q−1)"],
+   "answer": 3,
+   "explanation": "A number has a multiplicative inverse modulo k exactly when it is coprime to k. Without an inverse there is no decryption exponent d."},
+  {"question": "The RSA correctness proof shows m^(ed) ≡ m mod p and mod q separately. Why is that enough to conclude m^(ed) ≡ m mod n?",
+   "options": ["Because p and q are distinct primes, so if both divide m^(ed) − m then pq does too", "Because n is always larger than m", "Because Fermat's Little Theorem works for any modulus", "Because e and d are both odd"],
+   "answer": 0,
+   "explanation": "Two different primes dividing the same number means their product divides it. Fermat's theorem alone only covers prime moduli, which is why we split n."},
+  {"question": "You know x ≡ 2 (mod 3) and x ≡ 3 (mod 7), with 0 ≤ x < 21. What is x?",
+   "options": ["10", "17", "5", "14"],
+   "answer": 1,
+   "explanation": "Numbers ≡ 3 mod 7 below 21 are 3, 10, 17. Only 17 leaves remainder 2 mod 3. CRT promises this answer is unique mod 21."}
+]}

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" font-family="Georgia, serif">
+<rect width="800" height="450" fill="#ffffff"/>
+<text x="400" y="38" font-size="24" text-anchor="middle" fill="#2d2d2d">The integral method: trap a sum between two staircases</text>
+<rect x="90.0" y="232.7" width="80" height="127.3" fill="#fbe9dd" stroke="#c4825a" stroke-width="1.5"/>
+<rect x="170.0" y="204.1" width="80" height="155.9" fill="#fbe9dd" stroke="#c4825a" stroke-width="1.5"/>
+<rect x="250.0" y="180.0" width="80" height="180.0" fill="#fbe9dd" stroke="#c4825a" stroke-width="1.5"/>
+<rect x="330.0" y="158.8" width="80" height="201.2" fill="#fbe9dd" stroke="#c4825a" stroke-width="1.5"/>
+<rect x="410.0" y="139.5" width="80" height="220.5" fill="#fbe9dd" stroke="#c4825a" stroke-width="1.5"/>
+<rect x="90.0" y="270.0" width="80" height="90.0" fill="#f5f0eb" stroke="#6b8f71" stroke-width="1.5"/>
+<rect x="170.0" y="232.7" width="80" height="127.3" fill="#f5f0eb" stroke="#6b8f71" stroke-width="1.5"/>
+<rect x="250.0" y="204.1" width="80" height="155.9" fill="#f5f0eb" stroke="#6b8f71" stroke-width="1.5"/>
+<rect x="330.0" y="180.0" width="80" height="180.0" fill="#f5f0eb" stroke="#6b8f71" stroke-width="1.5"/>
+<rect x="410.0" y="158.8" width="80" height="201.2" fill="#f5f0eb" stroke="#6b8f71" stroke-width="1.5"/>
+<polyline points="90.0,270.0 98.0,265.6 106.0,261.4 114.0,257.4 122.0,253.5 130.0,249.8 138.0,246.2 146.0,242.7 154.0,239.3 162.0,235.9 170.0,232.7 178.0,229.6 186.0,226.5 194.0,223.5 202.0,220.6 210.0,217.7 218.0,214.9 226.0,212.1 234.0,209.4 242.0,206.7 250.0,204.1 258.0,201.5 266.0,199.0 274.0,196.5 282.0,194.0 290.0,191.6 298.0,189.2 306.0,186.9 314.0,184.6 322.0,182.3 330.0,180.0 338.0,177.8 346.0,175.6 354.0,173.4 362.0,171.2 370.0,169.1 378.0,167.0 386.0,164.9 394.0,162.8 402.0,160.8 410.0,158.8 418.0,156.8 426.0,154.8 434.0,152.8 442.0,150.9 450.0,148.9 458.0,147.0 466.0,145.1 474.0,143.3 482.0,141.4 490.0,139.5" fill="none" stroke="#2d2d2d" stroke-width="2"/>
+<line x1="70" y1="360" x2="520" y2="360" stroke="#2d2d2d" stroke-width="1.5"/>
+<line x1="70" y1="360" x2="70" y2="109.54592314951398" stroke="#2d2d2d" stroke-width="1.5"/>
+<text x="90.0" y="382.0" font-size="15" text-anchor="middle" fill="#2d2d2d">1</text>
+<text x="170.0" y="382.0" font-size="15" text-anchor="middle" fill="#2d2d2d">2</text>
+<text x="250.0" y="382.0" font-size="15" text-anchor="middle" fill="#2d2d2d">3</text>
+<text x="330.0" y="382.0" font-size="15" text-anchor="middle" fill="#2d2d2d">4</text>
+<text x="410.0" y="382.0" font-size="15" text-anchor="middle" fill="#2d2d2d">5</text>
+<text x="490.0" y="382.0" font-size="15" text-anchor="middle" fill="#2d2d2d">n</text>
+<text x="500.0" y="129.5" font-size="16" fill="#2d2d2d">f(x)</text>
+<rect x="545" y="80" width="225" height="70" rx="8" fill="#f5f0eb" stroke="#6b8f71" stroke-width="1.5"/>
+<text x="559" y="106" font-size="15" fill="#6b8f71">left-end steps: under</text>
+<text x="559" y="132" font-size="15" fill="#2d2d2d">area = S − f(n) ≤ I</text>
+<rect x="545" y="165" width="225" height="70" rx="8" fill="#fbe9dd" stroke="#c4825a" stroke-width="1.5"/>
+<text x="559" y="191" font-size="15" fill="#c4825a">right-end steps: over</text>
+<text x="559" y="217" font-size="15" fill="#2d2d2d">area = S − f(1) ≥ I</text>
+<rect x="545" y="255" width="225" height="62" rx="8" fill="#ffffff" stroke="#2d2d2d" stroke-width="1.5"/>
+<text x="657" y="282" font-size="16" text-anchor="middle" fill="#2d2d2d">I + f(1) ≤ S ≤ I + f(n)</text>
+<text x="657" y="304" font-size="14" text-anchor="middle" fill="#2d2d2d" opacity="0.75">f increasing, I = ∫ f from 1 to n</text>
+<text x="657" y="345" font-size="14" text-anchor="middle" fill="#7a8fa6">For decreasing f, swap</text>
+<text x="657" y="364" font-size="14" text-anchor="middle" fill="#7a8fa6">f(1) and f(n).</text>
+<text x="400" y="432" font-size="15" text-anchor="middle" fill="#2d2d2d" opacity="0.8">The gap between the staircases is one term wide, so the error is at most f(n) − f(1).</text>
+</svg>

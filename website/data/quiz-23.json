@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "A data center has 200 disks, and each fails this month with probability 0.002. Failures may be correlated. What is the best guaranteed statement about the chance that at least one disk fails?",
+   "options": ["It is at least 1 − e^(−0.4), by Murphy's law", "It is exactly 1 − 0.998^200", "It is exactly 0.4", "It is at most 0.4, by the union bound"],
+   "answer": 3,
+   "explanation": "The union bound needs no independence: Pr[at least one] ≤ 200 × 0.002 = 0.4. Murphy's law and the exact product formula both assume independence, which we were not given."},
+  {"question": "D is a fair die roll. Which is larger, E[D²] or E[D]²?",
+   "options": ["E[D²] = 91/6 is larger than E[D]² = 12.25", "They are equal because expectation is linear", "E[D]² is larger", "They are equal because a die is fair"],
+   "answer": 0,
+   "explanation": "E[D²] − E[D]² is the variance, which is never negative. Here 91/6 − 49/4 = 35/12 > 0. The product rule E[XY] = E[X]E[Y] fails because D is not independent of itself."},
+  {"question": "X and Y are independent, with Var[X] = 4 and Var[Y] = 9. What is Var[2X + Y]?",
+   "options": ["17", "25", "13", "Cannot be determined"],
+   "answer": 1,
+   "explanation": "Independence lets variances add, and scaling squares the factor: Var[2X] + Var[Y] = 4 × 4 + 9 = 25."},
+  {"question": "You split $1,000 equally across k independent bets, each of which doubles or loses its share with probability 1/2. How does the standard deviation of your total change as k grows?",
+   "options": ["It stays the same, since the expected gain is always 0", "It shrinks like 1/k", "It shrinks like 1/√k", "It grows like √k"],
+   "answer": 2,
+   "explanation": "Each share contributes (1000/k)² to the variance and there are k shares, so Var = 1000²/k and σ = 1000/√k. The mean stays 0 while the risk falls."}
+]}

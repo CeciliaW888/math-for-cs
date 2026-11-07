@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "Three fair coins are flipped, and f(ω) is the number of heads in outcome ω. Which description of f is most accurate?",
+   "options": ["A variable whose value changes randomly over time", "A fixed function from outcomes to numbers. The randomness is in which outcome occurs", "An event containing all outcomes with heads", "A probability between 0 and 1"],
+   "answer": 1,
+   "explanation": "A random variable is neither random nor a variable. It is a deterministic function S → ℝ, so f(HTH) is always 2."},
+  {"question": "g = 1 if the first coin is heads, and h = 1 if all three coins match. Why are g and h independent?",
+   "options": ["Because both are indicators", "Because they are defined using different coins", "Because Pr[g = x and h = y] = Pr[g = x]·Pr[h = y] for every pair of values, e.g. Pr[g=1, h=1] = 1/8 = ½·¼", "Because h never equals 1"],
+   "answer": 2,
+   "explanation": "Independence of RVs means the product rule holds for all value pairs. Being indicators doesn't guarantee it, and h does depend on coin 1. It just isn't shifted by it."},
+  {"question": "R is the number of heads in 10 independent coins with heads probability p. Which formula gives Pr[R = 3]?",
+   "options": ["p³", "3p(1 − p)⁹", "C(10, 3)/2¹⁰ for every p", "C(10, 3) · p³ · (1 − p)⁷"],
+   "answer": 3,
+   "explanation": "Each sequence with 3 heads has probability p³(1−p)⁷ by mutual independence, and there are C(10, 3) such sequences. C(10,3)/2¹⁰ is only correct when p = ½."},
+  {"question": "In the candy-box game, why does choosing a random threshold guarantee at least a 55% win rate?",
+   "options": ["With probability at least 1/10 the threshold separates the boxes, giving a sure win. Otherwise you still win half the time", "Because the bigger box always has more than 5 candies", "Because switching always beats keeping", "Because a random choice wins 55% of the time in any game"],
+   "answer": 0,
+   "explanation": "By the law of total probability, Pr[win] ≥ 1·(1/10) + ½·(9/10) = 0.55, whatever counts the boxes contain."}
+]}

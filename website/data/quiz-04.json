@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "You start the 8-puzzle with an odd number of inverted pairs. Which target grid can you rule out without any searching?",
+   "options": ["Any grid with an even number of inverted pairs", "Any grid with the blank in a corner", "Any grid with an odd number of inverted pairs", "Any grid where tile 1 is not in the top-left"],
+   "answer": 0,
+   "explanation": "Inversion parity is preserved by every move and starts odd, so it is invariant. A grid with even parity makes the predicate false, so it is unreachable."},
+  {"question": "What is the difference between a preserved predicate and an invariant?",
+   "options": ["They are two names for the same thing", "Preserved is about single transitions; invariant is about all reachable states", "Invariant is about single transitions; preserved is about all reachable states", "Preserved predicates only apply to finite machines"],
+   "answer": 1,
+   "explanation": "Preserved means each move keeps P true. Invariant means P holds in every reachable state. Preserved plus true at the start gives invariant, by the Invariant Principle."},
+  {"question": "Swap sort repeatedly swaps any adjacent out-of-order pair. Why must it stop?",
+   "options": ["Because the list gets shorter after each swap", "Because it always swaps the leftmost bad pair first", "Because the number of inverted pairs is a natural number that drops by exactly 1 each swap", "Because the largest element moves right every time"],
+   "answer": 2,
+   "explanation": "The inversion count is a derived variable in the natural numbers that strictly decreases, so there can be at most as many swaps as the starting inversion count. The choice of pair does not matter."},
+  {"question": "A machine has a derived variable that strictly decreases on every transition, but the machine runs forever. What must be true?",
+   "options": ["The derived variable is always a natural number", "The machine has no final states at all", "The start state is unreachable", "The variable is not always a natural number, for example it goes negative or takes values like 1/2, 1/4, ..."],
+   "answer": 3,
+   "explanation": "If it were always a natural number, it could fall at most x(q0) times. Endless decrease is only possible with negative or non-integer values."}
+]}

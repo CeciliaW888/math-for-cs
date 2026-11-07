@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "Merge sort's worst-case comparisons satisfy M(n) = 2M(n/2) + (n − 1). Where does the (n − 1) come from?",
+   "options": ["The two recursive calls on halves", "Splitting the list in half", "Choosing the smallest element of the whole list", "Merging two sorted halves of total size n"],
+   "answer": 3,
+   "explanation": "Merging compares only the two front items each round, and in the worst case needs one comparison per element except the last: n − 1."},
+  {"question": "Why does Towers of Hanoi need 2ⁿ − 1 moves while merge sort needs only about n log n comparisons?",
+   "options": ["Hanoi subproblems shrink by 1, so the recursion tree is n levels deep; merge sort halves, so it is only log n deep", "Hanoi makes more recursive calls per step than merge sort", "Merge sort does no work outside its recursive calls", "Hanoi has no base case"],
+   "answer": 0,
+   "explanation": "Both make two recursive calls. The difference is how fast the size shrinks: subtracting 1 gives a deep tree with exponentially many nodes, halving gives a shallow one."},
+  {"question": "While using plug and chug on M(n), you get (n − 1) + (n − 2) + 4M(n/4). Why is it wise NOT to rewrite this as 2n − 3 + 4M(n/4)?",
+   "options": ["2n − 3 is mathematically wrong", "Keeping each level's term separate makes the pattern (n − 2ⁱ) easier to spot", "The master theorem requires unsimplified terms", "Simplifying would change the base case"],
+   "answer": 1,
+   "explanation": "Both forms are equal, but separate terms reveal the structure n − 1, n − 2, n − 4, … which leads straight to the closed form."},
+  {"question": "For T(n) = 4T(n/2) + n, what does the master theorem give?",
+   "options": ["Θ(n)", "Θ(n log n)", "Θ(n²)", "The theorem does not apply"],
+   "answer": 2,
+   "explanation": "Here n^(log₂4) = n², and f(n) = n is smaller, so the leaves win (case 1) and T(n) = Θ(n²)."}
+]}

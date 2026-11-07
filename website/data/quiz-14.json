@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "In a digraph, a can reach b, and b can reach c. Which conclusion is guaranteed?",
+   "options": ["b can reach a", "a, b and c are strongly connected", "a can reach c", "c can reach a"],
+   "answer": 2,
+   "explanation": "Reachability is transitive, because you can join the two walks end to end. It is not symmetric, so nothing lets you travel back against the arrows."},
+  {"question": "Why is the condensation graph of any digraph acyclic?",
+   "options": ["Because every digraph is a DAG", "Because each SCC has only one vertex", "Because condensation deletes every arrow", "Because a cycle through several SCCs would make them mutually reachable, so they would be one SCC"],
+   "answer": 3,
+   "explanation": "SCCs are maximal sets of mutually reachable vertices. A cycle between components would merge them, which contradicts their maximality."},
+  {"question": "In the proof that every DAG has a topological order, why remove a source and not some other vertex?",
+   "options": ["A source has nothing that must come before it, so it can safely be listed first", "Sources have the most outgoing arrows", "Removing a source makes the graph strongly connected", "Only sources can be removed without deleting edges"],
+   "answer": 0,
+   "explanation": "Placing the source first breaks no constraint, since no vertex reaches it. Induction then orders the smaller DAG that remains."},
+  {"question": "A project DAG has 30 tasks, and its longest dependency chain has 7 tasks. With unlimited workers, what is the fastest finish?",
+   "options": ["30 rounds", "7 rounds", "6 rounds", "It depends on which topological order you pick"],
+   "answer": 1,
+   "explanation": "The minimum span equals the number of vertices on a longest path, which is 7 here. Scheduling each task at its depth achieves it."}
+]}

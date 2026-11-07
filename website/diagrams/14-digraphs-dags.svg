@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-labelledby="t14 d14">
+  <title id="t14">Getting dressed as a DAG, scheduled in parallel rounds</title>
+  <desc id="d14">Eleven clothing tasks arranged in four columns by depth. Arrows show precedence. The longest path shirt, jacket, scarf, coat is highlighted, and it has four vertices, so four parallel rounds are needed and enough.</desc>
+  <defs>
+    <marker id="ar14" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#2d2d2d" stroke-width="1.5"/></marker>
+    <marker id="ac14" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#c4825a" stroke-width="1.8"/></marker>
+  </defs>
+  <rect width="800" height="450" fill="#ffffff"/>
+  <text x="400" y="36" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#2d2d2d">Getting dressed: a DAG scheduled by depth</text>
+  <rect x="42" y="62" width="136" height="356" rx="10" fill="#f5f0eb" stroke="#e6ddd3" stroke-width="1.5"/>
+  <text x="110" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" fill="#7a8fa6">time 0</text>
+  <rect x="232" y="62" width="136" height="356" rx="10" fill="#ffffff" stroke="#e6ddd3" stroke-width="1.5"/>
+  <text x="300" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" fill="#7a8fa6">time 1</text>
+  <rect x="422" y="62" width="136" height="356" rx="10" fill="#f5f0eb" stroke="#e6ddd3" stroke-width="1.5"/>
+  <text x="490" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" fill="#7a8fa6">time 2</text>
+  <rect x="612" y="62" width="136" height="356" rx="10" fill="#ffffff" stroke="#e6ddd3" stroke-width="1.5"/>
+  <text x="680" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" fill="#7a8fa6">time 3</text>
+  <line x1="166" y1="110" x2="241" y2="110" stroke="#2d2d2d" stroke-width="1.5" marker-end="url(#ar14)"/>
+  <line x1="166" y1="170" x2="241" y2="170" stroke="#2d2d2d" stroke-width="1.5" marker-end="url(#ar14)"/>
+  <line x1="166" y1="230" x2="241" y2="110" stroke="#2d2d2d" stroke-width="1.5" marker-end="url(#ar14)"/>
+  <line x1="166" y1="230" x2="241" y2="170" stroke="#2d2d2d" stroke-width="1.5" marker-end="url(#ar14)"/>
+  <line x1="166" y1="230" x2="241" y2="240" stroke="#2d2d2d" stroke-width="1.5" marker-end="url(#ar14)"/>
+  <line x1="166" y1="330" x2="241" y2="240" stroke="#2d2d2d" stroke-width="1.5" marker-end="url(#ar14)"/>
+  <line x1="166" y1="330" x2="241" y2="330" stroke="#c4825a" stroke-width="2" marker-end="url(#ac14)"/>
+  <line x1="356" y1="240" x2="621" y2="240" stroke="#2d2d2d" stroke-width="1.5" marker-end="url(#ar14)"/>
+  <line x1="356" y1="330" x2="431" y2="330" stroke="#c4825a" stroke-width="2" marker-end="url(#ac14)"/>
+  <line x1="356" y1="330" x2="431" y2="400" stroke="#2d2d2d" stroke-width="1.5" marker-end="url(#ar14)"/>
+  <line x1="546" y1="330" x2="621" y2="240" stroke="#c4825a" stroke-width="2" marker-end="url(#ac14)"/>
+  <rect x="54" y="93" width="112" height="34" rx="8" fill="#ffffff" stroke="#6b8f71" stroke-width="1.5"/>
+  <text x="110" y="115" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="15" fill="#2d2d2d">left sock</text>
+  <rect x="54" y="153" width="112" height="34" rx="8" fill="#ffffff" stroke="#6b8f71" stroke-width="1.5"/>
+  <text x="110" y="175" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="15" fill="#2d2d2d">right sock</text>
+  <rect x="54" y="213" width="112" height="34" rx="8" fill="#ffffff" stroke="#6b8f71" stroke-width="1.5"/>
+  <text x="110" y="235" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="15" fill="#2d2d2d">pants</text>
+  <rect x="54" y="313" width="112" height="34" rx="8" fill="#fbe9dd" stroke="#c4825a" stroke-width="2"/>
+  <text x="110" y="335" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="15" fill="#2d2d2d">shirt</text>
+  <rect x="244" y="93" width="112" height="34" rx="8" fill="#ffffff" stroke="#6b8f71" stroke-width="1.5"/>
+  <text x="300" y="115" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="15" fill="#2d2d2d">left shoe</text>
+  <rect x="244" y="153" width="112" height="34" rx="8" fill="#ffffff" stroke="#6b8f71" stroke-width="1.5"/>
+  <text x="300" y="175" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="15" fill="#2d2d2d">right shoe</text>
+  <rect x="244" y="223" width="112" height="34" rx="8" fill="#ffffff" stroke="#6b8f71" stroke-width="1.5"/>
+  <text x="300" y="245" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="15" fill="#2d2d2d">belt</text>
+  <rect x="244" y="313" width="112" height="34" rx="8" fill="#fbe9dd" stroke="#c4825a" stroke-width="2"/>
+  <text x="300" y="335" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="15" fill="#2d2d2d">jacket</text>
+  <rect x="434" y="313" width="112" height="34" rx="8" fill="#fbe9dd" stroke="#c4825a" stroke-width="2"/>
+  <text x="490" y="335" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="15" fill="#2d2d2d">scarf</text>
+  <rect x="434" y="383" width="112" height="34" rx="8" fill="#ffffff" stroke="#6b8f71" stroke-width="1.5"/>
+  <text x="490" y="405" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="15" fill="#2d2d2d">hat</text>
+  <rect x="624" y="223" width="112" height="34" rx="8" fill="#fbe9dd" stroke="#c4825a" stroke-width="2"/>
+  <text x="680" y="245" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="15" fill="#2d2d2d">coat</text>
+  <text x="400" y="442" text-anchor="middle" font-family="Geist, system-ui, sans-serif" font-size="14" fill="#c4825a">Longest path shirt → jacket → scarf → coat has 4 vertices, so the minimum span is 4 rounds</text>
+</svg>

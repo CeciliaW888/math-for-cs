@@ -1,0 +1,136 @@
+<section class="module" id="module-21" data-day="21">
+  <div class="module-inner">
+    <h2>Day 21: Random Variables</h2>
+    <p>Programs rarely care about the raw outcome of a random process. They care about a <em>number</em> computed from it: packets lost, search time, hash collisions. Random variables are how we talk about those numbers.</p>
+
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>The barcode scanner:</strong> a <span class="term" data-definition="A function from the sample space to the real numbers. It assigns a number to every outcome, and it is neither random nor a variable.">random variable</span> (RV) works like a scanner that deterministically reads a price off whatever basket you bring. The randomness lives in <em>which basket</em> you end up with, not in the scanner. Formally, R : S → ℝ.
+      </div>
+    </div>
+
+    <h3>From outcome to distribution</h3>
+    <div class="flow-animation" data-steps='[
+      {"highlight": "flow-rv21-1", "label": "An experiment produces an outcome, such as HTH", "packet": "🪙", "from": "flow-rv21-1", "to": "flow-rv21-2"},
+      {"highlight": "flow-rv21-2", "label": "The RV f counts heads, a fixed rule applied to the outcome", "packet": "🔢", "from": "flow-rv21-2", "to": "flow-rv21-3"},
+      {"highlight": "flow-rv21-3", "label": "The result is a plain number: f(HTH) = 2", "packet": "2", "from": "flow-rv21-3", "to": "flow-rv21-4"},
+      {"highlight": "flow-rv21-4", "label": "The PMF records only how often each number appears: Pr[f = 2] = 3/8", "packet": "📊", "from": "flow-rv21-4", "to": "flow-rv21-4"}
+    ]'>
+      <div class="flow-actors">
+        <div class="flow-actor" id="flow-rv21-1">🎲 Outcome ω</div>
+        <div class="flow-actor" id="flow-rv21-2">⚙️ Function f</div>
+        <div class="flow-actor" id="flow-rv21-3">🔢 Value f(ω)</div>
+        <div class="flow-actor" id="flow-rv21-4">📊 PMF</div>
+      </div>
+      <div class="flow-packet"></div>
+      <div class="flow-step-label"></div>
+      <div class="flow-controls">
+        <button class="flow-next-btn">Next Step</button>
+        <button class="flow-play-btn">Play All</button>
+        <button class="flow-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <figure class="diagram-container">
+      <img src="diagrams/21-random-variables.svg" alt="The eight outcomes of three coin flips, each with an arrow to its number of heads (0 to 3), next to a bar chart of the PMF with heights 1/8, 3/8, 3/8, 1/8." loading="lazy">
+      <figcaption>f maps 8 outcomes to 4 values. The PMF keeps only the totals: 1/8, 3/8, 3/8, 1/8.</figcaption>
+    </figure>
+
+    <h3>Indicators, events and independence</h3>
+    <p>An <span class="term" data-definition="A random variable whose only values are 0 and 1. It is 1 exactly on the outcomes of some event.">indicator</span> takes only the values 0 and 1. Each event A gives an indicator 𝟙<sub>A</sub>, and each RV gives events such as [f = x], [f ≥ x] and [f ∈ T]. Two RVs are <span class="term" data-definition="R1 and R2 are independent when Pr[R1 = x and R2 = y] = Pr[R1 = x] · Pr[R2 = y] for every possible pair of values x and y.">independent</span> if the product rule holds for <em>every</em> pair of values.</p>
+
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">coin_rvs.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python">space = <span class="code-function">list</span>(<span class="code-function">product</span>(<span class="code-string">"HT"</span>, repeat=<span class="code-number">3</span>))
+f = <span class="code-keyword">lambda</span> w: w.<span class="code-function">count</span>(<span class="code-string">"H"</span>)
+g = <span class="code-keyword">lambda</span> w: <span class="code-number">1</span> <span class="code-keyword">if</span> w[<span class="code-number">0</span>] == <span class="code-string">"H"</span> <span class="code-keyword">else</span> <span class="code-number">0</span>
+h = <span class="code-keyword">lambda</span> w: <span class="code-number">1</span> <span class="code-keyword">if</span> <span class="code-function">len</span>(<span class="code-function">set</span>(w)) == <span class="code-number">1</span> <span class="code-keyword">else</span> <span class="code-number">0</span>
+<span class="code-function">print</span>(<span class="code-string">"g, h independent?"</span>, <span class="code-function">independent</span>(g, h))  <span class="code-comment"># True</span>
+<span class="code-function">print</span>(<span class="code-string">"f, g independent?"</span>, <span class="code-function">independent</span>(f, g))  <span class="code-comment"># False</span></code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">The sample space has 8 equally likely triples, from HHH to TTT.</div>
+        <div class="translation-line">f is just a function: give it an outcome and it returns the number of heads.</div>
+        <div class="translation-line">g is an indicator: 1 when the first flip is heads, otherwise 0.</div>
+        <div class="translation-line">h is an indicator: 1 when all three flips match.</div>
+        <div class="translation-line">The first flip says nothing about whether the other two match it, so g and h are independent.</div>
+        <div class="translation-line">If g = 0, then f cannot be 3, so learning g changes the odds for f.</div>
+      </div>
+    </div>
+
+    <h3>Common distributions</h3>
+    <div class="step-cards">
+      <div class="step-card"><span class="step-num">B</span><div class="step-body"><strong>Bernoulli(p)</strong><p>An indicator: 1 with probability p and 0 with probability 1 − p.</p></div></div>
+      <div class="step-card"><span class="step-num">U</span><div class="step-body"><strong>Uniform on {1, …, n}</strong><p>Each value has probability 1/n. The <span class="term" data-definition="Cumulative distribution function: CDF(x) = Pr[R ≤ x], the running total of the PMF.">CDF</span> is a staircase that climbs 1/n at each integer.</p></div></div>
+      <div class="step-card"><span class="step-num">Bin</span><div class="step-body"><strong>Binomial(n, p)</strong><p>The number of heads in n independent p-coins. The <span class="term" data-definition="Probability mass function: PMF(x) = Pr[R = x], the probability the RV takes exactly the value x.">PMF</span> is C(n, k) p<sup>k</sup>(1 − p)<sup>n−k</sup>: count the sequences, then multiply by the probability of each one.</p></div></div>
+    </div>
+    <div class="callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <div class="callout-content">
+        <strong>Tails shrink exponentially:</strong> with 100 fair flips, Pr[exactly 50] ≈ 0.08 but Pr[exactly 25] ≈ 1.9 × 10<sup>−7</sup>. Stirling's formula shows the PMF decays like 2<sup>−(something)·n</sup> away from np. So "at most 24 heads" (about 9 × 10<sup>−8</sup>) is actually <em>less</em> likely than "exactly 25".
+      </div>
+    </div>
+
+    <h3>Beating 50-50: the candy boxes</h3>
+    <p>Two boxes hold different numbers of candies, each between 0 and 10. You open one at random, then keep it or switch. You win if you end up with more. A <span class="term" data-definition="An algorithm that makes random choices as it runs. Its guarantee is a probability that holds for every input.">randomized algorithm</span> wins more than half the time, whatever the boxes hold:</p>
+    <div class="step-cards">
+      <div class="step-card"><span class="step-num">1</span><div class="step-body"><strong>Guess a threshold</strong><p>Pick t uniformly from {1, …, 10}.</p></div></div>
+      <div class="step-card"><span class="step-num">2</span><div class="step-body"><strong>Apply it</strong><p>Keep the opened box if it has at least t candies. Otherwise switch.</p></div></div>
+      <div class="step-card"><span class="step-num">3</span><div class="step-body"><strong>Good guess (chance ≥ 1/10)</strong><p>If smaller &lt; t ≤ larger, the threshold tells the two boxes apart, so you win for certain.</p></div></div>
+      <div class="step-card"><span class="step-num">4</span><div class="step-body"><strong>Bad guess</strong><p>You always keep or always switch, so you win with probability ½. In total, Pr[win] ≥ 1/10 + ½ · 9/10 = 0.55.</p></div></div>
+    </div>
+
+    <h3>Flip to review</h3>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front"><h4>Random variable</h4><p>What is it, really?</p><p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p></div>
+        <div class="flashcard-back"><h4>A function S → ℝ</h4><p>It is deterministic. All the randomness is in which outcome happens.</p><p style="font-size:0.8em">← Tap to flip →</p></div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front"><h4>PMF vs CDF</h4><p>How are they related?</p><p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p></div>
+        <div class="flashcard-back"><h4>CDF = running sum of PMF</h4><p>PMF(x) = Pr[R = x] and CDF(x) = Pr[R ≤ x]. Either one determines the other.</p><p style="font-size:0.8em">← Tap to flip →</p></div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front"><h4>Binomial PMF</h4><p>What is Pr[k heads in n independent p-coins]?</p><p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p></div>
+        <div class="flashcard-back"><h4>C(n, k) p<sup>k</sup> (1 − p)<sup>n−k</sup></h4><p>The number of sequences times the probability of each sequence.</p><p style="font-size:0.8em">← Tap to flip →</p></div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> f = number of heads and h = 1 if all three coins match. Why are f and h dependent?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. h is completely determined by f: h = 1 exactly when f is 0 or 3. Knowing f tells you h.">Because h is a function of f, so knowing f pins down h</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Both are defined on the same three coins, but so are g and h, and those are independent. Sharing a sample space is not the reason.">Because they are defined on the same coins</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Having different ranges has nothing to do with independence. What matters is whether the product rule holds for every value pair.">Because f takes 4 values and h takes only 2</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> In the candy game, the boxes hold 6 and 8 candies. What is the threshold strategy's chance of winning?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="0.55 is the worst case, when the counts differ by 1. Here two thresholds (7 and 8) work.">0.55</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes. Thresholds 7 and 8 both separate the boxes, so Pr = 2/10 · 1 + 8/10 · ½ = 0.6.">0.60</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="That would need every threshold to work. Only t = 7 and t = 8 separate 6 from 8.">1.00</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> For 100 fair flips, which is larger: Pr[exactly 50 heads] or Pr[fewer than 50 heads]?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Exactly 50 is the single most likely value, but it is still only about 8%.">Exactly 50, since it is the peak</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="They are not equal. One is a single value and the other is a whole half of the distribution.">They are equal by symmetry</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. Pr[fewer than 50] = (1 − 0.08)/2 ≈ 0.46, far more than 0.08. Deep in the tail the comparison flips.">Fewer than 50, at about 46% against 8%</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-03/day-21-random-variables.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=WXIOdgaLCNM" target="_blank" rel="noopener">Watch Lecture 21: Random Variables (MIT OpenCourseWare)</a></p>
+  </div>
+</section>

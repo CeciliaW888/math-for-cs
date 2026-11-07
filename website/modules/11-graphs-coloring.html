@@ -1,0 +1,166 @@
+<section class="module" id="module-11" data-day="11">
+  <div class="module-inner">
+    <h2>Day 11: Graphs and Coloring</h2>
+    <p>Friendships, server links, neurons, and exam clashes are all made of things plus pairs of related things. One abstraction covers them all, and it comes with theorems you can use straight away.</p>
+
+    <h3>The vocabulary in one picture</h3>
+    <p>A <span class="term" data-definition="A nonempty set of vertices V plus a set E of edges, each edge an unordered pair of two different vertices. No loops and no repeated edges.">simple graph</span> G = (V, E) has dots (<span class="term" data-definition="The objects in a graph, drawn as dots. Also called nodes.">vertices</span>) and lines (<span class="term" data-definition="An unordered pair {u, v} of vertices, drawn as a line joining them. It models a two-way relationship.">edges</span>). The <span class="term" data-definition="The number of edges touching a vertex.">degree</span> of a vertex is how many edges touch it.</p>
+
+    <div class="callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <div class="callout-content">
+        <strong>Two-way only today:</strong> Facebook friendships fit this model. Twitter follows and web links are one-way, so they need directed graphs, which come later in the course.
+      </div>
+    </div>
+
+    <h3>The handshake lemma</h3>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body"><strong>Count endpoints</strong><p>Adding up all the degrees counts every end of every edge once.</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body"><strong>Each edge has two ends</strong><p>So the total is Σ deg(v) = 2|E|, which is always even.</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body"><strong>Use it</strong><p>Degrees 2, 2, 2, 2, 2, 1 add up to 11, which is odd, so no such graph exists. Also |E| ≤ n(n−1)/2, and the complete graph Kₙ reaches it.</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">4</span>
+        <div class="step-body"><strong>Bipartite twist</strong><p>Each side's degrees add up to |E|. So (average Harvard friends per MIT student) ÷ (average MIT friends per Harvard student) = |H|/|M| ≈ 1.6, whoever is friends with whom.</p></div>
+      </div>
+    </div>
+
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">greedy_coloring.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python"><span class="code-keyword">def</span> <span class="code-function">greedy</span>(order):
+    color = {}
+    <span class="code-keyword">for</span> v <span class="code-keyword">in</span> order:
+        taken = {color[u] <span class="code-keyword">for</span> u <span class="code-keyword">in</span> nbrs[v] <span class="code-keyword">if</span> u <span class="code-keyword">in</span> color}
+        color[v] = <span class="code-function">min</span>(c <span class="code-keyword">for</span> c <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">1</span>, <span class="code-number">8</span>) <span class="code-keyword">if</span> c <span class="code-keyword">not in</span> taken)
+    <span class="code-keyword">return</span> <span class="code-function">max</span>(color.values())
+
+<span class="code-function">print</span>(<span class="code-function">greedy</span>([<span class="code-number">0</span>,<span class="code-number">1</span>,<span class="code-number">2</span>,<span class="code-number">3</span>,<span class="code-number">4</span>,<span class="code-number">5</span>]), <span class="code-function">greedy</span>([<span class="code-number">1</span>,<span class="code-number">4</span>,<span class="code-number">2</span>,<span class="code-number">5</span>,<span class="code-number">0</span>,<span class="code-number">3</span>]))  <span class="code-comment"># 2 4</span></code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">Greedy coloring takes an ordering of the vertices as its input.</div>
+        <div class="translation-line">The color assignments made so far start out empty.</div>
+        <div class="translation-line">Visit the vertices one at a time, in the given order.</div>
+        <div class="translation-line">Only neighbors that already have a color can block one. Later vertices are ignored for now.</div>
+        <div class="translation-line">Take the smallest color nobody nearby is using. That's why it's called greedy.</div>
+        <div class="translation-line">Report how many colors were needed.</div>
+        <div class="translation-line">Same graph (a 6-cycle plus one chord), two orders: 2 colors for one and 4 for the other. Order matters!</div>
+      </div>
+    </div>
+
+    <h3>Coloring is conflict avoidance</h3>
+    <p>A <span class="term" data-definition="An assignment of one of at most k colors to every vertex so that the two ends of every edge get different colors.">proper k-coloring</span> keeps neighbors apart. The <span class="term" data-definition="The smallest number of colors in a proper coloring of G, written χ(G).">chromatic number</span> χ(G) is the fewest colors that work. Think of seating feuding wedding guests at as few tables as possible.</p>
+
+    <figure class="diagram-container">
+      <img src="diagrams/11-graphs-coloring.svg" alt="Five MIT classes in a conflict graph colored with three exam slots, with a highlighted triangle showing that two slots are not enough." loading="lazy">
+      <figcaption>Proving χ = 3 takes two halves: a coloring that works (χ ≤ 3) and a triangle that rules out 2 colors (χ ≥ 3).</figcaption>
+    </figure>
+
+    <div class="chat-window" id="chat-day11">
+      <div class="chat-messages">
+        <div class="chat-message" data-msg="1" data-sender="1" style="display:none;">Registrar here. I have 10 exam slots. Can someone just give me the best schedule? 🗓️</div>
+        <div class="chat-message" data-msg="2" data-sender="2" style="display:none;">That's finding χ(G). Even deciding whether 3 colors are enough is NP-complete. No fast exact algorithm is known 😬</div>
+        <div class="chat-message" data-msg="3" data-sender="4" style="display:none;">Then go greedy: fix an order and give each class the smallest free slot. It never creates a clash.</div>
+        <div class="chat-message" data-msg="4" data-sender="3" style="display:none;">And if no class conflicts with more than d others, greedy uses at most d + 1 slots, in any order ✅</div>
+        <div class="chat-message" data-msg="5" data-sender="1" style="display:none;">So the compiler folks do the same with registers, and radio engineers with frequencies? 📻</div>
+        <div class="chat-message" data-msg="6" data-sender="2" style="display:none;">Exactly. Any time pairs can't share a resource, it's graph coloring.</div>
+        <div class="chat-typing typing-indicator" style="display:none;"><span></span><span></span><span></span></div>
+      </div>
+      <div class="chat-controls">
+        <button class="chat-next-btn">Next →</button>
+        <button class="chat-all-btn">Show All</button>
+        <button class="chat-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>Key Insight:</strong> In the d + 1 proof, induct on the number of vertices, and <em>start from an arbitrary (n+1)-vertex graph</em>. Greedy colors the first n vertices as if the last one weren't there, and the last vertex has at most d blocked colors.
+      </div>
+    </div>
+
+    <h3>Flip to review</h3>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Handshake lemma</h4>
+          <p>What do all the degrees add up to?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>2|E|</h4>
+          <p>Every edge has two endpoints, so it is counted twice. The total is always even.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Proving χ(G) = k</h4>
+          <p>What two things must you show?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Upper and lower bounds</h4>
+          <p>Show a proper k-coloring (χ ≤ k), and prove no (k−1)-coloring exists (χ ≥ k).</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Greedy guarantee</h4>
+          <p>Max degree d means at most how many colors?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>d + 1</h4>
+          <p>Each vertex sees at most d colored neighbors, so one of the colors 1 to d + 1 is always free.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> A survey reports that men have 1.74 times as many female partners on average as women have male partners. There are about 1.03 women per man. What should you conclude?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="The bipartite handshake lemma forbids that. Each partnership adds one to each side, so the ratio of averages must equal women ÷ men.">Men really are 1.74 times as active</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. The true ratio is forced to be about 1.03, so the survey data must be flawed somehow.">The data is off, because the ratio must be about 1.03</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Graph theory does pin it down. Both sides' degrees add up to the same edge count, so the ratio is a head count.">The ratio can't be predicted without more data</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> You found a proper 4-coloring of a graph. What do you know about χ(G)?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Close, but a coloring only gives an upper bound. Maybe 3 colors would work too. You also need a lower-bound argument.">χ(G) = 4</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes. Any working coloring shows χ ≤ 4. Proving χ = 4 also needs an argument that 3 colors can't work.">χ(G) ≤ 4</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="That's backwards. A coloring shows how few colors are enough, not how many are needed.">χ(G) ≥ 4</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> A graph has a million vertices, but every vertex has degree at most 5. What does greedy coloring promise?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Correct. The bound depends only on the max degree, not on the size of the graph, and it holds for every vertex order.">At most 6 colors, in any order</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Greedy is not always optimal. Bad orders can use more than χ colors, though never more than d + 1.">Exactly χ(G) colors</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="The number of vertices does not matter. Each vertex only has to dodge its at most 5 neighbors.">At most a million colors</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-02/day-11-graphs-coloring.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=cB0UijRfOCQ" target="_blank" rel="noopener">Watch Lecture 11: Graphs and Coloring (MIT OpenCourseWare)</a></p>
+  </div>
+</section>

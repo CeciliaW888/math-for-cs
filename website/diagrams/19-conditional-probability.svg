@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <rect x="0" y="0" width="800" height="450" fill="#ffffff"/>
+  <text x="400" y="38" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#2d2d2d">Conditioning on a positive test</text>
+  <text x="400" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-style="italic" fill="#6b8f71">Shine the spotlight on the + leaves, then ask what fraction of them are sick</text>
+
+  <g font-family="Georgia, serif" font-size="15" fill="#2d2d2d">
+    <!-- root -->
+    <circle cx="70" cy="245" r="7" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <!-- level 1 edges -->
+    <line x1="77" y1="242" x2="230" y2="145" stroke="#2d2d2d" stroke-width="1.5"/>
+    <line x1="77" y1="248" x2="230" y2="345" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="130" y="180" fill="#7a8fa6">0.1</text>
+    <text x="130" y="320" fill="#7a8fa6">0.9</text>
+    <!-- level 1 nodes -->
+    <rect x="230" y="125" width="90" height="40" rx="8" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="275" y="150" text-anchor="middle">Sick</text>
+    <rect x="230" y="325" width="90" height="40" rx="8" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="275" y="350" text-anchor="middle">Healthy</text>
+    <!-- level 2 edges -->
+    <line x1="320" y1="140" x2="440" y2="100" stroke="#c4825a" stroke-width="2"/>
+    <line x1="320" y1="150" x2="440" y2="190" stroke="#2d2d2d" stroke-width="1.5"/>
+    <line x1="320" y1="340" x2="440" y2="300" stroke="#c4825a" stroke-width="2"/>
+    <line x1="320" y1="350" x2="440" y2="390" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="360" y="108" fill="#7a8fa6">0.9</text>
+    <text x="360" y="192" fill="#7a8fa6">0.1</text>
+    <text x="360" y="308" fill="#7a8fa6">0.3</text>
+    <text x="360" y="392" fill="#7a8fa6">0.7</text>
+    <!-- leaves -->
+    <rect x="440" y="80" width="150" height="40" rx="8" fill="#fbe9dd" stroke="#c4825a" stroke-width="2"/>
+    <text x="515" y="105" text-anchor="middle">+  sick: 0.09</text>
+    <rect x="440" y="170" width="150" height="40" rx="8" fill="#ffffff" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="515" y="195" text-anchor="middle">−  sick: 0.01</text>
+    <rect x="440" y="280" width="150" height="40" rx="8" fill="#fbe9dd" stroke="#c4825a" stroke-width="2"/>
+    <text x="515" y="305" text-anchor="middle">+  healthy: 0.27</text>
+    <rect x="440" y="370" width="150" height="40" rx="8" fill="#ffffff" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="515" y="395" text-anchor="middle">−  healthy: 0.63</text>
+    <!-- result panel -->
+    <rect x="610" y="180" width="175" height="130" rx="10" fill="#ffffff" stroke="#c4825a" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="697" y="208" text-anchor="middle" font-family="Georgia, serif" font-size="16">Pr[sick | +]</text>
+    <text x="697" y="238" text-anchor="middle">0.09</text>
+    <line x1="645" y1="246" x2="750" y2="246" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="697" y="266" text-anchor="middle">0.09 + 0.27</text>
+    <text x="697" y="295" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#c4825a">= 1/4</text>
+  </g>
+  <text x="70" y="275" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#6b8f71">start</text>
+</svg>

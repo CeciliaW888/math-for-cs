@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-label="The five congruence classes modulo 5 arranged on a circle, with inverse pairs modulo 5">
+<rect width="800" height="450" fill="#ffffff"/>
+<text x="40" y="46" font-family="Georgia, serif" font-size="24" fill="#2d2d2d">Arithmetic mod 5: five classes on a loop</text>
+<circle cx="255" cy="250" r="112" fill="none" stroke="#e0d6cc" stroke-width="2"/>
+<circle cx="255.0" cy="138.0" r="24" fill="#fbe9dd" stroke="#7a8fa6" stroke-width="2"/>
+<text x="255.0" y="145.0" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#2d2d2d">0</text>
+<text x="255.0" y="98.0" text-anchor="middle" font-family="Helvetica Neue, sans-serif" font-size="14" fill="#6b6b6b">−5, 0, 5, 10</text>
+<circle cx="361.5" cy="215.4" r="24" fill="#fbe9dd" stroke="#7a8fa6" stroke-width="2"/>
+<text x="361.5" y="222.4" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#2d2d2d">1</text>
+<text x="395.8" y="209.3" text-anchor="start" font-family="Helvetica Neue, sans-serif" font-size="14" fill="#6b6b6b">−4, 1, 6, 11</text>
+<circle cx="320.8" cy="340.6" r="24" fill="#fbe9dd" stroke="#c4825a" stroke-width="2"/>
+<text x="320.8" y="347.6" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#2d2d2d">2</text>
+<text x="342.0" y="374.7" text-anchor="start" font-family="Helvetica Neue, sans-serif" font-size="14" fill="#6b6b6b">−3, 2, 7, 12</text>
+<circle cx="189.2" cy="340.6" r="24" fill="#fbe9dd" stroke="#c4825a" stroke-width="2"/>
+<text x="189.2" y="347.6" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#2d2d2d">3</text>
+<text x="168.0" y="374.7" text-anchor="end" font-family="Helvetica Neue, sans-serif" font-size="14" fill="#6b6b6b">−2, 3, 8, 13</text>
+<circle cx="148.5" cy="215.4" r="24" fill="#fbe9dd" stroke="#7a8fa6" stroke-width="2"/>
+<text x="148.5" y="222.4" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#2d2d2d">4</text>
+<text x="114.2" y="209.3" text-anchor="end" font-family="Helvetica Neue, sans-serif" font-size="14" fill="#6b6b6b">−1, 4, 9, 14</text>
+<text x="255" y="244" text-anchor="middle" font-family="Helvetica Neue, sans-serif" font-size="15" fill="#2d2d2d">a ≡ b (mod 5)</text>
+<text x="255" y="266" text-anchor="middle" font-family="Helvetica Neue, sans-serif" font-size="15" fill="#2d2d2d">⇔ same remainder</text>
+<rect x="510" y="95" width="260" height="300" rx="10" fill="#f5f0eb" stroke="#e0d6cc" stroke-width="1.5"/>
+<text x="530" y="127" font-family="Georgia, serif" font-size="19" fill="#2d2d2d">Inverses mod 5</text>
+<text x="540" y="165" font-family="Helvetica Neue, sans-serif" font-size="16" fill="#2d2d2d">1 · 1 = 1</text>
+<text x="680" y="165" font-family="Helvetica Neue, sans-serif" font-size="16" fill="#6b8f71">≡ 1</text>
+<text x="540" y="199" font-family="Helvetica Neue, sans-serif" font-size="16" fill="#2d2d2d">2 · 3 = 6</text>
+<text x="680" y="199" font-family="Helvetica Neue, sans-serif" font-size="16" fill="#6b8f71">≡ 1</text>
+<text x="540" y="233" font-family="Helvetica Neue, sans-serif" font-size="16" fill="#2d2d2d">4 · 4 = 16</text>
+<text x="680" y="233" font-family="Helvetica Neue, sans-serif" font-size="16" fill="#6b8f71">≡ 1</text>
+<line x1="530" y1="275" x2="770" y2="275" stroke="#e0d6cc" stroke-width="1.5"/>
+<text x="530" y="303" font-family="Georgia, serif" font-size="17" fill="#2d2d2d">But mod 6, 3 has none:</text>
+<text x="540" y="331" font-family="Helvetica Neue, sans-serif" font-size="15" fill="#c4825a">3·x is always 0 or 3</text>
+<text x="540" y="357" font-family="Helvetica Neue, sans-serif" font-size="15" fill="#2d2d2d">inverse exists ⇔ gcd(a, n) = 1</text>
+<text x="40" y="430" font-family="Helvetica Neue, sans-serif" font-size="14" fill="#6b6b6b">Adding moves around the loop; multiples of 5 are full laps and vanish.</text>
+</svg>

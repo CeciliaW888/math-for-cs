@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "Pr[A ∩ B] = 0.2 and Pr[B] = 0.5. What is Pr[A | B], and what does it mean?",
+   "options": ["0.1, because you multiply the two probabilities", "0.7, because you add the two probabilities", "0.2, because conditioning never changes a probability", "0.4: if you zoom in on B, 40% of it is also A"],
+   "answer": 3,
+   "explanation": "Pr[A | B] = Pr[A ∩ B] / Pr[B] = 0.2 / 0.5 = 0.4. Dividing by Pr[B] rescales B into the whole sample space."},
+  {"question": "10% of people are sick. A test has a 30% false-positive rate and a 10% false-negative rate. You test positive. What is Pr[sick | +]?",
+   "options": ["1/4", "9/10", "1/10", "2/3"],
+   "answer": 0,
+   "explanation": "The odds of sick to healthy are (0.9 · 0.1) / (0.3 · 0.9) = 1/3, so the probability is 1/4. 9/10 is Pr[+ | sick], which reverses the condition."},
+  {"question": "Why is the odds form of Bayes' rule, Pr[B|A]/Pr[C|A] = Pr[A|B]Pr[B] / (Pr[A|C]Pr[C]), often easier to use?",
+   "options": ["It doesn't need the priors Pr[B] and Pr[C]", "It doesn't need Pr[A], which can be hard to compute directly", "It only works when B and C are disjoint", "It gives the likelihood instead of the posterior"],
+   "answer": 1,
+   "explanation": "Pr[A] appears in both posteriors and cancels in the ratio. If B and C are complements, you then turn the odds back into a probability."},
+  {"question": "In the jelly-tart trial, both sides argued about Pr[C | J] (cake thief given tart thief). What did they both get wrong?",
+   "options": ["They should have used Pr[J | C] instead", "They multiplied where they should have added", "They ignored the evidence that a cake was actually stolen, so the right quantity is Pr[C | J ∩ X]", "Conditional probability doesn't apply to a single person"],
+   "answer": 2,
+   "explanation": "Once you know a cake was stolen (event X), you must condition on it too. Pr[C | J ∩ X] can be large even though Pr[C | J] is tiny."}
+]}

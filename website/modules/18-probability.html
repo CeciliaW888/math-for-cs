@@ -1,0 +1,183 @@
+<section class="module" id="module-18" data-day="18">
+  <div class="module-inner">
+    <h2>Day 18: Probability</h2>
+    <p>Randomized algorithms, cryptographic keys, machine learning: CS runs on probability. It is also where intuition fails most often. Today's fix is a mechanical procedure, the <span class="term" data-definition="A step-by-step way to analyze a random process: draw a tree to find the outcomes, label edges with probabilities, pick out the event, then add up.">tree method</span>, that does not care what your gut says.</p>
+
+    <h3>The Monty Hall problem</h3>
+    <p>Three doors: one car, two goats. You pick a door. The host, who knows where the car is, opens another door with a goat and offers a switch. Most people say it makes no difference. The tree shows otherwise.</p>
+
+    <div class="callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-content">
+        <strong>Step 0: fix the assumptions.</strong> The car and your first pick are uniform, the host always opens an unpicked goat door, and he chooses at random when he has two options. A host who only offers a switch when you are right would flip the answer.
+      </div>
+    </div>
+
+    <figure class="diagram-container">
+      <img src="diagrams/18-probability.svg" alt="Monty Hall tree diagram: car location, contestant pick, and door opened by the host give 12 leaves; 6 leaves where switching wins each have probability 1/9 and 6 where staying wins each have probability 1/18" loading="lazy">
+      <figcaption>Every car and pick edge has probability 1/3. Twelve leaves, but they are not equally likely: switching wins 6 × 1/9 = 2/3.</figcaption>
+    </figure>
+
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <strong>Find the sample space</strong>
+          <p>One tree level per random step: car location, your pick, the door the host opens. The 12 leaves are the <span class="term" data-definition="One complete result of a random process, corresponding to one root-to-leaf path in the tree.">outcomes</span>, together forming the <span class="term" data-definition="The set of all possible outcomes of a random process. In this course it is always nonempty and countable.">sample space</span>.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <strong>Assign probabilities</strong>
+          <p>Label each edge with its probability given its parent. Multiply along a path: 1/3 · 1/3 · 1/2 = 1/18 when the host has a choice, 1/3 · 1/3 · 1 = 1/9 when he is forced.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <strong>Define the event</strong>
+          <p>"Switching wins" is the <span class="term" data-definition="Any subset of the sample space. Its probability is the sum of the probabilities of the outcomes in it.">event</span> made of the leaves where your pick is not the car door.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">4</span>
+        <div class="step-body">
+          <strong>Compute</strong>
+          <p>Six leaves at 1/9 each: Pr[switch wins] = 2/3.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>Key Insight:</strong> Picture one litre of water poured into a river delta at the root. Each fork splits it in the labelled proportions, so a leaf's share is the product along its path. Counting leaves ("6 of 12, so 1/2") ignores how much water each one gets.
+      </div>
+    </div>
+
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">monty_exact.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python">exact = <span class="code-function">Fraction</span>(<span class="code-number">0</span>)
+<span class="code-keyword">for</span> car <span class="code-keyword">in</span> doors:
+    <span class="code-keyword">for</span> pick <span class="code-keyword">in</span> doors:
+        options = [d <span class="code-keyword">for</span> d <span class="code-keyword">in</span> doors <span class="code-keyword">if</span> d <span class="code-keyword">not in</span> (car, pick)]
+        <span class="code-keyword">for</span> opened <span class="code-keyword">in</span> options:
+            <span class="code-keyword">if</span> car != pick:
+                exact += <span class="code-function">Fraction</span>(<span class="code-number">1</span>, <span class="code-number">3</span>) * <span class="code-function">Fraction</span>(<span class="code-number">1</span>, <span class="code-number">3</span>) * <span class="code-function">Fraction</span>(<span class="code-number">1</span>, <span class="code-function">len</span>(options))
+<span class="code-function">print</span>(exact)  <span class="code-comment"># 2/3</span></code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">Use exact fractions so no rounding hides the answer.</div>
+        <div class="translation-line">Level 1 of the tree: where the car is.</div>
+        <div class="translation-line">Level 2: the contestant's first pick.</div>
+        <div class="translation-line">Level 3: the host can open any door that is neither the car nor your pick, so he has 1 or 2 options.</div>
+        <div class="translation-line">Visit each leaf.</div>
+        <div class="translation-line">Switching wins exactly when the first pick was wrong.</div>
+        <div class="translation-line">Add that leaf's probability, the product of its three edges.</div>
+        <div class="translation-line">The total is 2/3.</div>
+      </div>
+    </div>
+
+    <h3>Uniform spaces and dice that beat each other in a circle</h3>
+    <p>In a <span class="term" data-definition="A probability space where every outcome has the same probability, so Pr[E] = |E| / |S| and probability becomes counting.">uniform space</span>, Pr[E] = |E| / |S|, so probability is just counting. Take red dice faces {2, 6, 7}, green {1, 5, 9}, and blue {3, 4, 8}:</p>
+    <div class="pattern-cards">
+      <div class="pattern-card">
+        <div class="stat-value">5/9</div>
+        <div class="stat-label">red beats green</div>
+        <p>One roll each, 9 equally likely pairs.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="stat-value">5/9</div>
+        <div class="stat-label">green beats blue</div>
+        <p>So red should beat blue... right?</p>
+      </div>
+      <div class="pattern-card">
+        <div class="stat-value">5/9</div>
+        <div class="stat-label">blue beats red</div>
+        <p>"Beats" is not transitive.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="stat-value">37 / 2 / 42</div>
+        <div class="stat-label">red vs green, two rolls summed (of 81)</div>
+        <p>Wins, ties, losses. With two rolls, every matchup in the cycle reverses.</p>
+      </div>
+    </div>
+
+    <h3>Flashcards</h3>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Probability space</h4>
+          <p>Which two parts?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>S and Pr</h4>
+          <p>A countable sample space S, plus Pr: S → [0, 1] whose values sum to 1.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Outcome probability in a tree</h4>
+          <p>How do you get it?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Multiply along the path</h4>
+          <p>Multiply the edge probabilities from the root to that leaf.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Pr[E] for an event</h4>
+          <p>General rule and uniform shortcut?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Sum of outcomes</h4>
+          <p>Add Pr[ω] for ω in E. In a uniform space this is |E| / |S|.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> The Monty Hall tree has 12 leaves, and switching wins at 6 of them. Why is the answer not 6/12?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="All 12 leaves are real outcomes. The issue is their weights, not their number.">Some leaves are impossible</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. The 6 winning leaves have probability 1/9 each and the 6 losing ones 1/18 each, so the leaves are not equally likely.">The leaves have different probabilities</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="The host acting randomly is one of our assumptions, and it is already built into the 1/2 edges.">The host's choice is not random</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> In a tree, the edges leaving one node have probabilities 1/3, 1/3 and x. What is x?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Edges leaving a single node must sum to 1, because the process always continues somewhere.">Any value from 0 to 1</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Only the edges leaving one node sum to 1. A whole column does not have to.">It depends on the rest of the column</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes. From any node you must take exactly one edge, so 1/3 + 1/3 + x = 1.">1/3</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> Your opponent picks one of the red, green or blue dice first, then you pick. What should you do?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Exactly. Every die is beaten by another one with probability 5/9, so the second chooser always has an edge.">Pick the die that beats theirs in the cycle</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="There is no best die. Red beats green, green beats blue, and blue beats red.">Always pick the overall strongest die</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="It matters a lot. One remaining die wins 5/9 of the time and the other loses 5/9 of the time.">Either remaining die; it makes no difference</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-03/day-18-probability.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=Hjvy1w4ocQU" target="_blank" rel="noopener">Watch Lecture 18: Probability (MIT OpenCourseWare)</a></p>
+  </div>
+</section>

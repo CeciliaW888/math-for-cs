@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-labelledby="t22">
+  <title id="t22">Linearity of expectation: split a count into indicators, then add</title>
+  <rect x="0" y="0" width="800" height="450" fill="#ffffff"/>
+  <text x="400" y="42" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#2d2d2d">Linearity of expectation: split, then add</text>
+
+  <!-- the hard random variable -->
+  <rect x="200" y="70" width="400" height="62" rx="10" fill="#fbe9dd" stroke="#c4825a" stroke-width="2"/>
+  <text x="400" y="97" text-anchor="middle" font-family="Helvetica, sans-serif" font-size="17" fill="#2d2d2d">X = number of kids who get their own phone</text>
+  <text x="400" y="120" text-anchor="middle" font-family="Helvetica, sans-serif" font-size="14" fill="#6b6b6b">hard to analyze directly (n! shuffles)</text>
+
+  <!-- arrows down to indicators -->
+  <g stroke="#7a8fa6" stroke-width="1.5" fill="none">
+    <path d="M400 132 L110 190"/>
+    <path d="M400 132 L255 190"/>
+    <path d="M400 132 L400 190"/>
+    <path d="M400 132 L545 190"/>
+    <path d="M400 132 L690 190"/>
+  </g>
+  <text x="560" y="165" font-family="Helvetica, sans-serif" font-size="14" fill="#7a8fa6">decompose: X = I₁ + I₂ + … + Iₙ</text>
+
+  <!-- five indicator boxes -->
+  <g font-family="Helvetica, sans-serif" fill="#2d2d2d">
+    <rect x="55" y="192" width="110" height="88" rx="8" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="110" y="220" text-anchor="middle" font-size="18">I₁</text>
+    <text x="110" y="243" text-anchor="middle" font-size="14">kid 1 match?</text>
+    <text x="110" y="267" text-anchor="middle" font-size="15" fill="#c4825a">E = 1/n</text>
+
+    <rect x="200" y="192" width="110" height="88" rx="8" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="255" y="220" text-anchor="middle" font-size="18">I₂</text>
+    <text x="255" y="243" text-anchor="middle" font-size="14">kid 2 match?</text>
+    <text x="255" y="267" text-anchor="middle" font-size="15" fill="#c4825a">E = 1/n</text>
+
+    <rect x="345" y="192" width="110" height="88" rx="8" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="400" y="220" text-anchor="middle" font-size="18">I₃</text>
+    <text x="400" y="243" text-anchor="middle" font-size="14">kid 3 match?</text>
+    <text x="400" y="267" text-anchor="middle" font-size="15" fill="#c4825a">E = 1/n</text>
+
+    <rect x="490" y="192" width="110" height="88" rx="8" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="545" y="230" text-anchor="middle" font-size="22">…</text>
+    <text x="545" y="267" text-anchor="middle" font-size="15" fill="#c4825a">E = 1/n</text>
+
+    <rect x="635" y="192" width="110" height="88" rx="8" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="690" y="220" text-anchor="middle" font-size="18">Iₙ</text>
+    <text x="690" y="243" text-anchor="middle" font-size="14">kid n match?</text>
+    <text x="690" y="267" text-anchor="middle" font-size="15" fill="#c4825a">E = 1/n</text>
+  </g>
+
+  <!-- plus signs -->
+  <g font-family="Helvetica, sans-serif" font-size="22" fill="#6b8f71" text-anchor="middle">
+    <text x="182" y="244">+</text>
+    <text x="327" y="244">+</text>
+    <text x="472" y="244">+</text>
+    <text x="617" y="244">+</text>
+  </g>
+
+  <!-- arrows to the result -->
+  <g stroke="#6b8f71" stroke-width="1.5" fill="none">
+    <path d="M110 280 L400 340"/>
+    <path d="M255 280 L400 340"/>
+    <path d="M400 280 L400 340"/>
+    <path d="M545 280 L400 340"/>
+    <path d="M690 280 L400 340"/>
+  </g>
+
+  <rect x="230" y="342" width="340" height="56" rx="10" fill="#ffffff" stroke="#6b8f71" stroke-width="2"/>
+  <text x="400" y="377" text-anchor="middle" font-family="Helvetica, sans-serif" font-size="19" fill="#2d2d2d">E[X] = n × (1/n) = 1</text>
+
+  <text x="400" y="428" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="15" fill="#6b6b6b">The indicators are not independent, and linearity does not care.</text>
+</svg>

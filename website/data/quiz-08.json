@@ -1,0 +1,48 @@
+{
+  "questions": [
+    {
+      "question": "Jugs of 6 and 4 gallons can never measure exactly 3 gallons. What is the best explanation?",
+      "options": [
+        "Every reachable amount is an integer linear combination of 6 and 4, so it is divisible by gcd(6, 4) = 2",
+        "3 is smaller than both jug sizes",
+        "You would need a third jug",
+        "Pouring always wastes water, so odd amounts are lost"
+      ],
+      "answer": 0,
+      "explanation": "The invariant says every reachable amount is s·6 + t·4. Since 2 divides 6 and 4, it divides every such amount, and 2 does not divide 3."
+    },
+    {
+      "question": "To prove gcd(a, b) = gcd(a − b, b), the lecture shows which statement?",
+      "options": [
+        "a − b is smaller than a",
+        "The pairs (a, b) and (a − b, b) have exactly the same set of common divisors",
+        "a and b are both divisible by a − b",
+        "The division theorem gives a unique remainder"
+      ],
+      "answer": 1,
+      "explanation": "If the two sets of common divisors are equal, their largest elements are equal. Each containment uses the fact that common divisors divide integer linear combinations."
+    },
+    {
+      "question": "Why does Euclid's algorithm finish in O(log a + log b) steps?",
+      "options": [
+        "Because the remainder is always 0 or 1",
+        "Because it only works on prime numbers",
+        "Because x rem y < x/2, so the numbers at least halve every two steps",
+        "Because it subtracts 1 from each number per step"
+      ],
+      "answer": 2,
+      "explanation": "Either y ≤ x/2 and the remainder is below y, or y > x/2 and one subtraction removes over half of x. Halving repeatedly takes only logarithmically many steps."
+    },
+    {
+      "question": "The Pulverizer finds gcd(7, 4) = 1 = −1·7 + 2·4. Which expression shows 5 as an integer linear combination of 7 and 4?",
+      "options": [
+        "5 = 1·7 − 1·4",
+        "5 = 2·7 − 2·4",
+        "5 = 5·7 − 5·4",
+        "5 = −5·7 + 10·4"
+      ],
+      "answer": 3,
+      "explanation": "Multiply the recipe for 1 by 5: −5·7 + 10·4 = −35 + 40 = 5. The others evaluate to 3, 6, and 15, so they only look plausible."
+    }
+  ]
+}

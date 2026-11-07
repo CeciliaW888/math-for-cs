@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <rect x="0" y="0" width="800" height="450" fill="#ffffff"/>
+  <text x="400" y="40" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#2d2d2d">Sets and Implication at a Glance</text>
+
+  <!-- Venn diagram -->
+  <g font-family="Georgia, serif" fill="#2d2d2d">
+    <circle cx="160" cy="235" r="120" fill="#fbe9dd" fill-opacity="0.6" stroke="#c4825a" stroke-width="2"/>
+    <circle cx="300" cy="235" r="120" fill="#f5f0eb" fill-opacity="0.6" stroke="#6b8f71" stroke-width="2"/>
+    <text x="90" y="110" font-size="18" fill="#c4825a" font-style="italic">A</text>
+    <text x="370" y="110" font-size="18" fill="#6b8f71" font-style="italic">B</text>
+    <text x="110" y="205" font-size="20">6</text>
+    <text x="140" y="260" font-size="20">1</text>
+    <text x="95" y="295" font-size="20">0</text>
+    <text x="222" y="242" font-size="22" font-weight="bold">2</text>
+    <rect x="300" y="185" width="70" height="34" rx="8" fill="none" stroke="#6b8f71" stroke-width="1.5"/>
+    <text x="335" y="208" font-size="17" text-anchor="middle">{3, 4}</text>
+    <text x="335" y="280" font-size="22" text-anchor="middle">∅</text>
+    <text x="230" y="395" font-size="15" text-anchor="middle">A ∩ B = {2}     A − B = {0, 1, 6}</text>
+    <text x="230" y="420" font-size="14" text-anchor="middle" fill="#7a8fa6">3 ∉ B: it is nested inside the element {3, 4}</text>
+  </g>
+
+  <!-- Divider -->
+  <line x1="460" y1="80" x2="460" y2="420" stroke="#e0d6cc" stroke-width="1.5"/>
+
+  <!-- Implication truth table -->
+  <g font-family="Georgia, serif" fill="#2d2d2d" font-size="18" text-anchor="middle">
+    <text x="625" y="100" font-family="Georgia, serif" font-size="20">A → B</text>
+    <rect x="500" y="115" width="250" height="40" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="545" y="142">A</text>
+    <text x="625" y="142">B</text>
+    <text x="705" y="142">A → B</text>
+
+    <rect x="500" y="155" width="250" height="40" fill="none" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="545" y="182">T</text><text x="625" y="182">T</text><text x="705" y="182" fill="#6b8f71">T</text>
+
+    <rect x="500" y="195" width="250" height="40" fill="#fbe9dd" stroke="#c4825a" stroke-width="2"/>
+    <text x="545" y="222">T</text><text x="625" y="222">F</text><text x="705" y="222" fill="#c4825a" font-weight="bold">F</text>
+
+    <rect x="500" y="235" width="250" height="40" fill="none" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="545" y="262">F</text><text x="625" y="262">T</text><text x="705" y="262" fill="#6b8f71">T</text>
+
+    <rect x="500" y="275" width="250" height="40" fill="none" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="545" y="302">F</text><text x="625" y="302">F</text><text x="705" y="302" fill="#6b8f71">T</text>
+
+    <line x1="590" y1="115" x2="590" y2="315" stroke="#2d2d2d" stroke-width="1"/>
+    <line x1="660" y1="115" x2="660" y2="315" stroke="#2d2d2d" stroke-width="1"/>
+
+    <text x="625" y="350" font-size="15" fill="#c4825a">The only way to break a promise:</text>
+    <text x="625" y="372" font-size="15" fill="#c4825a">A happens, B does not.</text>
+    <text x="625" y="405" font-size="15" fill="#7a8fa6">A → B  ≡  NOT B → NOT A</text>
+  </g>
+</svg>

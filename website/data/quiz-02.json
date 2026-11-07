@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "You must prove: \"For every integer n, if n is a multiple of 6, then n is even.\" What should the first two lines of your proof be?",
+   "options": ["Let n = 6. Then n is even.", "Assume n is even. Show n is a multiple of 6.", "Let n be an arbitrary integer. Assume n is a multiple of 6.", "Assume, for contradiction, that every integer is odd."],
+   "answer": 2,
+   "explanation": "The claim starts with \"for all\", so you introduce an arbitrary n. Then it is an implication, so you assume the if-part. Choosing n = 6 proves only one case, and assuming n is even sets up the converse instead."},
+  {"question": "In the proof that √2 is irrational, which assumption makes the contradiction possible?",
+   "options": ["That √2 is between 1 and 2", "That a and b are both odd", "That b is even", "That a/b is written in lowest terms"],
+   "answer": 3,
+   "explanation": "The proof shows that a and b must both be even. That conflicts only with the assumption that the fraction has no common factor. Any fraction can be reduced first, so this assumption costs nothing."},
+  {"question": "Why does the L-tromino proof need to handle EVERY position of the missing cell in its inductive hypothesis?",
+   "options": ["Because after the centre L is placed, each quadrant's missing cell can be anywhere in it", "Because the base case is a 1 by 1 board", "Because induction always needs two base cases", "Because the number of pieces must be a multiple of 3"],
+   "answer": 0,
+   "explanation": "The original hole could be in any position within its quadrant, and the other three quadrants get their hole at a corner. To recurse, P(n) must cover any single missing cell. A weaker hypothesis would not apply to all four quadrants."},
+  {"question": "A student \"proves\" n = n + 1 for all n by showing: if n = n + 1, then adding 1 to both sides gives n + 1 = n + 2. What is wrong?",
+   "options": ["The inductive step is invalid algebra", "There is no true base case, so the chain never starts", "Induction only works for sums", "They should have used contradiction"],
+   "answer": 1,
+   "explanation": "The step itself is valid: if P(n) were true, P(n + 1) would follow. But P(0), which says 0 = 1, is false. Without a true base case, induction proves nothing."}
+]}

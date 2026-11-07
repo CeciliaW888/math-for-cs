@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "Which degree sequence is impossible for a simple graph because of the handshake lemma alone?",
+   "options": ["2, 2, 2", "1, 1, 1, 1", "3, 3, 3, 3", "3, 2, 2, 2"],
+   "answer": 3,
+   "explanation": "3 + 2 + 2 + 2 = 9 is odd, but the degrees must add up to 2|E|. The others have even sums and really exist: a triangle, two separate edges, and K4."},
+  {"question": "A greedy coloring of a graph used 5 colors. Every vertex has degree at most 3. What happened?",
+   "options": ["This cannot happen: greedy always uses at most d + 1 = 4 colors here", "The vertex order was unlucky, which is allowed", "The chromatic number must be 5", "The graph must contain K5"],
+   "answer": 0,
+   "explanation": "Whatever the order, each vertex has at most 3 colored neighbors, so one of colors 1 to 4 is free. A bad order can waste colors, but it can never go beyond d + 1."},
+  {"question": "In the inductive step of the d + 1 proof (induction on vertices), how should you begin?",
+   "options": ["Take an n-vertex graph and add a vertex to it", "Take an arbitrary (n+1)-vertex graph with max degree at most d", "Induct on d instead", "Assume the claim for n + 1 and deduce it for n"],
+   "answer": 1,
+   "explanation": "P(n+1) is a claim about ALL (n+1)-vertex graphs, so start from an arbitrary one. Building up from n vertices risks missing some graphs."},
+  {"question": "A registrar wants the fewest exam slots for a big conflict graph. What is the realistic approach?",
+   "options": ["Run an efficient exact algorithm for the chromatic number", "Use one slot per class", "Use a heuristic like greedy coloring, since exact coloring is NP-complete", "Use the four-color theorem to guarantee 4 slots"],
+   "answer": 2,
+   "explanation": "Deciding whether even 3 colors suffice is NP-complete, so exact answers are out of reach for huge graphs. The four-color theorem only covers planar graphs, and conflict graphs usually aren't planar."}
+]}

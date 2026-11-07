@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "A bipartite graph has 50 tasks on one side and 40 servers on the other. What can you say about perfect matchings?",
+   "options": ["None can exist, because the sides have different sizes", "One exists if every task connects to some server", "One always exists in a bipartite graph", "It depends on the edge weights"],
+   "answer": 0,
+   "explanation": "Every matching edge uses one vertex from each side, so at most 40 tasks can be covered. A perfect matching needs equal sides."},
+  {"question": "In a stable-matching instance, evaluator E rejected applicant A on day 3. What does the key invariant tell you about the final matching?",
+   "options": ["A ends up with their last choice", "E ends up with someone E prefers to A", "E and A form a rogue pair", "A must reject E later"],
+   "answer": 1,
+   "explanation": "Evaluators only keep or trade up, so after rejecting A, E always holds someone better. That is exactly why (E, A) can't be rogue."},
+  {"question": "Why does the 'everyone gets a partner' proof fail if there are more applicants than evaluators?",
+   "options": ["The algorithm would loop forever", "Evaluators could hold two applicants", "The contradiction relied on there being too few other applicants to fill all n evaluators", "Rankings would contain ties"],
+   "answer": 2,
+   "explanation": "The proof says all n evaluators would need partners better than A, but only n − 1 others exist. With more applicants, that count no longer runs out, and someone really can be left out."},
+  {"question": "Gale-Shapley with doctors proposing gives doctor D the hospital H. What does the optimality theorem say?",
+   "options": ["H is D's first choice", "No other stable matching exists", "H also got its first choice", "No stable matching gives D a hospital D prefers to H"],
+   "answer": 3,
+   "explanation": "Proposers get their best FEASIBLE partner: the best they could have in any stable matching. That may not be their first choice."}
+]}

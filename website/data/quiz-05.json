@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "A prize pays m dollars now and each year for n years in total. With interest rate p, why is it worth less than m times n today?",
+   "options": ["Because the sum of m dollars n times is less than mn", "Because a payment k years away is worth only m/(1+p)^k today, so later payments count for less", "Because the geometric series formula only works for x greater than 1", "Because interest makes future payments worth more than mn"],
+   "answer": 1,
+   "explanation": "Money now can earn interest, so future dollars are discounted. Each payment is multiplied by x^k with x = 1/(1+p) < 1, giving m(1 - x^n)/(1 - x), which is less than mn."},
+  {"question": "In the perturbation method for S = 1 + x + ... + x^(n-1), why multiply by x and subtract?",
+   "options": ["Because multiplying by x makes every term equal", "Because it turns the sum into an integral", "Because xS and S share almost every term, so the subtraction cancels all but the first and last", "Because it proves the formula by induction directly"],
+   "answer": 2,
+   "explanation": "xS is the same list of powers shifted by one place. Subtracting leaves S - xS = 1 - x^n, which is easy to solve for S."},
+  {"question": "To find the sum of k^2 from 1 to n by ansatz, you guess a cubic an^3 + bn^2 + cn + d. Why a cubic?",
+   "options": ["Because every sum of powers is a cubic", "Because the lecture said so", "Because a cubic has four constants, matching four test values", "Because the sum lies between about n^3/8 and n^3, so it grows like n^3"],
+   "answer": 3,
+   "explanation": "Rough bounds show the sum behaves like n^3, just as the integral of x^2 is x^3/3. That suggests a cubic. The guess still has to be checked by induction."},
+  {"question": "For an increasing function f with I = integral of f from 1 to n, which bound on S = f(1) + ... + f(n) is correct?",
+   "options": ["I + f(1) <= S <= I + f(n)", "I + f(n) <= S <= I + f(1)", "I - f(1) <= S <= I - f(n)", "S = I exactly"],
+   "answer": 0,
+   "explanation": "Left-end rectangles under the curve have area S - f(n) <= I, and right-end rectangles over it have area S - f(1) >= I. Rearranging gives I + f(1) <= S <= I + f(n)."}
+]}

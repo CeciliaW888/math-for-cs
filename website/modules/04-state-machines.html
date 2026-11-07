@@ -1,0 +1,207 @@
+<section class="module" id="module-4" data-day="4">
+  <div class="module-inner">
+    <h2>Day 4: State Machines</h2>
+    <p>Programs change over time, so two questions always matter: <strong>is the answer right?</strong> and <strong>does it ever stop?</strong> A <span class="term" data-definition="A model of a process: a set of states, a start state, and the transitions allowed between states.">state machine</span> lets you prove both.</p>
+
+    <figure class="diagram-container">
+      <img src="diagrams/04-state-machines.svg" alt="Three 8-puzzle grids linked by moves. A horizontal move keeps the inversion count the same; a vertical move changes it by an even amount. The solved grid has 0 inversions and the 5-6 swap has 1, so no path connects them." loading="lazy">
+      <figcaption>Every move keeps the parity of the inversion count, so odd-parity grids can never reach the solved grid.</figcaption>
+    </figure>
+
+    <h3>The parts of a machine</h3>
+    <div class="pattern-cards">
+      <div class="pattern-card"><strong>States Q</strong><p>Everything the machine can remember. For the 8-puzzle: all 9! grids.</p></div>
+      <div class="pattern-card"><strong>Start q₀</strong><p>Where every <span class="term" data-definition="A sequence of states starting at the start state where each step is an allowed transition.">execution</span> begins.</p></div>
+      <div class="pattern-card"><strong>Transitions q → r</strong><p>The legal moves. Slide one neighbouring tile into the blank.</p></div>
+    </div>
+    <p>A state is <span class="term" data-definition="A state that some execution, starting at the start state, actually ends at.">reachable</span> if some execution ends there. Our goal: prove that the solved grid is <em>not</em> reachable from the grid with 5 and 6 swapped.</p>
+
+    <h3>Preserved vs. invariant</h3>
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>Bishop rule:</strong> every bishop move stays on the same square colour. That property is <span class="term" data-definition="A predicate that every transition keeps true: if it holds before a move, it holds after.">preserved</span>, so a light-square bishop never reaches a dark square. Impossibility proofs all work this way.
+      </div>
+    </div>
+    <p>An <span class="term" data-definition="A predicate that is true in every reachable state of the machine.">invariant</span> is true in every reachable state. The <strong>Invariant Principle</strong> connects the two:</p>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body"><strong>Check the start</strong><p>Show P(q₀) is true. This is the base case.</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body"><strong>Check every move</strong><p>Take any transition q → r, assume P(q), prove P(r). This is the induction step.</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body"><strong>Conclude</strong><p>P holds in every reachable state. Any state where P is false is unreachable.</p></div>
+      </div>
+    </div>
+    <div class="callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <div class="callout-content">
+        <strong>Induction in disguise:</strong> apply the Invariant Principle to the counter machine 0 → 1 → 2 → … and you get the ordinary induction axiom back exactly.
+      </div>
+    </div>
+
+    <h3>The 8-puzzle proof, as a conversation</h3>
+    <div class="chat-window" id="chat-day4-parity">
+      <div class="chat-messages">
+        <div class="chat-message" data-msg="1" data-sender="1" style="display:none;">I keep getting 1 2 3 4 6 5 7 8. So close! Is it hopeless?</div>
+        <div class="chat-message" data-msg="2" data-sender="2" style="display:none;">Read the tiles row by row and count <span class="term" data-definition="Two tiles i &lt; j where the larger one, j, comes first in reading order.">inverted pairs</span>. You have exactly 1: the 6 before the 5. Solved has 0.</div>
+        <div class="chat-message" data-msg="3" data-sender="4" style="display:none;">A sideways move keeps the reading order the same. Count unchanged.</div>
+        <div class="chat-message" data-msg="4" data-sender="4" style="display:none;">An up or down move hops one tile over two others: two neighbour swaps, each changing the count by plus or minus 1. Total change: even.</div>
+        <div class="chat-message" data-msg="5" data-sender="3" style="display:none;">So odd stays odd forever. You start odd, the goal is even (0). Proven impossible.</div>
+        <div class="chat-typing typing-indicator" style="display:none;"><span></span><span></span><span></span></div>
+      </div>
+      <div class="chat-controls">
+        <button class="chat-next-btn">Next →</button>
+        <button class="chat-all-btn">Show All</button>
+        <button class="chat-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <h3>Does it stop? Derived variables</h3>
+    <p>Swap sort: while some neighbours are out of order, swap them. Its <span class="term" data-definition="A state with no outgoing transitions. The machine halts there.">final states</span> are exactly the sorted lists, so it is partially correct. To prove it halts, find a <span class="term" data-definition="A number computed from each state, used to track progress, such as the count of inverted pairs.">derived variable</span> that is a natural number and drops on every move.</p>
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">swap_sort.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python"><span class="code-keyword">def</span> <span class="code-function">swap_sort</span>(a):
+    a, swaps = <span class="code-function">list</span>(a), <span class="code-number">0</span>
+    <span class="code-keyword">while</span> bad := [i <span class="code-keyword">for</span> i <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-function">len</span>(a) - <span class="code-number">1</span>) <span class="code-keyword">if</span> a[i] &gt; a[i + <span class="code-number">1</span>]]:
+        i = random.<span class="code-function">choice</span>(bad)
+        before = <span class="code-function">inversions</span>(a)
+        a[i], a[i + <span class="code-number">1</span>] = a[i + <span class="code-number">1</span>], a[i]
+        <span class="code-keyword">assert</span> <span class="code-function">inversions</span>(a) == before - <span class="code-number">1</span>
+        swaps += <span class="code-number">1</span>
+    <span class="code-keyword">return</span> a, swaps</code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">Start counting swaps from zero.</div>
+        <div class="translation-line">Keep going while any neighbour pair is out of order. When none is, we are in a final state: sorted.</div>
+        <div class="translation-line">Pick any legal swap. The machine is allowed to choose, so the proof must work for every choice.</div>
+        <div class="translation-line">Remember the derived variable before the move.</div>
+        <div class="translation-line">Make the transition.</div>
+        <div class="translation-line">Check the key fact: each swap removes exactly one inversion.</div>
+        <div class="translation-line">So the loop runs exactly as many times as there were inversions, a finite number.</div>
+      </div>
+    </div>
+
+    <div class="flow-animation" data-steps='[
+      {"highlight": "flow-d4-1", "label": "Start: 3 6 2 5 4 1 has 10 inversions", "packet": "10", "from": "flow-d4-1", "to": "flow-d4-2"},
+      {"highlight": "flow-d4-2", "label": "Each swap fixes one inverted neighbour pair", "packet": "-1", "from": "flow-d4-2", "to": "flow-d4-3"},
+      {"highlight": "flow-d4-3", "label": "A natural number cannot drop forever: after exactly 10 swaps it hits 0", "packet": "0", "from": "flow-d4-3", "to": "flow-d4-4"},
+      {"highlight": "flow-d4-4", "label": "No out-of-order neighbours left: sorted and stopped", "packet": "✅", "from": "flow-d4-3", "to": "flow-d4-4"}
+    ]'>
+      <div class="flow-actors">
+        <div class="flow-actor" id="flow-d4-1">📋 Unsorted</div>
+        <div class="flow-actor" id="flow-d4-2">🔁 Swap</div>
+        <div class="flow-actor" id="flow-d4-3">📉 Counter</div>
+        <div class="flow-actor" id="flow-d4-4">🏁 Sorted</div>
+      </div>
+      <div class="flow-packet"></div>
+      <div class="flow-step-label"></div>
+      <div class="flow-controls">
+        <button class="flow-next-btn">Next Step</button>
+        <button class="flow-play-btn">Play All</button>
+        <button class="flow-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <p><strong>Both conditions matter:</strong> 1, ½, ¼, … decreases forever (not integers), and 0, −1, −2, … does too (not non-negative).</p>
+
+    <h3>Flashcards</h3>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Preserved vs. invariant</h4>
+          <p>What is the difference?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Moves vs. reachable states</h4>
+          <p>Preserved: every transition keeps P true. Invariant: P is true in every reachable state. Preserved plus true at the start gives invariant.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Termination theorem</h4>
+          <p>What two facts about a derived variable guarantee the machine stops?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Natural and strictly decreasing</h4>
+          <p>It always takes values in ℕ, and every transition makes it strictly smaller. Then there are at most x(q₀) steps.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>8-puzzle invariant</h4>
+          <p>What never changes as you slide tiles?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Parity of inversions</h4>
+          <p>Whether the number of inverted pairs is odd or even. Sideways moves change it by 0, vertical moves by an even amount.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> You want to prove a puzzle position R can never be reached. Which plan works?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="Good instinct to search, but failing to find a path by hand proves nothing; there might be a long path you missed."
+          data-explanation-wrong="Good instinct to search, but failing to find a path by hand proves nothing; there might be a long path you missed.">Try many move sequences and show none reach R</button>
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Exactly. Preserved plus true at the start makes P invariant, and an invariant can never be false in a reachable state."
+          data-explanation-wrong="Exactly. Preserved plus true at the start makes P invariant, and an invariant can never be false in a reachable state.">Find a P that is true at the start, preserved by every move, and false at R</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="Close, but a property true at R and at the start says nothing about whether R is reachable."
+          data-explanation-wrong="Close, but a property true at R and at the start says nothing about whether R is reachable.">Find a P that is true at both the start and R</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> A loop has derived variable x = 100 − (steps taken so far), and the loop never checks x. Does the termination theorem apply?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="It is strictly decreasing, but that is only half the theorem."
+          data-explanation-wrong="It is strictly decreasing, but that is only half the theorem.">Yes, because x strictly decreases</button>
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Right. Nothing stops x from going to −1, −2, … so x is not always a natural number, and the theorem says nothing."
+          data-explanation-wrong="Right. Nothing stops x from going to −1, −2, … so x is not always a natural number, and the theorem says nothing.">No, because x can become negative</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="Integer values are fine; the problem is the lack of a floor at 0."
+          data-explanation-wrong="Integer values are fine; the problem is the lack of a floor at 0.">No, because x must be a real number</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> Moving tile i down past tiles j and k (in reading order) can change the inversion count by how much?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="That would be one adjacent swap. A vertical move is two."
+          data-explanation-wrong="That would be one adjacent swap. A vertical move is two.">Exactly ±1</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="Only i moves relative to two tiles, so at most two pairs change status."
+          data-explanation-wrong="Only i moves relative to two tiles, so at most two pairs change status.">Any amount from −7 to +7</button>
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Yes. Two swaps, each ±1, give −2, 0 or +2: always even, so parity is preserved."
+          data-explanation-wrong="Yes. Two swaps, each ±1, give −2, 0 or +2: always even, so parity is preserved.">−2, 0 or +2</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-01/day-04-state-machines.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=gVdrFsnOo_s" target="_blank" rel="noopener">Watch Lecture 4: State Machines →</a></p>
+  </div>
+</section>

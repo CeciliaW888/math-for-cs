@@ -1,0 +1,199 @@
+<section class="module" id="module-10" data-day="10">
+  <div class="module-inner">
+    <h2>Day 10: Cryptography</h2>
+    <p>Every card payment you make crosses a network that strangers can tap. Today the number theory from the last two days turns into a lock that anyone can close but only one person can open.</p>
+
+    <h3>Four ciphers, four ways to break them</h3>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <strong>Caesar cipher: shift by 3</strong>
+          <p>There's no key at all, only a secret method. The day one general defects, every message can be read.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <strong>Caesar shift: shift by a secret k</strong>
+          <p>There are only 26 keys, so Eve tries every one and keeps the output that reads like English.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <strong>Substitution: a random permutation</strong>
+          <p>26! keys, but <span class="term" data-definition="Breaking a cipher by matching the most common ciphertext symbols to the most common letters of the language, like E and T in English.">frequency analysis</span> still cracks it: the most common symbol is probably E.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">4</span>
+        <div class="step-body">
+          <strong>Enigma: the permutation changes every letter</strong>
+          <p>This beats letter counting, but a <span class="term" data-definition="An attack where the codebreaker can guess part of the original message, for example a standard greeting or a weather report, and uses it to narrow down the key.">known-plaintext attack</span> using predictable weather reports broke it.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-content">
+        <strong>Security by hubris:</strong> "I can't break it, so nobody can" is not a proof. Modern cryptography instead rests on problems the whole field of mathematics has failed to solve, such as factoring huge numbers.
+      </div>
+    </div>
+
+    <h3>A mail slot in Bob's door</h3>
+    <p>In a <span class="term" data-definition="A scheme where encryption uses a key anyone may see, and decryption uses a different key that only the receiver holds.">public-key cryptosystem</span>, Bob posts a public key that anyone can use to lock a message, and keeps a secret key for unlocking. It works like a mail slot: anyone can drop a letter in, but only Bob can open the box behind it.</p>
+
+    <div class="flow-animation" data-steps='[
+      {"highlight": "flow10-bob", "label": "Bob picks primes 11 and 17 and publishes n = 187, e = 7", "packet": "🔑", "from": "flow10-bob", "to": "flow10-alice"},
+      {"highlight": "flow10-alice", "label": "Alice encrypts m = 42 as 42^7 mod 187 = 15", "packet": "✉️", "from": "flow10-alice", "to": "flow10-eve"},
+      {"highlight": "flow10-eve", "label": "Eve sees only 15. Without the factors of 187 she cannot find d", "packet": "👁️", "from": "flow10-eve", "to": "flow10-bob"},
+      {"highlight": "flow10-bob", "label": "Bob computes 15^23 mod 187 = 42 and reads the message", "packet": "✅", "from": "flow10-bob", "to": "flow10-bob"}
+    ]'>
+      <div class="flow-actors">
+        <div class="flow-actor" id="flow10-alice">✍️ Alice</div>
+        <div class="flow-actor" id="flow10-eve">👁️ Eve (channel)</div>
+        <div class="flow-actor" id="flow10-bob">🔐 Bob</div>
+      </div>
+      <div class="flow-packet"></div>
+      <div class="flow-step-label"></div>
+      <div class="flow-controls">
+        <button class="flow-next-btn">Next Step</button>
+        <button class="flow-play-btn">Play All</button>
+        <button class="flow-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <figure class="diagram-container">
+      <img src="diagrams/10-cryptography.svg" alt="RSA with toy numbers: Bob builds keys from primes 11 and 17, publishes (187, 7), Alice encrypts 42 to 15, Eve sees only 15, Bob decrypts back to 42." loading="lazy">
+      <figcaption>The whole RSA round trip with primes small enough to check by hand.</figcaption>
+    </figure>
+
+    <h3>RSA in eight lines of Python</h3>
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">toy_rsa.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python"><span class="code-keyword">from</span> math <span class="code-keyword">import</span> gcd
+p, q, e = <span class="code-number">11</span>, <span class="code-number">17</span>, <span class="code-number">7</span>
+n, phi = p * q, (p - <span class="code-number">1</span>) * (q - <span class="code-number">1</span>)
+<span class="code-keyword">assert</span> <span class="code-function">gcd</span>(e, phi) == <span class="code-number">1</span>
+d = <span class="code-function">pow</span>(e, -<span class="code-number">1</span>, phi)
+c = <span class="code-function">pow</span>(<span class="code-number">42</span>, e, n)
+<span class="code-function">print</span>(n, d, c, <span class="code-function">pow</span>(c, d, n))   <span class="code-comment"># 187 23 15 42</span>
+<span class="code-function">print</span>(<span class="code-function">all</span>(<span class="code-function">pow</span>(<span class="code-function">pow</span>(m, e, n), d, n) == m <span class="code-keyword">for</span> m <span class="code-keyword">in</span> <span class="code-function">range</span>(n)))</code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">We need gcd to make sure our exponent is usable.</div>
+        <div class="translation-line">Two secret primes and a public exponent. Real keys use primes hundreds of digits long.</div>
+        <div class="translation-line">n is published. φ(n) = (p−1)(q−1) is never shown to anyone.</div>
+        <div class="translation-line">e must share no factor with φ(n), or it has no inverse.</div>
+        <div class="translation-line">The Pulverizer step: d is the inverse of e mod φ(n), here 23.</div>
+        <div class="translation-line">Encrypt 42 with three-argument pow, which never builds the huge number 42⁷.</div>
+        <div class="translation-line">Decrypting gives 42 back.</div>
+        <div class="translation-line">The proof says this works for every message, so we check all 187 of them: True.</div>
+      </div>
+    </div>
+
+    <h3>Why decryption always works</h3>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body"><strong>Peel off one prime</strong><p>(p−1) divides ed − 1, so ed = k(p−1) + 1 for some k.</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body"><strong>Apply Fermat</strong><p>m^(ed) = (m^(p−1))^k · m ≡ m (mod p). If p divides m, both sides are 0 anyway.</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body"><strong>Repeat for q, then combine</strong><p>p and q each divide m^(ed) − m, so their product n does too.</p></div>
+      </div>
+    </div>
+
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>Key Insight:</strong> Multiplying p·q is instant. Undoing it (factoring) is believed to be hopelessly slow. RSA hides the secret key behind that one-way street.
+      </div>
+    </div>
+
+    <h3>Split and recombine: the Chinese Remainder Theorem</h3>
+    <p>The <span class="term" data-definition="If p and q share no common factor, then knowing x mod p and x mod q pins down exactly one value of x mod pq.">Chinese Remainder Theorem</span> says: if x ≡ 4 (mod 5) and x ≡ 7 (mod 11), there is exactly one answer mod 55. List 7, 18, 29, 40, 51, and only <strong>29</strong> leaves remainder 4 when divided by 5.</p>
+
+    <h3>Flip to review</h3>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>RSA keys</h4>
+          <p>What is public and what is secret?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Public (n, e), secret (n, d)</h4>
+          <p>n = pq. d is the inverse of e mod (p−1)(q−1). The primes p and q are thrown away or kept secret.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>φ(n) for n = pq</h4>
+          <p>What is it, and why does it stay hidden?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>(p−1)(q−1)</h4>
+          <p>Knowing it reveals p + q, and with n = pq that lets anyone factor n and compute d.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>CRT</h4>
+          <p>What does it promise?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>One answer mod pq</h4>
+          <p>For coprime p and q, the remainders mod p and mod q fix a unique remainder mod pq.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> A friend proposes RSA with a single prime: publish (p, e) and keep d = e⁻¹ mod (p−1). What goes wrong?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Fermat's theorem guarantees decryption works with one prime. Correctness is fine. The problem is security.">Decryption fails for some messages</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Exactly. p is public, so anyone can compute p−1 and run the Pulverizer to get d, just as the key owner did.">Anyone can compute d from the public key</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Encryption is one fast modular power, the same as in real RSA. Speed is not the issue.">Encryption becomes too slow</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> Eve somehow learns φ(n) = (p−1)(q−1) for Bob's public n. What can she do?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Good instinct to doubt it, but φ(n) is exactly the secret ingredient. From it she gets d with the Pulverizer.">Nothing, because d is still hidden</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="She can do more than that. Messages are random-looking, and φ(n) gives her the whole secret key.">Only decrypt messages she can already guess</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. φ(n) = n − (p+q) + 1 reveals p+q, so the quadratic formula gives p and q, and the Pulverizer gives d.">Factor n and compute d, breaking every message</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> A substitution cipher has 26! (about 4 × 10²⁶) keys. Why is it still weak?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes. Letter frequencies leak through the permutation, so the attacker solves it piece by piece instead of trying keys.">Letter frequencies survive encryption, so the key can be guessed one letter at a time</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Trying 10²⁶ keys is far beyond any computer. The real attack is smarter than brute force.">Computers can try all 26! keys in seconds</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="A permutation is a one-to-one map, so no two letters share a code. The weakness lies elsewhere.">Two letters can encrypt to the same symbol</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-02/day-10-cryptography.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=hRDOmMEZtPo" target="_blank" rel="noopener">Watch Lecture 10: Cryptography (MIT OpenCourseWare)</a></p>
+  </div>
+</section>

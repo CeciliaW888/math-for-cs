@@ -1,0 +1,164 @@
+<section class="module" id="module-2" data-day="2">
+  <div class="module-inner">
+    <h2>Day 2: Contradiction and Induction</h2>
+    <p>A loop runs the same code again and again. <span class="term" data-definition="A proof technique: prove a base case, then prove that each case implies the next. Together these cover every natural number.">Induction</span> is the proof version of a loop: one argument covers infinitely many cases.</p>
+
+    <h3>Read the claim, pick the outline</h3>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">∃</span>
+        <div class="step-body">
+          <strong>There exists</strong>
+          <p>Name one example and check that it works. For "a prime n ≥ 10," take n = 17.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">∀</span>
+        <div class="step-body">
+          <strong>For all</strong>
+          <p>"Let x be arbitrary." Assume nothing else about x, then show the property.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">→</span>
+        <div class="step-body">
+          <strong>Implication</strong>
+          <p><span class="term" data-definition="Assume P is true, then use it to derive Q.">Direct proof</span>: assume P and show Q. Or use the <span class="term" data-definition="Prove NOT Q implies NOT P, which is logically the same as P implies Q.">contrapositive</span>: assume NOT Q and show NOT P.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">¬</span>
+        <div class="step-body">
+          <strong>Contradiction</strong>
+          <p><span class="term" data-definition="Assume the claim is false, then derive a statement that is both true and false. So the claim must be true.">Proof by contradiction</span>: assume NOT P, then break math. Example: √2 = a/b in lowest terms forces both a and b to be even.</p>
+        </div>
+      </div>
+    </div>
+
+    <p><strong>Tip:</strong> You can write the skeleton of an "if and only if" proof before you understand the terms. Prove P → Q, then Q → P, and mark each gap with WTS ("want to show").</p>
+
+    <h3>Induction as a bucket brigade</h3>
+    <p>The first person gets a full bucket (the <span class="term" data-definition="The starting instance of an induction, such as P(0), proved directly.">base case</span>). Everyone passes it to the next person (the <span class="term" data-definition="A proof that for every n, if P(n) is true then P(n+1) is true.">inductive step</span>). The water reaches every person in line.</p>
+    <div class="flow-animation" data-steps='[
+      {"highlight": "flow-actor-p0", "label": "Base case: P(0) holds, because the empty sum is 0 = 0 x 1 / 2", "packet": "🪣", "from": "flow-actor-p0", "to": "flow-actor-p1"},
+      {"highlight": "flow-actor-p1", "label": "Step with n = 0: P(0) implies P(1), so 1 = 1 x 2 / 2", "packet": "🪣", "from": "flow-actor-p1", "to": "flow-actor-p2"},
+      {"highlight": "flow-actor-p2", "label": "Step with n = 1: P(1) implies P(2), so 1 + 2 = 2 x 3 / 2", "packet": "🪣", "from": "flow-actor-p2", "to": "flow-actor-pn"},
+      {"highlight": "flow-actor-pn", "label": "The same step works for every n, so P(n) holds for all n", "packet": "✅", "from": "flow-actor-pn", "to": "flow-actor-pn"}
+    ]'>
+      <div class="flow-actors">
+        <div class="flow-actor" id="flow-actor-p0">P(0)</div>
+        <div class="flow-actor" id="flow-actor-p1">P(1)</div>
+        <div class="flow-actor" id="flow-actor-p2">P(2)</div>
+        <div class="flow-actor" id="flow-actor-pn">P(n) …</div>
+      </div>
+      <div class="flow-packet"></div>
+      <div class="flow-step-label"></div>
+      <div class="flow-controls">
+        <button class="flow-next-btn">Next Step</button>
+        <button class="flow-play-btn">Play All</button>
+        <button class="flow-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>Key Insight:</strong> Induction trades infinitely many checks for two: one starting case, plus one step that works for an <em>arbitrary</em> n.
+      </div>
+    </div>
+
+    <h3>The tromino proof is an algorithm</h3>
+    <figure class="diagram-container">
+      <img src="diagrams/02-contradiction-induction.svg" alt="An 8 by 8 grid split into four 4 by 4 quadrants, with one missing cell in the top-right quadrant and one L tromino placed at the centre covering a corner of each of the other three quadrants" loading="lazy">
+      <figcaption>Split into quadrants and place one L at the centre. Now every quadrant is a smaller copy of the same problem.</figcaption>
+    </figure>
+
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">tromino.py (inside tile)</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python"><span class="code-keyword">if</span> size == <span class="code-number">1</span>:
+    <span class="code-keyword">return</span>
+half = size // <span class="code-number">2</span>
+mid_r, mid_c = top + half, left + half
+<span class="code-keyword">for</span> qr, qc <span class="code-keyword">in</span> [(top, left), (top, mid_c), (mid_r, left), (mid_r, mid_c)]:
+    <span class="code-keyword">if</span> qr &lt;= hole_r &lt; qr + half <span class="code-keyword">and</span> qc &lt;= hole_c &lt; qc + half:
+        holes.<span class="code-function">append</span>((qr, qc, hole_r, hole_c))
+    <span class="code-keyword">else</span>:
+        r = mid_r - <span class="code-number">1</span> <span class="code-keyword">if</span> qr == top <span class="code-keyword">else</span> mid_r
+        c = mid_c - <span class="code-number">1</span> <span class="code-keyword">if</span> qc == left <span class="code-keyword">else</span> mid_c
+        board[r][c] = piece
+        holes.<span class="code-function">append</span>((qr, qc, r, c))
+<span class="code-keyword">for</span> qr, qc, hr, hc <span class="code-keyword">in</span> holes:
+    <span class="code-function">tile</span>(board, qr, qc, half, hr, hc, counter)</code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">Base case: a 1 × 1 board is just the hole, so there is nothing to place</div>
+        <div class="translation-line">Each quadrant is a board half as wide: 2ⁿ instead of 2ⁿ⁺¹</div>
+        <div class="translation-line">Find the centre, where the four quadrants meet</div>
+        <div class="translation-line">Visit the four quadrants one at a time</div>
+        <div class="translation-line">If this quadrant already contains the missing cell, keep that cell as its hole</div>
+        <div class="translation-line">Otherwise, pick the quadrant's corner cell that touches the centre</div>
+        <div class="translation-line">Cover it with this round's piece. The three covered cells together form one L</div>
+        <div class="translation-line">Now every quadrant is missing exactly one cell, the same problem at a smaller size</div>
+        <div class="translation-line">Inductive hypothesis: trust that each smaller board can be tiled, and recurse</div>
+      </div>
+    </div>
+
+    <div class="callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-content">
+        <strong>Common mistake:</strong> In the inductive step, n must be <em>arbitrary</em>. If your step only works for n = 3, you haven't proved P(n) → P(n + 1) for all n.
+      </div>
+    </div>
+
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Principle of induction</h4>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>P(0) and ∀n (P(n) → P(n+1))</h4>
+          <p>Together these give ∀n P(n). You prove the two pieces, and induction gives you everything else.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Why must a and b both be even in the √2 proof?</h4>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>a² = 2b²</h4>
+          <p>So a² is even, which makes a even. Write a = 2c. Then b² = 2c², so b is even too. That contradicts lowest terms.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> You want to prove "if n² is even, then n is even." Assuming n² is even gets you nowhere. What next?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Examples are useful for intuition, but they can never prove a claim about all integers.">Check n = 1 to 100 and conclude</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes. Assume n = 2k + 1 is odd. Then n² = 2(2k² + 2k) + 1 is odd, which is exactly the contrapositive.">Prove the contrapositive: n odd implies n² odd</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="That is the converse. It is true, but proving it does not prove the original claim.">Prove n even implies n² even</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> A classmate proves P(n) → P(n + 1) for every n but skips the base case. What have they shown?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Without a first true case, the chain never starts. A false statement can still have a valid step, for example n = n + 1.">That P(n) is true for all n</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. The brigade is ready, but nobody was handed a bucket. The step alone proves nothing true.">Only that IF some P(k) holds, all later ones do</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="The step does not prove P(0). It only links each case to the next one.">That P(0) is true</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-01/day-02-contradiction-induction.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=_NYsYuzMLs0" target="_blank" rel="noopener">Watch Lecture 2: Contradiction and Induction (MIT OpenCourseWare)</a></p>
+  </div>
+</section>

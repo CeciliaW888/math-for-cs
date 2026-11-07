@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-label="Three-set inclusion-exclusion Venn diagram showing every region counted exactly once">
+  <rect width="800" height="450" fill="#ffffff"/>
+  <text x="400" y="40" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#2d2d2d">Inclusion-exclusion: every region counts once</text>
+
+  <circle cx="300" cy="190" r="110" fill="#fbe9dd" fill-opacity="0.55" stroke="#c4825a" stroke-width="2"/>
+  <circle cx="440" cy="190" r="110" fill="#f5f0eb" fill-opacity="0.55" stroke="#6b8f71" stroke-width="2"/>
+  <circle cx="370" cy="305" r="110" fill="#f5f0eb" fill-opacity="0.35" stroke="#7a8fa6" stroke-width="2"/>
+
+  <g font-family="Georgia, serif" font-size="22" font-style="italic">
+    <text x="190" y="100" fill="#c4825a">A</text>
+    <text x="540" y="100" fill="#6b8f71">B</text>
+    <text x="490" y="420" fill="#7a8fa6">C</text>
+  </g>
+
+  <g font-family="'JetBrains Mono', monospace" font-size="16" fill="#2d2d2d" text-anchor="middle">
+    <text x="245" y="165">1</text>
+    <text x="495" y="165">1</text>
+    <text x="370" y="375">1</text>
+    <text x="370" y="145">2 − 1</text>
+    <text x="300" y="275">2 − 1</text>
+    <text x="440" y="275">2 − 1</text>
+    <text x="370" y="232" fill="#c4825a">3 − 3 + 1</text>
+  </g>
+
+  <g font-family="Georgia, serif" font-size="16" fill="#2d2d2d">
+    <text x="585" y="210">Add singles:</text>
+    <text x="585" y="232" font-family="'JetBrains Mono', monospace" font-size="14">+|A| +|B| +|C|</text>
+    <text x="585" y="264">Subtract pairs:</text>
+    <text x="585" y="286" font-family="'JetBrains Mono', monospace" font-size="14">−|A∩B| −|A∩C| −|B∩C|</text>
+    <text x="585" y="318">Add the triple:</text>
+    <text x="585" y="340" font-family="'JetBrains Mono', monospace" font-size="14" fill="#c4825a">+|A∩B∩C|</text>
+  </g>
+  <line x1="575" y1="195" x2="575" y2="350" stroke="#c4825a" stroke-width="1.5"/>
+
+  <text x="40" y="435" font-family="Georgia, serif" font-size="15" fill="#6b8f71">Two sets: hearts or faces = 13 + 12 − 3 = 22</text>
+</svg>

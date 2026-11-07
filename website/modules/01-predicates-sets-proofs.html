@@ -1,0 +1,166 @@
+<section class="module" id="module-1" data-day="1">
+  <div class="module-inner">
+    <h2>Day 1: Predicates, Sets, and Proofs</h2>
+    <p>Every <code>if</code> in your code is a tiny piece of logic. Today you get the vocabulary that lets you say "this is <em>definitely</em> true" and back it up.</p>
+
+    <figure class="diagram-container">
+      <img src="diagrams/01-predicates-sets-proofs.svg" alt="Venn diagram of sets A = {6, 1, 2, 0} and B = {2, {3,4}, empty set} sharing only 2, next to the truth table for implication with the single false row highlighted" loading="lazy">
+      <figcaption>Left: two sets overlap only in 2, and 3 is hidden one level deep inside B. Right: an implication fails in exactly one row.</figcaption>
+    </figure>
+
+    <h3>The three ingredients of a proof</h3>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <strong>Propositions</strong>
+          <p>A <span class="term" data-definition="A statement that is either true or false, like 2 + 3 = 4 (false, but still a proposition).">proposition</span> is something that is true or false. A <span class="term" data-definition="A statement with a variable, like p is prime. It becomes a proposition once the variable has a value.">predicate</span> such as "p is prime" only becomes one when you fill in p.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <strong>Axioms</strong>
+          <p>An <span class="term" data-definition="A proposition we agree to assume true, declared up front, so every proof has a starting point.">axiom</span> is a starting assumption. Ours: standard high-school math.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <strong>Logical deductions</strong>
+          <p>These are the steps that carry truth from the axioms to the claim. That's tomorrow's topic.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Examples are not proofs</h3>
+    <p>A <span class="term" data-definition="For all (written with an upside-down A): the predicate must hold for every value in the set.">∀ quantifier</span> needs <em>every</em> case. A single counterexample is enough to break it.</p>
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">counterexample_hunt.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python"><span class="code-keyword">for</span> n <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">100</span>):
+    value = n * n + n + <span class="code-number">41</span>
+    <span class="code-keyword">if</span> <span class="code-keyword">not</span> <span class="code-function">is_prime</span>(value):
+        <span class="code-function">print</span>(<span class="code-string">"Counterexample:"</span>, n, value)
+        <span class="code-keyword">break</span>
+<span class="code-comment"># Counterexample: 40 1681   (1681 = 41 * 41)</span></code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">Try the claim on n = 0, 1, 2, … one at a time</div>
+        <div class="translation-line">Compute n² + n + 41, the value the claim says is always prime</div>
+        <div class="translation-line">We only care about failures, since one failure settles a "for all" claim</div>
+        <div class="translation-line">Report the first counterexample we find</div>
+        <div class="translation-line">Stop: one is enough, and 40 earlier successes don't matter</div>
+        <div class="translation-line">At n = 40 the "always prime" pattern breaks</div>
+      </div>
+    </div>
+
+    <h3>What does a mathematician mean by "or"?</h3>
+    <div class="chat-window" id="chat-day1-or">
+      <div class="chat-messages">
+        <div class="chat-message" data-msg="1" data-sender="1" style="display:none;">Chicken or pasta? (You picked exactly one on the RSVP card.)</div>
+        <div class="chat-message" data-msg="2" data-sender="4" style="display:none;">That is XOR: exactly one, not both, not neither.</div>
+        <div class="chat-message" data-msg="3" data-sender="1" style="display:none;">Coffee or tea? (One mug, so not both, but neither is fine.)</div>
+        <div class="chat-message" data-msg="4" data-sender="4" style="display:none;">That is NAND: anything except both.</div>
+        <div class="chat-message" data-msg="5" data-sender="1" style="display:none;">Cream or sugar? Have whatever you like.</div>
+        <div class="chat-message" data-msg="6" data-sender="3" style="display:none;">Math OR is inclusive: at least one is true, and both is fine. None of the three waiter questions match it exactly.</div>
+        <div class="chat-typing typing-indicator" style="display:none;">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="chat-controls">
+        <button class="chat-next-btn">Next →</button>
+        <button class="chat-all-btn">Show All</button>
+        <button class="chat-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>Key Insight:</strong> An <span class="term" data-definition="If A then B. It is false only when A is true and B is false.">implication</span> A → B is like a product warranty. The promise is broken only if the product breaks <em>and</em> nobody replaces it. When A is false, the promise holds automatically.
+      </div>
+    </div>
+
+    <div class="callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-content">
+        <strong>Common mistake:</strong> A → B is equivalent to its <span class="term" data-definition="NOT B implies NOT A. Always says the same thing as A implies B.">contrapositive</span> (NOT B → NOT A), <em>not</em> to its <span class="term" data-definition="B implies A. Flipping the arrow usually changes the meaning.">converse</span> (B → A). "Wednesday → pink" does not mean "pink → Wednesday."
+      </div>
+    </div>
+
+    <h3>Sets in one glance</h3>
+    <p>A <span class="term" data-definition="An unordered collection of objects with no repeats. {1, 2} and {2, 1, 1} are the same set.">set</span> cares only about membership. Use ∈ for elements, <span class="term" data-definition="A is a subset of B when every element of A is also an element of B. The empty set is a subset of every set.">⊆</span> for subsets, and <span class="term" data-definition="A way to describe a set by filtering a bigger set with a predicate, like {n in N | n is prime}.">set-builder notation</span> to filter with a predicate.</p>
+
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Is 3 ∈ {2, {3, 4}, ∅}?</h4>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>No</h4>
+          <p>3 is inside the element {3, 4}, but it is not itself one of the three elements.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Why is "false → anything" true?</h4>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>It can't be broken</h4>
+          <p>An implication only fails when the "if" part is true. If that part never happens, the rule is never violated.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Set vs. tuple</h4>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Order matters for tuples</h4>
+          <p>{6, 1, 2, 0} = {0, 1, 2, 6}, but (6, 1, 2, 0) ≠ (0, 1, 2, 6), and repeats count in a tuple.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> A friend tests "n² + n + 41 is prime" for n = 0 to 39 and says it's proved. What do you say?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Forty cases is a lot of evidence, but a for-all claim needs every n, and n = 40 fails.">Forty cases is enough evidence</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. A for-all claim needs every case, and n = 40 gives 1681 = 41 × 41, which is not prime.">Examples can't prove a for-all claim, and n = 40 is a counterexample</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="More tests would still not be a proof, and in this case the claim is actually false.">Test up to 1000 and then it's proved</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> The rule is "If it's Wednesday, wear pink." On a Tuesday you wear pink. Did you break the rule?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Good instinct to look closely, but the rule says nothing about Tuesday. False → true counts as true.">Yes, pink is only for Wednesdays</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Exactly. The if-part is false, so the implication holds no matter what you wear.">No, the rule only restricts Wednesdays</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="In math, implication has a definite truth value. Here it is true, because the if-part is false.">It depends on what pink means</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> Which statement means the same as "If n is a multiple of 4, then n is even"?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="That is the converse, and 6 breaks it: 6 is even but not a multiple of 4.">If n is even, then n is a multiple of 4</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="That is the inverse, and 6 breaks it again: 6 is not a multiple of 4, but it is even.">If n is not a multiple of 4, then n is odd</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes, that is the contrapositive, which always matches the original.">If n is odd, then n is not a multiple of 4</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-01/day-01-predicates-sets-proofs.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=sbpCTjmw85g" target="_blank" rel="noopener">Watch Lecture 1: Predicates, Sets, and Proofs (MIT OpenCourseWare)</a></p>
+  </div>
+</section>

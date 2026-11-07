@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "Which of these is a predicate rather than a proposition?",
+   "options": ["2 + 3 = 4", "x is greater than 3", "Every even number greater than 2 is a sum of two primes", "For all n in N, n is at least 0"],
+   "answer": 1,
+   "explanation": "\"x is greater than 3\" cannot be judged true or false until x has a value, so it is a predicate. The others are propositions. \"2 + 3 = 4\" is false, Goldbach's statement is unknown but still true or false, and the last one is true."},
+  {"question": "A rule says: \"If it is raining, the game is cancelled.\" On which day was the rule broken?",
+   "options": ["Sunny, game cancelled", "Sunny, game played", "Raining, game played", "Raining, game cancelled"],
+   "answer": 2,
+   "explanation": "An implication fails only when the if-part is true and the then-part is false. Rain with the game still played is the only violation. On sunny days the rule makes no promise at all."},
+  {"question": "Which statement is logically equivalent to \"If a number is prime and greater than 2, then it is odd\"?",
+   "options": ["If a number is odd, then it is prime and greater than 2", "If a number is not prime or is at most 2, then it is even", "If a number is odd, then it is not prime", "If a number is even, then it is not both prime and greater than 2"],
+   "answer": 3,
+   "explanation": "The contrapositive (NOT B implies NOT A) always matches the original. NOT odd means even, and NOT (prime and greater than 2) means not both. The first option is the converse and the second is the inverse, and neither is equivalent."},
+  {"question": "Let B = {2, {3, 4}, empty set}. Which statement is true?",
+   "options": ["The empty set is both an element and a subset of B", "3 is an element of B", "B has 4 elements", "{3, 4} is a subset of B"],
+   "answer": 0,
+   "explanation": "The empty set is listed as an element of B, and it is also a subset of every set. B has exactly 3 elements: 2, {3, 4}, and the empty set. 3 is not an element because it is nested inside {3, 4}. {3, 4} is an element of B but not a subset, since 3 and 4 are not elements of B."}
+]}

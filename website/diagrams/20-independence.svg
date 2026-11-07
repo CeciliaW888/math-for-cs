@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <rect x="0" y="0" width="800" height="450" fill="#ffffff"/>
+  <text x="400" y="38" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#2d2d2d">Three coins: pairwise, but not mutually, independent</text>
+  <text x="400" y="62" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-style="italic" fill="#6b8f71">A: coins 1,2 match   ·   B: coins 2,3 match   ·   C: coins 3,1 match</text>
+
+  <g font-family="Georgia, serif" fill="#2d2d2d">
+    <!-- row 1 -->
+    <rect x="30" y="95" width="110" height="105" rx="10" fill="#fbe9dd" stroke="#c4825a" stroke-width="2"/>
+    <text x="85" y="132" text-anchor="middle" font-size="22">HHH</text>
+    <text x="85" y="175" text-anchor="middle" font-size="18"><tspan fill="#c4825a">A</tspan>  <tspan fill="#6b8f71">B</tspan>  <tspan fill="#7a8fa6">C</tspan></text>
+
+    <rect x="150" y="95" width="110" height="105" rx="10" fill="#ffffff" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="205" y="132" text-anchor="middle" font-size="22">HHT</text>
+    <text x="205" y="175" text-anchor="middle" font-size="18" fill="#c4825a">A</text>
+
+    <rect x="270" y="95" width="110" height="105" rx="10" fill="#ffffff" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="325" y="132" text-anchor="middle" font-size="22">HTH</text>
+    <text x="325" y="175" text-anchor="middle" font-size="18" fill="#7a8fa6">C</text>
+
+    <rect x="390" y="95" width="110" height="105" rx="10" fill="#ffffff" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="445" y="132" text-anchor="middle" font-size="22">HTT</text>
+    <text x="445" y="175" text-anchor="middle" font-size="18" fill="#6b8f71">B</text>
+
+    <!-- row 2 -->
+    <rect x="30" y="215" width="110" height="105" rx="10" fill="#ffffff" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="85" y="252" text-anchor="middle" font-size="22">THH</text>
+    <text x="85" y="295" text-anchor="middle" font-size="18" fill="#6b8f71">B</text>
+
+    <rect x="150" y="215" width="110" height="105" rx="10" fill="#ffffff" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="205" y="252" text-anchor="middle" font-size="22">THT</text>
+    <text x="205" y="295" text-anchor="middle" font-size="18" fill="#7a8fa6">C</text>
+
+    <rect x="270" y="215" width="110" height="105" rx="10" fill="#ffffff" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="325" y="252" text-anchor="middle" font-size="22">TTH</text>
+    <text x="325" y="295" text-anchor="middle" font-size="18" fill="#c4825a">A</text>
+
+    <rect x="390" y="215" width="110" height="105" rx="10" fill="#fbe9dd" stroke="#c4825a" stroke-width="2"/>
+    <text x="445" y="252" text-anchor="middle" font-size="22">TTT</text>
+    <text x="445" y="295" text-anchor="middle" font-size="18"><tspan fill="#c4825a">A</tspan>  <tspan fill="#6b8f71">B</tspan>  <tspan fill="#7a8fa6">C</tspan></text>
+
+    <text x="265" y="355" text-anchor="middle" font-size="15" fill="#6b8f71">Each of the 8 outcomes has probability 1/8</text>
+
+    <!-- summary panel -->
+    <rect x="530" y="95" width="245" height="225" rx="12" fill="#f5f0eb" stroke="#2d2d2d" stroke-width="1.5"/>
+    <text x="652" y="127" text-anchor="middle" font-size="15">Pr[A] = Pr[B] = Pr[C] = 1/2</text>
+    <line x1="550" y1="142" x2="755" y2="142" stroke="#c4825a" stroke-width="1.5"/>
+    <text x="548" y="172" font-size="16">Pairwise:</text>
+    <text x="548" y="197" font-size="16">Pr[A ∩ B] = 2/8 = 1/4</text>
+    <text x="548" y="222" font-size="16" fill="#6b8f71">= 1/2 · 1/2  ✓</text>
+    <text x="548" y="257" font-size="16">Mutual:</text>
+    <text x="548" y="282" font-size="16">Pr[A ∩ B ∩ C] = 1/4</text>
+    <text x="548" y="307" font-size="16" fill="#c4825a">≠ 1/8  ✗</text>
+
+    <text x="400" y="400" text-anchor="middle" font-size="16">Shaded: once any two events hold, all coins match, so the third is certain.</text>
+  </g>
+</svg>

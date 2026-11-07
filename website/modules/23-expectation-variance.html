@@ -1,0 +1,197 @@
+<section class="module" id="module-23" data-day="23">
+  <div class="module-inner">
+    <h2>Day 23: Expectation and Variance</h2>
+    <p>Your system has 130 moving parts. How likely is it that <em>something</em> breaks? And once you know the average outcome, how far from it should you expect to land? Today brings two bounds for failures and a second summary number: <span class="term" data-definition="The expected squared distance from the mean, E[(X − E[X])²]. It measures spread.">variance</span>.</p>
+
+    <h3>Will anything go wrong?</h3>
+    <div class="pattern-cards">
+      <div class="pattern-card">
+        <strong>Expected count</strong>
+        <p>N = number of events that happen. By linearity, E[N] = Σ Pr[Eᵢ]. No independence needed.</p>
+      </div>
+      <div class="pattern-card">
+        <strong>Union bound ≤</strong>
+        <p>The <span class="term" data-definition="The rule that the probability of at least one event is at most the sum of their probabilities. Always true, but can exceed 1 and become useless.">union bound</span>: Pr[at least one] ≤ E[N]. Always true, often loose.</p>
+      </div>
+      <div class="pattern-card">
+        <strong>Murphy's law ≥</strong>
+        <p>For <span class="term" data-definition="Events where knowing any group of them tells you nothing about the others.">mutually independent</span> events: Pr[at least one] ≥ 1 − e^(−E[N]).</p>
+      </div>
+    </div>
+
+    <h3>Why Murphy's law holds</h3>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <strong>Flip to the complement</strong>
+          <p>Compute Pr[no event happens], then subtract from 1.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <strong>Multiply, thanks to independence</strong>
+          <p>Pr[none] = (1 − Pr[E₁])(1 − Pr[E₂])⋯(1 − Pr[Eₙ]).</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <strong>Bound each factor</strong>
+          <p>1 − x ≤ e^(−x), so each factor is at most e^(−Pr[Eᵢ]).</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">4</span>
+        <div class="step-body">
+          <strong>Add the exponents</strong>
+          <p>Pr[none] ≤ e^(−E[N]), so Pr[at least one] ≥ 1 − e^(−E[N]).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pattern-cards">
+      <div class="stat-card"><div class="stat-value">≈ 1 in 10⁶</div><div class="stat-label">130 parts at 90%: whole run works</div></div>
+      <div class="stat-card"><div class="stat-value">73%</div><div class="stat-label">130 parts at 99%: something fails</div></div>
+      <div class="stat-card"><div class="stat-value">12%</div><div class="stat-label">130 parts at 99.9%: something fails</div></div>
+    </div>
+
+    <div class="callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-content">
+        <strong>Independence matters:</strong> Lazy Susan phones have E[N] = 1, yet the chance anyone matches is only 1/n, far below 63%. The events are identical, so Murphy's law does not apply.
+      </div>
+    </div>
+
+    <h3>Code ↔ English</h3>
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">bounds.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python"><span class="code-keyword">import</span> math
+<span class="code-keyword">def</span> <span class="code-function">compare</span>(n, p):
+    union = <span class="code-function">min</span>(<span class="code-number">1</span>, n * p)
+    murphy = <span class="code-number">1</span> - math.<span class="code-function">exp</span>(-n * p)
+    exact = <span class="code-number">1</span> - (<span class="code-number">1</span> - p) ** n
+    <span class="code-function">print</span>(murphy, exact, union)
+<span class="code-function">compare</span>(<span class="code-number">130</span>, <span class="code-number">0.01</span>)  <span class="code-comment"># 0.727 &lt;= 0.729 &lt;= 1</span></code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">We need e^x for the Murphy lower bound.</div>
+        <div class="translation-line">Take n independent parts, each failing with probability p.</div>
+        <div class="translation-line">Union bound: the expected count np, capped at 1 since nothing beats certainty.</div>
+        <div class="translation-line">Murphy: 1 − e^(−E[N]), trustworthy only because the parts are independent.</div>
+        <div class="translation-line">Exact answer: 1 minus the chance that all n parts survive.</div>
+        <div class="translation-line">Show the squeeze: lower ≤ exact ≤ upper.</div>
+        <div class="translation-line">A 130-part machine at 99% per part fails about 73% of the time.</div>
+      </div>
+    </div>
+
+    <h3>Multiply yes, divide no</h3>
+    <div class="pattern-cards">
+      <div class="pattern-card">
+        <strong>Independent product</strong>
+        <p>E[D₁·D₂] = 3.5 × 3.5 = 12.25 for two independent dice.</p>
+      </div>
+      <div class="pattern-card">
+        <strong>Not independent</strong>
+        <p>E[D₁·D₁] = E[D₁²] = 91/6 ≈ 15.17. Same die, so the rule fails.</p>
+      </div>
+      <div class="pattern-card">
+        <strong>Never divide</strong>
+        <p>A takes 1 s and 2 s, B takes 2 s and 1 s. E[A/B] = E[B/A] = 1.25, so each looks slower than the other.</p>
+      </div>
+    </div>
+
+    <h3>Variance: how wide is the scatter?</h3>
+    <p>Two archers both average the bullseye. One cluster is tight, one is wild. Same mean, very different <span class="term" data-definition="The square root of the variance. It measures spread in the same units as the variable.">standard deviation</span>.</p>
+
+    <figure class="diagram-container">
+      <img src="diagrams/23-expectation-variance.svg" alt="Two bar charts with mean 0. One stock gives minus 100 or plus 100 with probability one half each; four independent stocks give a bell-like spread from minus 100 to plus 100 with variance 2500 instead of 10000." loading="lazy">
+      <figcaption>Splitting $100 across 4 independent stocks keeps the mean at 0 but cuts σ from 100 to 50.</figcaption>
+    </figure>
+
+    <div class="pattern-cards">
+      <div class="pattern-card"><strong>Shift</strong><p>Var[X + c] = Var[X]</p></div>
+      <div class="pattern-card"><strong>Scale</strong><p>Var[cX] = c² Var[X]</p></div>
+      <div class="pattern-card"><strong>Shortcut</strong><p>Var[X] = E[X²] − E[X]². Indicator: p(1 − p)</p></div>
+      <div class="pattern-card"><strong>Independent sum</strong><p>Var[X + Y] = Var[X] + Var[Y]. n coins: np(1 − p)</p></div>
+    </div>
+
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>Key Insight:</strong> Linearity of expectation never needs independence. Additivity of variance does. That is why <span class="term" data-definition="Splitting a bet across many independent risks so the total variance shrinks.">diversification</span> only helps when the risks are not tied together.
+      </div>
+    </div>
+
+    <h3>Flashcards</h3>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Union bound</h4>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Pr[∪Eᵢ] ≤ Σ Pr[Eᵢ]</h4>
+          <p>Always true. Useless once the sum passes 1.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Why square in the variance?</h4>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Plain deviations cancel</h4>
+          <p>E[X − E[X]] is always 0. Squaring treats both sides alike and weights big misses more.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Var of an indicator</h4>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>p(1 − p)</h4>
+          <p>Because I² = I, Var = E[I] − E[I]² = p − p².</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> 50 independent sensors each fail with probability 0.1 today. What can you say about the chance at least one fails?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Murphy gives at least 1 − e^(−5) ≈ 0.993." data-explanation-wrong="The union bound gives 5 here, which says nothing. Since the sensors are independent, use Murphy instead.">It is at most 5, so we learn nothing</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes. E[N] = 5 and the events are independent, so Murphy's law gives at least 1 − e^(−5) ≈ 0.993." data-explanation-wrong="Murphy gives at least 1 − e^(−5) ≈ 0.993.">It is at least about 99.3%</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Murphy gives at least 1 − e^(−5) ≈ 0.993." data-explanation-wrong="That is the chance for a single sensor. With 50 independent chances, failure is nearly certain.">It is about 10%</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> You measure a quantity X and report X + 10 instead. What happens to the variance?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Shifting does not change spread." data-explanation-wrong="That would be the rule for scaling by 10, not shifting.">It is multiplied by 100</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Shifting does not change spread." data-explanation-wrong="The mean moves by 10, but the deviations X − E[X] stay the same.">It grows by 10</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. The mean moves too, so every deviation X − E[X] is unchanged." data-explanation-wrong="Shifting does not change spread.">It stays the same</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> A paper reports E[A/B] &gt; 1, claiming A is slower than B. What is the best response?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Exactly. E[B/A] can exceed 1 at the same time. Compare E[A] and E[B] instead." data-explanation-wrong="Expected ratios can support either story. Compare E[A] with E[B].">Ask for E[A] versus E[B]; expected ratios can mislead</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Expected ratios can support either story." data-explanation-wrong="Not necessarily. E[B/A] could also be above 1, telling the opposite story.">Accept it, since the ratio exceeds 1</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Expected ratios can support either story." data-explanation-wrong="Independence is not the issue. The problem is that E[A/B] is not 1/E[B/A] in general.">Ask whether A and B are independent</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-04/day-23-expectation-variance.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=047B4UrEaNw" target="_blank" rel="noopener">Watch Lecture 23 on YouTube →</a></p>
+  </div>
+</section>

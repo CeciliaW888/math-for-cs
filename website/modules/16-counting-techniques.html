@@ -1,0 +1,195 @@
+<section class="module" id="module-16" data-day="16">
+  <div class="module-inner">
+    <h2>Day 16: Counting Techniques</h2>
+    <p>How many passwords must an attacker try? How many poker hands beat yours? Today you get three tools for counting huge sets without listing them: the <span class="term" data-definition="If step i of a sequence of choices always has exactly n_i options, no matter what came before, the total number of outcomes is n_1 times n_2 times ... times n_k.">generalized product rule</span>, the <span class="term" data-definition="If every element of B is hit by exactly k elements of A under a map from A to B, then the size of B is the size of A divided by k.">division rule</span>, and <span class="term" data-definition="A step-by-step list of choices that builds the objects you want to count. It works if it builds every object exactly once.">counting with recipes</span>.</p>
+
+    <div class="pattern-cards">
+      <div class="pattern-card">
+        <div class="stat-value">10⁸</div>
+        <div class="stat-label">8-digit serials, repeats allowed</div>
+        <p>10 options in every slot.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="stat-value">10·9·…·3</div>
+        <div class="stat-label">serials with distinct digits</div>
+        <p>The options shrink by one each step. Only about 1.8% of bills.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="stat-value">(n−1)!</div>
+        <div class="stat-label">round-table seatings</div>
+        <p>n! line-ups, divided by n rotations.</p>
+      </div>
+    </div>
+
+    <h3>The division rule: count photos, then divide</h3>
+    <p>Think of photographing a merry-go-round: every notch it turns gives a new photo of the same carousel. A <span class="term" data-definition="A map where every element of the target set is the image of exactly k elements of the source set.">k-to-1 map</span> turns that into arithmetic.</p>
+
+    <figure class="diagram-container">
+      <img src="diagrams/16-counting-techniques.svg" alt="Five permutations of 1 to 5 that are rotations of each other all map with arrows to one circular seating, showing a 5-to-1 map" loading="lazy">
+      <figcaption>Five line-ups, one table: the map from permutations to circular seatings is n-to-1, so there are n!/n = (n−1)! tables.</figcaption>
+    </figure>
+
+    <div class="flow-animation" data-steps='[
+      {"highlight": "flow16-perm", "label": "Start with all n! permutations of the knights", "packet": "🔢", "from": "flow16-perm", "to": "flow16-map"},
+      {"highlight": "flow16-map", "label": "Lay each one clockwise around the table", "packet": "🔄", "from": "flow16-map", "to": "flow16-table"},
+      {"highlight": "flow16-table", "label": "Each table is hit by exactly n permutations, one per starting knight", "packet": "🪑", "from": "flow16-table", "to": "flow16-count"},
+      {"highlight": "flow16-count", "label": "Divide: n! / n = (n - 1)! tables", "packet": "➗", "from": "flow16-count", "to": "flow16-count"}
+    ]'>
+      <div class="flow-actors">
+        <div class="flow-actor" id="flow16-perm">🔢 Permutations</div>
+        <div class="flow-actor" id="flow16-map">🔄 Seat clockwise</div>
+        <div class="flow-actor" id="flow16-table">🪑 Round tables</div>
+        <div class="flow-actor" id="flow16-count">➗ Count</div>
+      </div>
+      <div class="flow-packet"></div>
+      <div class="flow-step-label"></div>
+      <div class="flow-controls">
+        <button class="flow-next-btn">Next Step</button>
+        <button class="flow-play-btn">Play All</button>
+        <button class="flow-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <h3>Where n choose k comes from</h3>
+    <p>Send each permutation of 10 digits to the <em>set</em> of its first three entries. The set {3, 6, 7} is hit by 3! orders of the front times 7! orders of the back. Every set gets the same 3!·7!, so the number of 3-subsets is 10!/(3!·7!) = 120. In general this is the <span class="term" data-definition="C(n, k) = n! / (k! (n - k)!), the number of ways to choose a k-element subset from an n-element set. Pronounced n choose k.">binomial coefficient</span> C(n, k).</p>
+
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>Key Insight:</strong> Count something easy, then fix the relationship. A bijection keeps the count, a k-to-1 map divides by k, and an irregular map means you need a new recipe.
+      </div>
+    </div>
+
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">round_table.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python"><span class="code-keyword">def</span> <span class="code-function">canonical</span>(seating):
+    <span class="code-keyword">return</span> <span class="code-function">min</span>(seating[i:] + seating[:i] <span class="code-keyword">for</span> i <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-function">len</span>(seating)))
+
+<span class="code-keyword">for</span> n <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">3</span>, <span class="code-number">7</span>):
+    tables = {<span class="code-function">canonical</span>(p) <span class="code-keyword">for</span> p <span class="code-keyword">in</span> <span class="code-function">permutations</span>(<span class="code-function">range</span>(<span class="code-number">1</span>, n + <span class="code-number">1</span>))}
+    <span class="code-function">print</span>(n, <span class="code-function">len</span>(tables), <span class="code-function">factorial</span>(n - <span class="code-number">1</span>))</code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">Rotations are the same table, so pick one fixed rotation (the smallest) to stand for all of them.</div>
+        <div class="translation-line">Try a few table sizes.</div>
+        <div class="translation-line">Squash every permutation down to its table; the set keeps only distinct tables.</div>
+        <div class="translation-line">Compare the brute-force count with (n−1)!. They match: 2, 6, 24, 120.</div>
+      </div>
+    </div>
+
+    <h3>Counting with recipes: the two questions</h3>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <strong>Write a recipe</strong>
+          <p>Four of a kind: pick a rank (13 ways), then any fifth card (48 ways).</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <strong>Does it only build things in the set?</strong>
+          <p>Yes: four cards of one rank plus a different card is always a four of a kind.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <strong>Is every object built exactly once?</strong>
+          <p>Yes: the hand tells you its rank and its odd card. It is a <span class="term" data-definition="A one-to-one correspondence: every element on each side is paired with exactly one element on the other side.">bijection</span>.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">4</span>
+        <div class="step-body">
+          <strong>Multiply</strong>
+          <p>13 · 48 = 624 four-of-a-kind hands.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-content">
+        <strong>Common mistake:</strong> "Pick a pair, then any three cards" for <em>at least one pair</em> builds two-pair hands 2 ways and four-of-a-kinds 6 ways. The map is not k-to-1 for any single k, so no division can save it.
+      </div>
+    </div>
+
+    <h3>Flashcards</h3>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Generalized product rule</h4>
+          <p>What must stay fixed at each step?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>The number of options</h4>
+          <p>Which options are left can change; how many are left cannot.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>All four suits</h4>
+          <p>Why divide 13⁴ · 48 by 2?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>It is a 2-to-1 recipe</h4>
+          <p>The fifth card can swap with the card of the same suit, so every hand is built exactly twice.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>C(n, k)</h4>
+          <p>Formula and meaning?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>n! / (k!(n−k)!)</h4>
+          <p>The number of k-element subsets of an n-element set.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> How many 8-digit serial numbers are there if digits may repeat?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="8 to the 10 swaps the roles. Ask how many options each of the 8 slots has: 10.">8¹⁰</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. 8 slots, 10 options each, and the options never shrink.">10⁸</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="That would forbid repeats. With repeats allowed, every slot still has all 10 digits.">10 · 9 · … · 3</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> You seat 7 people at a round table, and rotations count as the same. How many seatings?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="7! counts line-ups. Each table comes from 7 line-ups (one per starting person), so divide by 7.">7! = 5040</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes. The map from line-ups to tables is 7-to-1, so 7!/7 = 6! = 720.">6! = 720</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Dividing by 7 twice over-corrects. Only rotations are identified, and there are 7 of them.">5! = 120</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> A recipe builds some hands once and others three times. What can you conclude?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Dividing by 3 only works if every hand is built exactly 3 times. Here the counts vary.">Divide the recipe count by 3</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Averaging has no justification. The division rule needs the same k for every object.">Divide by the average, 2</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Exactly. The map is not k-to-1 for one k, so the recipe tells you nothing directly. Find a better one.">The recipe cannot give the count; design a new one</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-03/day-16-counting-techniques.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=9X6HtUsxnDc" target="_blank" rel="noopener">Watch Lecture 16: Counting Techniques (MIT OpenCourseWare)</a></p>
+  </div>
+</section>

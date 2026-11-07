@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "A proof splits into three cases: \"n is divisible by 3\", \"n leaves remainder 1 when divided by 3\", and \"n is odd\". What is the main problem?",
+   "options": ["Proofs by cases may only use two cases", "The cases overlap, which is never allowed", "Divisibility cannot be used as a case condition", "The cases are not exhaustive, since n = 2 fits none of them"],
+   "answer": 3,
+   "explanation": "Cases may overlap and there can be any number of them, but together they must cover every possibility. n = 2 is not divisible by 3, leaves remainder 2, and is even, so no case covers it."},
+  {"question": "In the six-people proof, why does choosing a single person P and counting P's friends work so well?",
+   "options": ["Because P has 5 relationships, so P has at least 3 friends or at least 3 strangers", "Because P is friends with everyone", "Because every group of 3 people must include P", "Because P can be chosen to have exactly 3 friends"],
+   "answer": 0,
+   "explanation": "Five relationships cannot split as 2 friends and 2 strangers or fewer, so one side has at least 3. That forces a group Q, R, S, and the sub-cases on their relationships finish the proof. P can be anyone. We don't get to choose P's friendships."},
+  {"question": "When is strong induction clearly more convenient than ordinary induction?",
+   "options": ["When the claim is about real numbers", "When a size-n problem splits into smaller pieces whose sizes are not just n - 1", "When there is no base case", "When the claim is an existence statement"],
+   "answer": 1,
+   "explanation": "Strong induction lets you assume P(k) for every k below n. That is exactly what you need when a split, like the unstacking game or a beat ordering, creates pieces of unpredictable smaller size. It still needs a starting case, and it works over the natural numbers."},
+  {"question": "In the beat-ordering proof, a pivot team T beat every other team, so W (the teams that beat T) is empty. What happens?",
+   "options": ["The proof fails because W must be non-empty", "We must pick a different pivot", "The line-up is just T followed by a beat ordering of L, and the proof still works", "T must go last in the line-up"],
+   "answer": 2,
+   "explanation": "An empty group has a trivially valid (empty) ordering. T goes first, and T beat the first team in L. The proof never needed W or L to be non-empty."}
+]}

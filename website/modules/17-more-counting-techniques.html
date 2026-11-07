@@ -1,0 +1,186 @@
+<section class="module" id="module-17" data-day="17">
+  <div class="module-inner">
+    <h2>Day 17: More Counting Techniques</h2>
+    <p>Three new moves for when building objects one by one gets messy. Use <span class="term" data-definition="A formula for the size of a union: add the sizes of the sets, subtract the pairwise intersections, add the triple intersections, and so on, alternating signs.">inclusion-exclusion</span> to fix overlaps, the <span class="term" data-definition="If you put more items than boxes into boxes, some box gets at least two items. Formally, a total function from a bigger set to a smaller set cannot be injective.">pigeonhole principle</span> to force a collision, and a <span class="term" data-definition="A proof that two expressions are equal because both count the same set, just in different ways. Also called double counting.">combinatorial proof</span> to discover identities.</p>
+
+    <h3>Inclusion-exclusion: merging mailing lists</h3>
+    <p>Merge two club mailing lists and anyone on both would get two emails, so subtract the overlap. Hearts or face cards: 13 + 12 − 3 = 22.</p>
+
+    <figure class="diagram-container">
+      <img src="diagrams/17-more-counting-techniques.svg" alt="Three-set Venn diagram where every region is labelled with its running count: single regions 1, two-set lenses 2 minus 1, and the center 3 minus 3 plus 1, all equal to 1" loading="lazy">
+      <figcaption>Every region ends up counted exactly once. The center is added 3 times, subtracted 3 times, then added back once.</figcaption>
+    </figure>
+
+    <div class="pattern-cards">
+      <div class="pattern-card">
+        <div class="stat-value">+ |A| + |B| + |C|</div>
+        <div class="stat-label">add the singles</div>
+        <p>The overlaps get counted too often.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="stat-value">− pairs</div>
+        <div class="stat-label">subtract the lenses</div>
+        <p>Now the center is counted 0 times.</p>
+      </div>
+      <div class="pattern-card">
+        <div class="stat-value">+ |A∩B∩C|</div>
+        <div class="stat-label">add the center back</div>
+        <p>Everything is counted exactly once.</p>
+      </div>
+    </div>
+
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">coprime_pie.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python"><span class="code-keyword">def</span> <span class="code-function">coprime_pie</span>(n, primes):
+    total = <span class="code-number">0</span>
+    <span class="code-keyword">for</span> size <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-function">len</span>(primes) + <span class="code-number">1</span>):
+        <span class="code-keyword">for</span> subset <span class="code-keyword">in</span> <span class="code-function">combinations</span>(primes, size):
+            total += (-<span class="code-number">1</span>) ** size * (n // <span class="code-function">prod</span>(subset))
+    <span class="code-keyword">return</span> total
+
+<span class="code-function">print</span>(<span class="code-function">coprime_pie</span>(<span class="code-number">30</span>, [<span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">5</span>]))  <span class="code-comment"># 8</span></code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">Count the numbers 1…n that share no prime factor with n.</div>
+        <div class="translation-line">Walk through subsets of the primes by size: 0, then 1, then 2, and so on.</div>
+        <div class="translation-line">n // (product) counts the multiples of every prime in the subset.</div>
+        <div class="translation-line">Even-size subsets are added and odd-size ones subtracted. The empty subset contributes all n numbers.</div>
+        <div class="translation-line">For 30 we get 8, which is Euler's totient φ(30) = 1·2·4.</div>
+      </div>
+    </div>
+
+    <h3>Pigeonhole: name the three ingredients</h3>
+    <p>The <span class="term" data-definition="If more than k times as many items as boxes are placed into boxes, some box holds at least k + 1 items.">generalized pigeonhole principle</span> says |A| &gt; k·|B| forces a box with k + 1 items. The hard part is choosing the boxes. Here it is for 33 rooks on a chessboard:</p>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <strong>Pigeons: the 33 rooks</strong>
+          <p>We want 5 that share no row or column.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <strong>Holes: 8 wrap-around diagonals</strong>
+          <p>Diagonal i is every square with (column − row) mod 8 = i. Each one meets every row and column once.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <strong>Map: rook → its diagonal</strong>
+          <p>Every rook lies on exactly one diagonal, so the map is total.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">4</span>
+        <div class="step-body">
+          <strong>Count: 33 &gt; 4 · 8</strong>
+          <p>Some diagonal holds 5 rooks, and those 5 never share a row or column.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <div class="callout-content">
+        <strong>Good to know:</strong> Pigeonhole proofs are <em>non-constructive</em>. Boston has more than 3 × 200,000 people, so at least 4 share a hair count, but the proof never says who.
+      </div>
+    </div>
+
+    <h3>Double counting Pascal's identity</h3>
+    <div class="chat-window" id="chat-17-pascal">
+      <div class="chat-messages">
+        <div class="chat-message" data-msg="1" data-sender="1" style="display:none;">I want to show C(n, k) = C(n−1, k−1) + C(n−1, k) without any factorial algebra.</div>
+        <div class="chat-message" data-msg="2" data-sender="2" style="display:none;">Then count one set two ways. Take all length-n binary strings with exactly k ones.</div>
+        <div class="chat-message" data-msg="3" data-sender="4" style="display:none;">Way 1: choose which k positions hold the ones. That is C(n, k).</div>
+        <div class="chat-message" data-msg="4" data-sender="4" style="display:none;">Way 2: split on the last bit. If it ends in 1, place k−1 ones in n−1 spots, which is C(n−1, k−1). If it ends in 0, place all k ones in n−1 spots, which is C(n−1, k).</div>
+        <div class="chat-message" data-msg="5" data-sender="3" style="display:none;">The two cases are disjoint and cover everything, so they add up to the same set. The identity is proved ✅</div>
+        <div class="chat-typing typing-indicator" style="display:none;"><span></span><span></span><span></span></div>
+      </div>
+      <div class="chat-controls">
+        <button class="chat-next-btn">Next →</button>
+        <button class="chat-all-btn">Show All</button>
+        <button class="chat-reset-btn">Reset</button>
+      </div>
+    </div>
+    <p>That identity is the rule that builds <span class="term" data-definition="A triangle of numbers where row n lists C(n,0), C(n,1), ..., C(n,n). Each entry is the sum of the two entries above it.">Pascal's triangle</span>, and each row sums to 2ⁿ. The <span class="term" data-definition="(x + y)^n equals the sum over k of C(n, k) x^k y^(n-k). The coefficients count the ways to choose which k factors contribute an x.">binomial theorem</span> is the same counting story: in (x + y)ⁿ, the term xᵏyⁿ⁻ᵏ shows up once for each way to pick which k factors give an x.</p>
+
+    <h3>Flashcards</h3>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>|A ∪ B ∪ C|</h4>
+          <p>The full formula?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Singles − pairs + triple</h4>
+          <p>|A|+|B|+|C| − |A∩B| − |A∩C| − |B∩C| + |A∩B∩C|</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Generalized pigeonhole</h4>
+          <p>What does |A| &gt; k·|B| guarantee?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>A (k+1)-way collision</h4>
+          <p>Some box gets at least k + 1 items.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Σ C(n, k) = 2ⁿ</h4>
+          <p>Which set is counted twice?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Length-n binary strings</h4>
+          <p>2 choices per bit, or group the strings by how many ones they have.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> How many integers from 1 to 100 are divisible by 2 or 5?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="50 + 20 double-counts the multiples of 10. Subtract those 10.">70</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes: 50 + 20 − 10 = 60.">60</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="That subtracts the overlap twice. Each multiple of 10 should be removed once.">50</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> A hash function sends 1,000 keys into 300 slots. What is guaranteed?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="True, but weak. 1,000 is more than 3 × 300, so the generalized version gives more.">Some slot gets at least 2 keys</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. 1,000 &gt; 3 × 300, so some slot holds at least 3 + 1 = 4 keys.">Some slot gets at least 4 keys</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Pigeonhole gives a lower bound on the busiest slot, not an even spread. A bad hash could put everything in one slot.">Every slot gets 3 or 4 keys</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> In a combinatorial proof, what makes the two expressions equal?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Checking small cases builds confidence but proves nothing about all n.">They agree for small n</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="No algebra is needed. That is the whole appeal of the technique.">Expanding both into factorials</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Exactly. One set has one size, so two correct counts of it must agree.">Both correctly count the same set</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-03/day-17-more-counting-techniques.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=sF5_cyLyyw0" target="_blank" rel="noopener">Watch Lecture 17: More Counting Techniques (MIT OpenCourseWare)</a></p>
+  </div>
+</section>

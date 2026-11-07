@@ -1,0 +1,203 @@
+<section class="module" id="module-24" data-day="24">
+  <div class="module-inner">
+    <h2>Day 24: Large Deviations: Chebyshev and Chernoff Bounds, Wrap Up</h2>
+    <p>The average request takes 8 ms. How often can one take 16 ms or more? A <span class="term" data-definition="An upper limit on the probability that a random variable lands far from its expected value.">tail bound</span> answers questions like this without knowing the full distribution. The more you know, the stronger the promise.</p>
+
+    <h3>Markov: averages limit extremes</h3>
+    <p>If the average height in a room is 170 cm, half the room cannot be 340 cm giants. That is <span class="term" data-definition="For a random variable that is never negative: Pr[R ≥ x] ≤ E[R]/x.">Markov's inequality</span>: for R ≥ 0, Pr[R ≥ x] ≤ E[R]/x.</p>
+
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <strong>Split the average</strong>
+          <p>E[R] = E[R | R ≥ x]·Pr[R ≥ x] + E[R | R &lt; x]·Pr[R &lt; x].</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <strong>Bound each piece</strong>
+          <p>The first conditional mean is at least x. The second is at least 0, because R is never negative.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <strong>Rearrange</strong>
+          <p>E[R] ≥ x·Pr[R ≥ x], so Pr[R ≥ x] ≤ E[R]/x.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pattern-cards">
+      <div class="pattern-card">
+        <strong>Direct</strong>
+        <p>Scores in [30, 100], mean 75: Pr[R ≥ 90] ≤ 75/90 ≈ 83%.</p>
+      </div>
+      <div class="pattern-card">
+        <strong>Shift</strong>
+        <p>R − 30 ≥ 0 has mean 45: Pr[R ≥ 90] ≤ 45/60 = 75%.</p>
+      </div>
+      <div class="pattern-card">
+        <strong>Flip</strong>
+        <p>S = 100 − R ≥ 0 has mean 25: Pr[R ≤ 65] ≤ 25/35 = 5/7.</p>
+      </div>
+    </div>
+
+    <div class="callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-content">
+        <strong>Non-negativity is not optional:</strong> if R is ±1 with equal chance, E[R] = 0 and Markov would claim Pr[R ≥ 1/2] ≤ 0. Shift a variable up until it is non-negative before applying Markov.
+      </div>
+    </div>
+
+    <h3>Climbing the information ladder</h3>
+    <div class="flow-animation" data-steps='[
+      {"highlight": "flow-actor-24a", "label": "Know only the mean: Markov gives Pr[R at least 75] at most 2/3, for any n", "packet": "📏", "from": "flow-actor-24a", "to": "flow-actor-24b"},
+      {"highlight": "flow-actor-24b", "label": "Add the variance: Chebyshev applies Markov to the squared deviation and gives 4/n", "packet": "📐", "from": "flow-actor-24b", "to": "flow-actor-24c"},
+      {"highlight": "flow-actor-24c", "label": "Add mutual independence: Chernoff applies Markov to c to the power R and gives about e to the minus 0.054n", "packet": "🚀", "from": "flow-actor-24c", "to": "flow-actor-24d"},
+      {"highlight": "flow-actor-24d", "label": "For 100 coins the truth is about 0.0000003, and only Chernoff gets close", "packet": "🎯", "from": "flow-actor-24c", "to": "flow-actor-24d"}
+    ]'>
+      <div class="flow-actors">
+        <div class="flow-actor" id="flow-actor-24a">📏 Markov</div>
+        <div class="flow-actor" id="flow-actor-24b">📐 Chebyshev</div>
+        <div class="flow-actor" id="flow-actor-24c">🚀 Chernoff</div>
+        <div class="flow-actor" id="flow-actor-24d">🎯 Exact</div>
+      </div>
+      <div class="flow-packet"></div>
+      <div class="flow-step-label"></div>
+      <div class="flow-controls">
+        <button class="flow-next-btn">Next Step</button>
+        <button class="flow-play-btn">Play All</button>
+        <button class="flow-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <div class="pattern-cards">
+      <div class="pattern-card">
+        <strong>Chebyshev</strong>
+        <p><span class="term" data-definition="For any random variable: Pr[|R − E[R]| ≥ x] ≤ Var[R]/x². Proved by applying Markov to the squared deviation.">Chebyshev's inequality</span>: Pr[|R − E[R]| ≥ x] ≤ Var[R]/x². At least 2σ away: at most 1/4.</p>
+      </div>
+      <div class="pattern-card">
+        <strong>Chernoff</strong>
+        <p>The <span class="term" data-definition="For a sum of mutually independent variables each between 0 and 1: Pr[R ≥ c·E[R]] ≤ e^(−β(c)·E[R]), with β(c) = c ln c − c + 1.">Chernoff bound</span>: Pr[R ≥ c·E[R]] ≤ e^(−β(c)·E[R]), β(c) = c ln c − c + 1.</p>
+      </div>
+    </div>
+
+    <figure class="diagram-container">
+      <img src="diagrams/24-large-deviations.svg" alt="A bell-shaped curve for heads in 100 coin flips with mean 50 and a vanishingly thin tail beyond 75. Below, four cards: Markov at most 0.67, Chebyshev at most 0.04, Chernoff at most 0.0045, exact about 0.0000003." loading="lazy">
+      <figcaption>Each new piece of information upgrades the bound: constant, then 1/n, then exponentially small.</figcaption>
+    </figure>
+
+    <h3>Code ↔ English</h3>
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">tails.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python"><span class="code-keyword">import</span> math
+beta = <span class="code-number">1.5</span> * math.<span class="code-function">log</span>(<span class="code-number">1.5</span>) - <span class="code-number">1.5</span> + <span class="code-number">1</span>
+<span class="code-keyword">for</span> n <span class="code-keyword">in</span> [<span class="code-number">20</span>, <span class="code-number">100</span>, <span class="code-number">400</span>]:
+    markov = (n / <span class="code-number">2</span>) / (<span class="code-number">3</span> * n / <span class="code-number">4</span>)
+    chebyshev = (n / <span class="code-number">4</span>) / (n / <span class="code-number">4</span>) ** <span class="code-number">2</span>
+    chernoff = math.<span class="code-function">exp</span>(-beta * n / <span class="code-number">2</span>)
+    <span class="code-function">print</span>(n, markov, chebyshev, chernoff)  <span class="code-comment"># n=20: Chebyshev wins; n=400: Chernoff wins</span></code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">We need natural logs and exponentials for Chernoff.</div>
+        <div class="translation-line">β(3/2) ≈ 0.108: the constant for asking about 1.5 times the mean.</div>
+        <div class="translation-line">Try a small, a medium, and a large number of coin flips.</div>
+        <div class="translation-line">Markov uses only the mean n/2, so the bound never improves: 2/3.</div>
+        <div class="translation-line">Chebyshev uses the variance n/4 and a distance of n/4, giving 4/n.</div>
+        <div class="translation-line">Chernoff uses independence and shrinks exponentially in E[R] = n/2.</div>
+        <div class="translation-line">Constants matter for small n, but the exponential always wins eventually.</div>
+      </div>
+    </div>
+
+    <div class="pattern-cards">
+      <div class="pattern-card">
+        <strong>Lazy Susan, 5 phones</strong>
+        <p>Markov says Pr[everyone matches] ≤ 1/5. The truth is exactly 1/5, so the bound is <span class="term" data-definition="A bound that some distribution actually meets exactly, so it cannot be improved using the same information.">tight</span>.</p>
+      </div>
+      <div class="pattern-card">
+        <strong>Shuffle, 5 phones</strong>
+        <p>Same mean, same bound of 1/5. The truth is 1/120: Markov is 24 times too big, because it only sees the mean.</p>
+      </div>
+    </div>
+
+    <h3>Flashcards</h3>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Markov needs…</h4>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>R ≥ 0 and E[R]</h4>
+          <p>Gives Pr[R ≥ x] ≤ E[R]/x.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>How is Chebyshev proved?</h4>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Markov on (R − E[R])²</h4>
+          <p>That variable is non-negative and its mean is the variance.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Chernoff needs…</h4>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>Independent pieces in [0, 1]</h4>
+          <p>Then the tail shrinks exponentially in E[R].</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> Server latency R ≥ 0 has mean 10 ms. Nothing else is known. What is the best bound on Pr[R ≥ 50 ms]?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. With only the mean and non-negativity, Markov gives 10/50 = 1/5, and some distribution meets it." data-explanation-wrong="Markov gives 10/50 = 1/5.">At most 1/5</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Markov gives 10/50 = 1/5." data-explanation-wrong="That is a Chebyshev-style answer, but Chebyshev needs the variance, which we do not know.">At most 1/25</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Markov gives 10/50 = 1/5." data-explanation-wrong="Chernoff needs independent bounded pieces. We know nothing about how R is built.">Exponentially small</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> Temperatures T range from −20 to 40 with mean 15. Can you apply Markov directly to T to bound Pr[T ≥ 30]?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Shift first: T + 20 ≥ 0, mean 35, so Pr[T ≥ 30] ≤ 35/50 = 0.7." data-explanation-wrong="15/30 looks tempting, but T can be negative, so that bound is not valid.">Yes, the bound is 15/30 = 1/2</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Correct. T + 20 is non-negative with mean 35, so Pr[T ≥ 30] = Pr[T + 20 ≥ 50] ≤ 35/50 = 0.7." data-explanation-wrong="Shift first: T + 20 ≥ 0, mean 35, so the bound is 0.7.">No; shift to T + 20 first, giving 0.7</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="Shift first: T + 20 ≥ 0, mean 35, so the bound is 0.7." data-explanation-wrong="Markov still works after shifting T up to make it non-negative.">No; Markov cannot help at all</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> Why does Chernoff give a much stronger bound than Chebyshev for many coin flips?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-correct="It exploits mutual independence of all the pieces." data-explanation-wrong="Chernoff does not use a different mean; both use E[R] = n/2.">It uses a more accurate mean</button>
+        <button class="quiz-option" data-correct="false" data-explanation-correct="It exploits mutual independence of all the pieces." data-explanation-wrong="Chebyshev also works for sums. The difference is how much independence each uses.">Chebyshev only works for single variables</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes. Chebyshev only needs pairwise independence. Chernoff uses mutual independence, so the factors of E[c^R] multiply into an exponential." data-explanation-wrong="It exploits mutual independence of all the pieces.">It uses mutual independence, not just the variance</button>
+      </div>
+    </div>
+
+    <div class="callout-info">
+      <span class="callout-icon">🎓</span>
+      <div class="callout-content">
+        <strong>You finished the course.</strong> Proofs and induction, sums and asymptotics, number theory and RSA, graphs, counting, and probability: every unit is a tool for reasoning precisely about programs. Natural next steps are an algorithms course (MIT continues with 6.1210), randomized algorithms, and a probability and statistics course.
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-04/day-24-large-deviations.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=7FOFBqw1gMs" target="_blank" rel="noopener">Watch Lecture 24 on YouTube →</a></p>
+  </div>
+</section>

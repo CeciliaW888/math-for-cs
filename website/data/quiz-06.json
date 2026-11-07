@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "Which statement about S(n) = n^2/2 - n/2 is FALSE?",
+   "options": ["S(n) is in Theta(n^2)", "S(n) is in O(n^3)", "S(n) is asymptotically equivalent to n^2", "S(n) is asymptotically equivalent to n^2/2"],
+   "answer": 2,
+   "explanation": "S(n)/n^2 tends to 1/2, not 1, so S is not ~ n^2. Theta and O forgive the constant 1/2, and S/(n^2/2) does tend to 1."},
+  {"question": "You want to prove n^2 + 3n + 7 is in O(n^2). What does a complete proof need?",
+   "options": ["A table of values showing n^2 + 3n + 7 is close to n^2 for n up to 100", "A proof by induction on n that each value is O(1)", "An argument that 3n and 7 are smaller than n^2 for some n", "A specific constant C and starting point n0 with n^2 + 3n + 7 <= C n^2 for all n >= n0"],
+   "answer": 3,
+   "explanation": "Big O is an existence claim: exhibit C and n0 (for example C = 11, n0 = 1) and show the inequality for every n >= n0. Finite tables and per-value induction prove nothing about the whole function."},
+  {"question": "Why is 3^n not in O(2^n), even though big O ignores constant factors?",
+   "options": ["Because 3^n / 2^n = 1.5^n grows without bound, so no single constant C works", "Because the bases are different integers", "Because exponential functions are never in big O of each other", "Because 3^n is bigger than 2^n for small n"],
+   "answer": 0,
+   "explanation": "Changing the base multiplies by 1.5 once per step of n, not once overall. The ratio tends to infinity, so by the limit test 3^n is not in O(2^n). Note 2^(n+1) is in O(2^n), so exponentials can be."},
+  {"question": "The harmonic number H_n satisfies ln n + 1/n <= H_n <= ln n + 1. What does this let you conclude?",
+   "options": ["H_n stays below a fixed number, so the block overhang is limited", "H_n is asymptotically equivalent to ln n, because dividing by ln n squeezes the ratio to 1", "H_n is in o(ln n)", "H_n equals ln n for large n"],
+   "answer": 1,
+   "explanation": "Dividing all three parts by ln n gives bounds that both tend to 1, so H_n / ln n tends to 1. H_n still grows without limit, and the difference H_n - ln n does not vanish."}
+]}

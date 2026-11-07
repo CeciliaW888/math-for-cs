@@ -1,0 +1,138 @@
+<section class="module" id="module-19" data-day="19">
+  <div class="module-inner">
+    <h2>Day 19: Conditional Probability</h2>
+    <p>Spam filters, medical tests and recommenders all ask one question: <em>now that I have seen this, how should my belief change?</em> Today you learn the maths of updating on evidence.</p>
+
+    <h3>Rules carried over from counting</h3>
+    <p>An <span class="term" data-definition="A set of outcomes from the sample space, such as all outcomes where the test is positive.">event</span> is a set of outcomes, so the set rules you already know still apply:</p>
+    <div class="step-cards">
+      <div class="step-card"><span class="step-num">∪</span><div class="step-body"><strong>Sum rule and inclusion-exclusion</strong><p>Pr[A ∪ B] = Pr[A] + Pr[B] − Pr[A ∩ B]. If A and B are disjoint, the overlap term is 0.</p></div></div>
+      <div class="step-card"><span class="step-num">¬</span><div class="step-body"><strong>Complement rule</strong><p>Pr[not A] = 1 − Pr[A].</p></div></div>
+      <div class="step-card"><span class="step-num">≤</span><div class="step-body"><strong><span class="term" data-definition="Pr[A ∪ B] ≤ Pr[A] + Pr[B]. It holds for any events, because the overlap you skip subtracting is never negative.">Union bound</span> and monotonicity</strong><p>Pr[A ∪ B] ≤ Pr[A] + Pr[B], and if A ⊆ B then Pr[A] ≤ Pr[B].</p></div></div>
+    </div>
+
+    <h3>The spotlight: what "given B" means</h3>
+    <p>Picture a dark stage with a spotlight on B. Once you know B happened, only the lit part matters, and you ask what fraction of it is also A.</p>
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong><span class="term" data-definition="The probability of A once you know B happened: Pr[A ∩ B] divided by Pr[B]. Only defined when Pr[B] is greater than 0.">Conditional probability</span>:</strong> Pr[A | B] = Pr[A ∩ B] / Pr[B]. Dividing by Pr[B] rescales the lit region so it becomes a whole sample space again. Rearranged, this gives the <span class="term" data-definition="Pr[A ∩ B] = Pr[A | B] · Pr[B]. It is the reason you multiply along the edges of a probability tree.">product rule</span>, which is why you multiply along tree edges.
+      </div>
+    </div>
+
+    <h3>Worked example: best of three</h3>
+    <p>Ash and Gary battle until someone has two wins. Battle 1 is 50-50, and after that the previous winner wins with probability 2/3. What is Pr[Ash wins the series | Ash wins battle 1]?</p>
+    <div class="step-cards">
+      <div class="step-card"><span class="step-num">1</span><div class="step-body"><strong>Draw the tree</strong><p>The leaves are WW, WLW, WLL, LWW, LWL and LL. Each edge after the first is a conditional probability (2/3 or 1/3).</p></div></div>
+      <div class="step-card"><span class="step-num">2</span><div class="step-body"><strong>Multiply along paths</strong><p>WW = ½·⅔ = 1/3, WLW = ½·⅓·⅓ = 1/18, WLL = ½·⅓·⅔ = 1/9 (the L-first leaves mirror these).</p></div></div>
+      <div class="step-card"><span class="step-num">3</span><div class="step-body"><strong>Name the events</strong><p>A ∩ B = {WW, WLW} and B = {WW, WLW, WLL}.</p></div></div>
+      <div class="step-card"><span class="step-num">4</span><div class="step-body"><strong>Divide</strong><p>Pr[A | B] = (1/3 + 1/18) / (1/2) = (7/18)/(1/2) = 7/9.</p></div></div>
+    </div>
+
+    <h3>Bayes' rule: reversing the arrow</h3>
+    <p>Writing the product rule both ways gives <span class="term" data-definition="Pr[B | A] = Pr[A | B] · Pr[B] / Pr[A]. It turns how likely the evidence is under a hypothesis into how likely the hypothesis is given the evidence.">Bayes' rule</span>: Pr[B | A] = Pr[A | B] · Pr[B] / Pr[A]. Here Pr[B] is the <span class="term" data-definition="Your belief in a hypothesis before you see any evidence.">prior</span>, Pr[A | B] is the <span class="term" data-definition="How probable the observed evidence is if the hypothesis is true.">likelihood</span>, and Pr[B | A] is the <span class="term" data-definition="Your updated belief in the hypothesis after you condition on the evidence.">posterior</span>.</p>
+
+    <figure class="diagram-container">
+      <img src="diagrams/19-conditional-probability.svg" alt="Probability tree for a medical test: 10 percent sick, 90 percent healthy. The positive leaves have probabilities 0.09 and 0.27, so the probability of being sick given a positive test is one quarter." loading="lazy">
+      <figcaption>The testing tree. Of all positive results (0.09 + 0.27), only 0.09 come from sick people, so Pr[sick | +] = 1/4.</figcaption>
+    </figure>
+
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">covid_test.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python">prior, p_pos_sick, p_pos_healthy = F(<span class="code-number">1</span>, <span class="code-number">10</span>), F(<span class="code-number">9</span>, <span class="code-number">10</span>), F(<span class="code-number">3</span>, <span class="code-number">10</span>)
+odds = (p_pos_sick * prior) / (p_pos_healthy * (<span class="code-number">1</span> - prior))
+<span class="code-function">print</span>(<span class="code-string">"P(sick | +) ="</span>, odds / (<span class="code-number">1</span> + odds))
+<span class="code-keyword">for</span> _ <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">100_000</span>):
+    sick = random.<span class="code-function">random</span>() &lt; <span class="code-number">0.1</span>
+    <span class="code-keyword">if</span> random.<span class="code-function">random</span>() &lt; (<span class="code-number">0.9</span> <span class="code-keyword">if</span> sick <span class="code-keyword">else</span> <span class="code-number">0.3</span>):
+        positives += <span class="code-number">1</span>; sick_positives += sick</code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">Store the prior (10% sick) and the two likelihoods of a positive test, as exact fractions.</div>
+        <div class="translation-line">Odds form of Bayes: compare sick against healthy, and the hard-to-find Pr[+] cancels out.</div>
+        <div class="translation-line">Odds of 1:3 turn into a probability of 1/4.</div>
+        <div class="translation-line">Now check the answer by simulating 100,000 people.</div>
+        <div class="translation-line">Each person is sick with probability 0.1.</div>
+        <div class="translation-line">Conditioning on a positive test means keeping only the trials where the test came back positive…</div>
+        <div class="translation-line">…and counting how many of those people were sick. The result is about 0.249.</div>
+      </div>
+    </div>
+
+    <h3>Reasoning out loud: the trick coin</h3>
+    <div class="chat-window" id="chat-day19-coin">
+      <div class="chat-messages">
+        <div class="chat-message" data-msg="1" data-sender="1" style="display:none;">I picked a coin at random, either the fair one or the two-headed one, and flipped heads. Which coin is it?</div>
+        <div class="chat-message" data-msg="2" data-sender="4" style="display:none;">Prior first: each coin had a 1/2 chance before the flip.</div>
+        <div class="chat-message" data-msg="3" data-sender="2" style="display:none;">Likelihoods: Pr[heads | fair] = 1/2 and Pr[heads | trick] = 1.</div>
+        <div class="chat-message" data-msg="4" data-sender="2" style="display:none;">Odds of fair to trick = (1/2 · 1/2) / (1 · 1/2) = 1/2.</div>
+        <div class="chat-message" data-msg="5" data-sender="3" style="display:none;">Odds of 1:2 mean Pr[fair | heads] = 1/3. Heads made the trick coin more believable.</div>
+        <div class="chat-typing typing-indicator" style="display:none;"><span></span><span></span><span></span></div>
+      </div>
+      <div class="chat-controls">
+        <button class="chat-next-btn">Next →</button>
+        <button class="chat-all-btn">Show All</button>
+        <button class="chat-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <h3>Two classic traps</h3>
+    <div class="callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-content">
+        <strong><span class="term" data-definition="A trend that holds inside every group but reverses when the groups are combined, because the groups have very different sizes.">Simpson's paradox</span>:</strong> CS admits 1 of 99 women and 0 of 1 man. EE admits 1 of 1 woman and 98 of 99 men. Women do better in <em>each</em> department, yet overall 98 men are admitted and only 2 women. <strong>Forgotten evidence:</strong> in the jelly-tart trial, both sides argued about Pr[cake thief | tart thief] and ignored the fact that a cake <em>was</em> stolen. The question that matters is Pr[C | J ∩ X].
+      </div>
+    </div>
+
+    <h3>Flip to review</h3>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front"><h4>Pr[A | B]</h4><p>What is the formula, and when is it defined?</p><p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p></div>
+        <div class="flashcard-back"><h4>Pr[A ∩ B] / Pr[B]</h4><p>It is defined only when Pr[B] &gt; 0. B becomes the new sample space.</p><p style="font-size:0.8em">← Tap to flip →</p></div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front"><h4>Odds form of Bayes</h4><p>How do you compare two hypotheses B and C after seeing A?</p><p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p></div>
+        <div class="flashcard-back"><h4>Likelihood × prior, top and bottom</h4><p>Pr[B|A] / Pr[C|A] = Pr[A|B]Pr[B] / (Pr[A|C]Pr[C]). Pr[A] cancels.</p><p style="font-size:0.8em">← Tap to flip →</p></div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front"><h4>Why only 1/4?</h4><p>A good test says positive, yet you are probably healthy. Why?</p><p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p></div>
+        <div class="flashcard-back"><h4>The prior dominates</h4><p>Healthy people are 9× more common, so their false positives (0.27) outnumber the true positives (0.09).</p><p style="font-size:0.8em">← Tap to flip →</p></div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> In the best-of-three series, why does Pr[B | A] (Ash won battle 1, given he won the series) also equal 7/9?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="Close, but conditional probability is not symmetric in general. Pr[B|A] = Pr[A ∩ B]/Pr[A], and here it matches only because Pr[A] = Pr[B].">Conditional probability is always symmetric</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Exactly. Both use the same Pr[A ∩ B] = 7/18, and by symmetry Pr[A] = Pr[B] = 1/2, so the two quotients are equal.">Because Pr[A] = Pr[B] = 1/2, so both quotients divide 7/18 by the same number</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="The first battle does not decide the series; Ash can still lose with WLL.">Because winning battle 1 guarantees winning the series</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> A test catches 99% of cases and has a 1% false-positive rate, but only 1 in 10,000 people has the condition. You test positive. What is the best description?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="That confuses Pr[+ | sick] with Pr[sick | +]. The tiny prior matters a lot.">You are 99% likely to have it</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="A positive result does raise your probability, by about 100 times, so it is not meaningless.">The test tells you nothing</button>
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Right. The odds are (0.99 · 0.0001) / (0.01 · 0.9999), roughly 1:101, so the probability is about 1%. That is far higher than the prior, but still low.">You are still very likely healthy, at roughly 1% chance of having it</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> Every department admits women at a higher rate, but the university overall admits men at a higher rate. What is the most likely explanation?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="true" data-explanation-correct="Yes. This is Simpson's paradox: the overall rate is a weighted average, and the weights (who applies where) differ between the groups.">The groups applied to departments with very different admission rates in different proportions</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="No arithmetic error is needed. The paradox happens with perfectly correct numbers.">Someone made an arithmetic mistake</button>
+        <button class="quiz-option" data-correct="false" data-explanation-wrong="It is not impossible. The lecture example (CS and EE) shows that it can happen with real counts.">It is impossible, so the data must be fake</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-03/day-19-conditional-probability.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=wQBSalAFFC4" target="_blank" rel="noopener">Watch Lecture 19: Conditional Probability (MIT OpenCourseWare)</a></p>
+  </div>
+</section>

@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "You flip two fair, independent coins. Let S = 'the coins match' and A = 'coin 1 is heads'. Are S and A independent?",
+   "options": ["Yes: Pr[S | A] = Pr[coin 2 is heads] = 1/2 = Pr[S]", "No, because S depends on coin 1", "No, because S and A overlap", "Only if the coins are biased"],
+   "answer": 0,
+   "explanation": "An event can involve coin 1 and still be independent of it. Knowing coin 1 is heads leaves the chance of a match at exactly 1/2. With biased coins this usually breaks."},
+  {"question": "Which statement is equivalent to 'A is independent of B' for every pair of events, including when Pr[B] = 0?",
+   "options": ["A and B are disjoint", "Pr[A ∩ B] = Pr[A] · Pr[B]", "Pr[A ∪ B] = Pr[A] + Pr[B]", "Pr[A | B] = Pr[B | A]"],
+   "answer": 1,
+   "explanation": "The product rule is equivalent by a proof by cases on whether Pr[B] = 0. Disjointness (with positive probabilities) actually forces dependence."},
+  {"question": "A suspect matches 9 DNA markers, each shared by 10% of people. When is the claim 'one in a billion' justified?",
+   "options": ["Always, because 0.1 to the 9th power is 10⁻⁹", "When each pair of markers is independent", "When the nine marker events are mutually independent", "Never, because probabilities do not apply to individuals"],
+   "answer": 2,
+   "explanation": "Multiplying all nine probabilities is exactly the product rule for the whole collection, which requires mutual independence. Pairwise independence is not enough, as the three-coin example shows."},
+  {"question": "Why do only about 23 people give even odds of a shared birthday among 365 days?",
+   "options": ["Because birthdays cluster in August", "Because of the pigeonhole principle", "Because each new person has a 1/2 chance of matching someone", "Because the number of pairs grows like n², so Pr[no match] ≈ e^(−n(n−1)/(2·365)) falls quickly"],
+   "answer": 3,
+   "explanation": "There are about n²/2 pairs, each of which could match. Solving e^(−n(n−1)/(2d)) = 1/2 gives n ≈ 1.18√d ≈ 23. Pigeonhole only gives the worst-case guarantee of 366."}
+]}

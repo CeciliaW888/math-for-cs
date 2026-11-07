@@ -1,0 +1,189 @@
+<section class="module" id="module-5" data-day="5">
+  <div class="module-inner">
+    <h2>Day 5: Sums</h2>
+    <p>A loop's running time is a sum of the cost of each pass. Today you learn to replace a long sum with a <span class="term" data-definition="An expression with a fixed number of operations: no dots and no sigma, so a calculator can evaluate it directly.">closed form</span>, or, when none exists, to trap it between two easy numbers.</p>
+
+    <h3>Four tools for four situations</h3>
+    <div class="pattern-cards">
+      <div class="pattern-card"><strong>🔁 Perturbation</strong><p>Shift the sum a little, subtract, watch it cancel.</p></div>
+      <div class="pattern-card"><strong>🎯 Ansatz</strong><p>Guess the shape, solve for constants, then check.</p></div>
+      <div class="pattern-card"><strong>🧮 Double sums</strong><p>Work inside-out, or swap which index is outside.</p></div>
+      <div class="pattern-card"><strong>📐 Integral method</strong><p>No formula? Bound the sum with an integral.</p></div>
+    </div>
+
+    <h3>The lottery prize</h3>
+    <p>"$1 million" paid as $50,000 a year for 20 years is worth less than $1 million today. With interest rate p, a payment k years away is worth 1/(1+p)ᵏ now, so the prize is a <span class="term" data-definition="A sum of consecutive powers of one number x: 1 + x + x² + … + xⁿ⁻¹.">geometric series</span>.</p>
+    <div class="callout-accent">
+      <span class="callout-icon">💡</span>
+      <div class="callout-content">
+        <strong>Frame difference:</strong> subtract two video frames taken a moment apart and everything that stood still disappears. <span class="term" data-definition="Changing a sum slightly (shifting or multiplying it) and combining it with the original so most terms cancel.">Perturbation</span> does the same to a sum.
+      </div>
+    </div>
+    <div class="step-cards">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-body"><strong>Name it</strong><p>S = 1 + x + x² + … + xⁿ⁻¹</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-body"><strong>Perturb it</strong><p>xS = x + x² + … + xⁿ⁻¹ + xⁿ</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-body"><strong>Subtract</strong><p>The middle cancels: S − xS = 1 − xⁿ</p></div>
+      </div>
+      <div class="step-card">
+        <span class="step-num">4</span>
+        <div class="step-body"><strong>Solve and verify</strong><p>S = (1 − xⁿ)/(1 − x). Then prove it by induction (guess and check).</p></div>
+      </div>
+    </div>
+
+    <div class="translation-block">
+      <div class="translation-code">
+        <div class="code-header">
+          <span class="filename">annuity.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+        </div>
+        <pre><code class="language-python"><span class="code-keyword">def</span> <span class="code-function">annuity_closed</span>(m, n, p):
+    x = <span class="code-number">1</span> / (<span class="code-number">1</span> + p)
+    <span class="code-keyword">return</span> m * (<span class="code-number">1</span> - x ** n) / (<span class="code-number">1</span> - x)
+
+<span class="code-function">print</span>(<span class="code-function">annuity_closed</span>(<span class="code-number">50_000</span>, <span class="code-number">20</span>, <span class="code-number">0.0533</span>))
+<span class="code-comment"># 638339.9...</span>
+<span class="code-function">print</span>(<span class="code-number">1</span> / (<span class="code-number">1</span> - <span class="code-number">1</span> / <span class="code-number">1.0533</span>))
+<span class="code-comment"># 19.76...</span></code></pre>
+      </div>
+      <div class="translation-english">
+        <div class="translation-line">Price a stream of m dollars a year for n years at interest rate p.</div>
+        <div class="translation-line">x is what one dollar next year is worth today.</div>
+        <div class="translation-line">Apply the perturbation formula: one line, no loop, however big n is.</div>
+        <div class="translation-line">The "$1 million" prize is really worth about $638,000.</div>
+        <div class="translation-line">$1 a year forever: xⁿ shrinks to 0, leaving 1/(1 − x).</div>
+        <div class="translation-line">Getting paid forever is worth only about $20 today.</div>
+      </div>
+    </div>
+
+    <h3>The ansatz: guess the shape</h3>
+    <p>For Σ k² there is no obvious trick. But every term is at most n², and half of them are at least (n/2)², so the sum sits between about n³/8 and n³. An <span class="term" data-definition="German for 'approach': an educated guess at the form of an answer, with unknown constants you then solve for.">ansatz</span> says: guess a cubic.</p>
+    <div class="chat-window" id="chat-day5-ansatz">
+      <div class="chat-messages">
+        <div class="chat-message" data-msg="1" data-sender="1" style="display:none;">Guess: S(n) = an³ + bn² + cn + d. Four unknowns, so I need four facts.</div>
+        <div class="chat-message" data-msg="2" data-sender="3" style="display:none;">S(0) = 0, S(1) = 1, S(2) = 5, S(3) = 14.</div>
+        <div class="chat-message" data-msg="3" data-sender="4" style="display:none;">Solving the four equations: a = 1/3, b = 1/2, c = 1/6, d = 0.</div>
+        <div class="chat-message" data-msg="4" data-sender="2" style="display:none;">Not proven yet! Sanity check n = 4: 64/3 + 8 + 4/6 = 30. And 1 + 4 + 9 + 16 = 30 ✓</div>
+        <div class="chat-message" data-msg="5" data-sender="3" style="display:none;">Now prove it by induction. S(n) = n(n+1)(2n+1)/6.</div>
+        <div class="chat-typing typing-indicator" style="display:none;"><span></span><span></span><span></span></div>
+      </div>
+      <div class="chat-controls">
+        <button class="chat-next-btn">Next →</button>
+        <button class="chat-all-btn">Show All</button>
+        <button class="chat-reset-btn">Reset</button>
+      </div>
+    </div>
+
+    <h3>Double sums: swap the order</h3>
+    <p>In Σ<sub>i=1..n</sub> Σ<sub>j=i..n</sub> j, the pairs added obey 1 ≤ i ≤ j ≤ n. <span class="term" data-definition="Rewriting a double sum so the inner and outer indices trade places, while adding up exactly the same pairs.">Exchanging the order of summation</span> puts j outside: for each j, i runs 1..j, the inner sum is j·j = j², and the total is Σ j².</p>
+
+    <h3>No formula? Use the integral method</h3>
+    <figure class="diagram-container">
+      <img src="diagrams/05-sums.svg" alt="An increasing curve f(x) from 1 to n with two staircases: left-end rectangles underneath it and right-end rectangles above it, giving I + f(1) ≤ S ≤ I + f(n)." loading="lazy">
+      <figcaption>Two staircases squeeze the curve. Their areas are S − f(n) and S − f(1), which traps the sum S.</figcaption>
+    </figure>
+    <div class="callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <div class="callout-content">
+        <strong>Sharpen the bound:</strong> the <span class="term" data-definition="Bounding a sum by the integral I of its function: I plus the smaller end term ≤ sum ≤ I plus the larger end term.">integral method</span> is off by at most one term. For Σ 1/i² it only gives 1 ≤ S ≤ 2, but adding the first three terms by hand narrows it to about 1.61 ≤ S ≤ 1.67 (true value 1.645).
+      </div>
+    </div>
+
+    <h3>Flashcards</h3>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Geometric series</h4>
+          <p>1 + x + … + xⁿ⁻¹ = ?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>(1 − xⁿ)/(1 − x)</h4>
+          <p>For x ≠ 1. Found by subtracting xS from S.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Integral bound (f increasing)</h4>
+          <p>Where does S = f(1) + … + f(n) sit?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>I + f(1) ≤ S ≤ I + f(n)</h4>
+          <p>I is the integral of f from 1 to n. For decreasing f, swap f(1) and f(n).</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <h4>Sum of squares</h4>
+          <p>1² + 2² + … + n² = ?</p>
+          <p style="font-size:0.8em;color:var(--color-text-muted)">← Tap to flip →</p>
+        </div>
+        <div class="flashcard-back">
+          <h4>n(n+1)(2n+1)/6</h4>
+          <p>Found by guessing a cubic and solving with n = 0, 1, 2, 3.</p>
+          <p style="font-size:0.8em">← Tap to flip →</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Check yourself</h3>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q1:</strong> You guessed a cubic for a sum and solved for a, b, c, d from n = 0..3. What should you do next?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="Four points always fit some cubic, even if the true answer is not a cubic. Fitting proves nothing yet."
+          data-explanation-wrong="Four points always fit some cubic, even if the true answer is not a cubic. Fitting proves nothing yet.">Nothing: four points pin it down, so it is proven</button>
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Exactly. Test another value as a sanity check, then prove the formula by induction."
+          data-explanation-wrong="Exactly. Test another value as a sanity check, then prove the formula by induction.">Check another value, then prove it by induction</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="Close, but a higher-degree guess still needs a proof, and a cubic may already be right."
+          data-explanation-wrong="Close, but a higher-degree guess still needs a proof, and a cubic may already be right.">Switch to a degree-4 guess to be safe</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q2:</strong> The integral method says 1 ≤ Σ 1/i² ≤ 2. How do you get a much tighter bound?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="The integral is exact already; the slack comes from the first term of the sum, f(1) = 1."
+          data-explanation-wrong="The integral is exact already; the slack comes from the first term of the sum, f(1) = 1.">Compute the integral more precisely</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="1/x² is decreasing, so the decreasing version is already the right one."
+          data-explanation-wrong="1/x² is decreasing, so the decreasing version is already the right one.">Use the increasing version of the bound</button>
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Yes. The error equals one term of what you approximate, so add the big early terms exactly and bound only the small tail."
+          data-explanation-wrong="Yes. The error equals one term of what you approximate, so add the big early terms exactly and bound only the small tail.">Add the first few terms by hand and bound only the tail</button>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-question"><strong>Q3:</strong> In Σ<sub>i=1..n</sub> Σ<sub>j=i..n</sub> 1, you swap the order. What does the inner sum become?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="true"
+          data-explanation-correct="Right. With j outside, i runs from 1 to j, so you add 1 exactly j times. The total is Σ j = n(n+1)/2."
+          data-explanation-wrong="Right. With j outside, i runs from 1 to j, so you add 1 exactly j times. The total is Σ j = n(n+1)/2.">Σ over i from 1 to j of 1, which is j</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="That is the original inner range; after swapping, the bounds on i come from i ≤ j."
+          data-explanation-wrong="That is the original inner range; after swapping, the bounds on i come from i ≤ j.">Σ over i from j to n of 1, which is n − j + 1</button>
+        <button class="quiz-option" data-correct="false"
+          data-explanation-correct="i is bounded by j, not by n, once j is the outer index."
+          data-explanation-wrong="i is bounded by j, not by n, once j is the outer index.">Σ over i from 1 to n of 1, which is n</button>
+      </div>
+    </div>
+
+    <p><a href="https://github.com/CeciliaW888/math-for-cs/blob/main/week-01/day-05-sums.md" target="_blank" rel="noopener">Read the full study guide →</a> · <a href="https://www.youtube.com/watch?v=nqOPy2d6ihY" target="_blank" rel="noopener">Watch Lecture 5: Sums →</a></p>
+  </div>
+</section>

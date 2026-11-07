@@ -1,0 +1,18 @@
+{"questions": [
+  {"question": "In the Monty Hall tree, the leaf (car P, pick P, host opens G) has probability 1/18 but (car P, pick G, host opens S) has probability 1/9. Why the difference?",
+   "options": ["The car is less likely to be behind P", "The contestant prefers door G", "In the first case the host chooses between two goat doors (1/2); in the second he is forced (1)", "Leaves deeper in the tree always have smaller probability"],
+   "answer": 2,
+   "explanation": "Both paths start with 1/3 · 1/3. When your pick is the car, the host splits 1/2 and 1/2 between two goat doors; otherwise only one door is allowed, so that edge has probability 1."},
+  {"question": "A friend says: 'After the host opens a goat door, two doors are left, so each has probability 1/2.' What is the best response?",
+   "options": ["Correct, as long as the host chooses at random", "Correct, because the tree has 6 winning and 6 losing leaves", "Wrong, because the car moves after the host opens a door", "Wrong: outcomes are not automatically equally likely, and adding the leaf probabilities gives 2/3 for switching"],
+   "answer": 3,
+   "explanation": "Counting leaves assumes a uniform space. Here the 6 switch-wins leaves have probability 1/9 each and the 6 stay-wins leaves 1/18 each, so switching wins 2/3 of the time."},
+  {"question": "When is it valid to compute Pr[E] as |E| / |S|?",
+   "options": ["When the probability space is uniform, meaning every outcome has the same probability", "Always, for any finite sample space", "Only when the event E contains half the outcomes", "Only for events defined by dice"],
+   "answer": 0,
+   "explanation": "In general Pr[E] is the sum of Pr[ω] over ω in E. If every outcome has probability 1/|S|, that sum is |E|/|S|, so probability becomes counting."},
+  {"question": "With one roll, red beats green and green beats blue, each with probability 5/9. What can you conclude about red versus blue?",
+   "options": ["Red must beat blue, because 'beats' is transitive", "Nothing until you compute it, and in fact blue beats red with probability 5/9", "They must tie with probability 1/2", "Red beats blue with probability (5/9)²"],
+   "answer": 1,
+   "explanation": "'Beats with probability above 1/2' is not a transitive relation. Counting the 9 equally likely pairs shows blue beats red in 5 of them."}
+]}
